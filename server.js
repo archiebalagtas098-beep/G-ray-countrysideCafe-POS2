@@ -1686,14 +1686,16 @@ const recipeMapping = {
     'Red Tea (Glass)',
     'Matcha Green Tea'
 ],
-'sesame_oil': [
-    'Korean Spicy Bulgogi (Pork)'
+'Sesame oil': [
+    'Korean Spicy Bulgogi (Pork)',
+    'Buttered Honey Chicken',
+    'Buttered Spicy Chicken'
 ],
 'chili flakes': [
     'Korean Spicy Bulgogi (Pork)',
     'Buttered Spicy Chicken'
 ],
-'black_pepper': [
+'Black Pepper': [
     'Korean Spicy Bulgogi (Pork)',
     'Korean Salt and Pepper (Pork)',
     'Crispy Pork Lechon Kawali',
@@ -1726,11 +1728,7 @@ const recipeMapping = {
     'Crispy Pork Lechon Kawali',
     'Chicken Adobo'
 ],
-'Black Pepper': [
-    'Crispy Pork Lechon Kawali',
-    'Chicken Adobo',
-    'Korean Salt and Pepper (Pork)',
-],
+
 'cooking_oil': [
     'Crispy Pork Lechon Kawali',
     'Pork Shanghai',
@@ -3333,7 +3331,7 @@ app.post('/api/menu', verifyToken, verifyAdmin, async (req, res) => {
     try {
         console.log('✏️ API: Creating new menu item...', JSON.stringify(req.body, null, 2));
         
-        const { name, itemName, category, price, unit, currentStock, minStock, maxStock, image, isActive, itemType } = req.body;
+        const { name, itemName, category, price, unit, currentStock, minStock, maxStock, image, isActive, itemType, requiredIngredients } = req.body;
         
         if (!name && !itemName) {
             console.error('❌ Validation failed: Item name is required');
@@ -3372,6 +3370,23 @@ app.post('/api/menu', verifyToken, verifyAdmin, async (req, res) => {
             });
         }
         
+        // Process required ingredients - support both array of strings and array of objects
+        let processedIngredients = [];
+        if (requiredIngredients && Array.isArray(requiredIngredients)) {
+            processedIngredients = requiredIngredients.map(ing => {
+                if (typeof ing === 'string') {
+                    return { ingredientName: ing, quantity: 1, unit: 'piece' };
+                } else if (typeof ing === 'object') {
+                    return {
+                        ingredientName: ing.ingredientName || ing.name || '',
+                        quantity: Number(ing.quantity) || 1,
+                        unit: ing.unit || 'piece'
+                    };
+                }
+                return null;
+            }).filter(ing => ing && ing.ingredientName);
+        }
+        
         const menuItem = new MenuItem({
             itemName: name || itemName,
             name: name || itemName,
@@ -3383,10 +3398,12 @@ app.post('/api/menu', verifyToken, verifyAdmin, async (req, res) => {
             maxStock: parsedMaxStock,
             image: image || 'default_food.jpg',
             isActive: isActive !== false,
-            itemType: itemType || 'finished'
+            itemType: itemType || 'finished',
+            requiredIngredients: processedIngredients
         });
         
         console.log('📝 MenuItem object created, saving to database...');
+        console.log('📝 Required ingredients:', processedIngredients);
         
         try {
             await menuItem.save();
@@ -3481,6 +3498,50 @@ app.put('/api/menu/:itemId', verifyToken, verifyAdmin, async (req, res) => {
             });
         }
         
+        // 🚫 CHECK: Block stock addition if item's REQUIRED INGREDIENTS are OUT OF STOCK (currentStock === 0)
+        const existingMenuItem = await MenuItem.findById(itemId);
+        if (!existingMenuItem) {
+            console.warn(`⚠️ Menu item not found: ${itemId}`);
+            return res.status(404).json({
+                success: false,
+                message: 'Menu item not found'
+            });
+        }
+        
+        // Check if any required ingredients are out of stock
+        const requiredIngredients = existingMenuItem.requiredIngredients || [];
+        if (requiredIngredients.length > 0) {
+            console.log(`🔍 Checking ingredient inventory for "${existingMenuItem.itemName}"...`);
+            
+            const outOfStockIngredients = [];
+            
+            for (const ingredientName of requiredIngredients) {
+                const ingredient = await InventoryItem.findOne({
+                    itemName: { $regex: new RegExp(`^${ingredientName}$`, 'i') },
+                    isActive: true
+                });
+                
+                if (ingredient && ingredient.currentStock === 0) {
+                    outOfStockIngredients.push(ingredient.itemName);
+                    console.warn(`   ⚠️ Required ingredient "${ingredient.itemName}" is OUT OF STOCK`);
+                }
+            }
+            
+            // If any required ingredient is out of stock, block the stock addition
+            if (outOfStockIngredients.length > 0) {
+                const ingredientList = outOfStockIngredients.join(', ');
+                console.warn(`🚫 BLOCKED: Cannot add stock to "${existingMenuItem.itemName}" - Required ingredients are out of stock: ${ingredientList}`);
+                return res.status(403).json({
+                    success: false,
+                    message: `🚫 Cannot add stock to "${existingMenuItem.itemName}" - Required ingredient(s) are Out of Stock: ${ingredientList}. Please restock these items first.`,
+                    error: 'REQUIRED_INGREDIENTS_OUT_OF_STOCK',
+                    outOfStockIngredients: outOfStockIngredients
+                });
+            }
+            
+            console.log(`✅ All required ingredients are in stock or low stock - Can proceed`);
+        }
+        
         const menuItem = await MenuItem.findByIdAndUpdate(
             itemId,
             {
@@ -3508,6 +3569,88 @@ app.put('/api/menu/:itemId', verifyToken, verifyAdmin, async (req, res) => {
         }
         
         console.log(`✅ Menu item updated successfully`);
+        
+        // 🧂 DEDUCT RAW INGREDIENTS FROM INVENTORY when stock is increased
+        const previousStock = existingMenuItem.currentStock || 0;
+        const quantityAdded = parsedCurrentStock - previousStock;
+        
+        console.log(`📦 Stock change: ${previousStock} → ${parsedCurrentStock} = ${quantityAdded} added`);
+        
+        if (quantityAdded > 0) {
+            console.log(`🧂 Deducting ingredients for added stock: ${menuItem.itemName} (Qty: ${quantityAdded})`);
+            
+            // ✅ FIX: Use stored requiredIngredients first, then fall back to reverseRecipeMapping
+            let ingredientsToDeduct = [];
+            
+            // Check if the menu item has stored required ingredients
+            if (menuItem.requiredIngredients && menuItem.requiredIngredients.length > 0) {
+                console.log(`✅ Using stored required ingredients from database`);
+                ingredientsToDeduct = menuItem.requiredIngredients.map(ing => ing.ingredientName);
+            } else {
+                // Fall back to reverseRecipeMapping for backward compatibility
+                console.log(`🧂 Looking for recipe in reverseRecipeMapping...`);
+                ingredientsToDeduct = reverseRecipeMapping[menuItem.itemName] || [];
+            }
+            
+            console.log(`🧂 Found ingredients:`, ingredientsToDeduct);
+            
+            try {
+                if (ingredientsToDeduct.length === 0) {
+                    console.log(`ℹ️ No ingredients required for: ${menuItem.itemName}`);
+                    if (!menuItem.requiredIngredients || menuItem.requiredIngredients.length === 0) {
+                        console.log(`🧂 Available recipes in reverseRecipeMapping:`, Object.keys(reverseRecipeMapping).slice(0, 10));
+                    }
+                } else {
+                    for (const ingredientName of ingredientsToDeduct) {
+                        try {
+                            // Try to find ingredient - be flexible with itemType
+                            const inventoryItem = await InventoryItem.findOne({
+                                itemName: { $regex: new RegExp(`^${ingredientName}$`, 'i') },
+                                isActive: true
+                            });
+                            
+                            if (!inventoryItem) {
+                                console.warn(`⚠️ Ingredient not found: ${ingredientName}`);
+                                continue;
+                            }
+                            
+                            const previousIngredientStock = inventoryItem.currentStock;
+                            const newIngredientStock = Math.max(0, previousIngredientStock - quantityAdded);
+                            
+                            // Update stock
+                            inventoryItem.currentStock = newIngredientStock;
+                            
+                            // Update status
+                            if (newIngredientStock <= 0) {
+                                inventoryItem.status = 'out_of_stock';
+                            } else if (newIngredientStock <= inventoryItem.minStock) {
+                                inventoryItem.status = 'low_stock';
+                            } else {
+                                inventoryItem.status = 'in_stock';
+                            }
+                            
+                            // Record usage
+                            inventoryItem.usageHistory.push({
+                                quantity: quantityAdded,
+                                notes: `Stock added to menu - ${menuItem.itemName}`,
+                                usedBy: req.user?.username || 'Admin',
+                                date: new Date()
+                            });
+                            
+                            await inventoryItem.save();
+                            
+                            console.log(`  ✓ ${ingredientName}: ${previousIngredientStock} → ${newIngredientStock} ${inventoryItem.unit} [${inventoryItem.status}]`);
+                            
+                        } catch (err) {
+                            console.error(`❌ Error deducting ingredient ${ingredientName}:`, err.message);
+                        }
+                    }
+                }
+            } catch (deductError) {
+                console.warn(`⚠️ Ingredient deduction error:`, deductError.message);
+                // Don't block stock update if deduction fails
+            }
+        }
         
         const formatted = {
             _id: menuItem._id,
@@ -3636,6 +3779,21 @@ app.put('/api/menu/:itemId/stock', verifyToken, async (req, res) => {
             });
         }
         
+        // Get the old stock to calculate the quantity added
+        const oldMenuItem = await MenuItem.findById(itemId);
+        if (!oldMenuItem) {
+            console.warn(`⚠️ Menu item not found: ${itemId}`);
+            return res.status(404).json({
+                success: false,
+                message: 'Menu item not found'
+            });
+        }
+        
+        const previousStock = oldMenuItem.currentStock || 0;
+        const quantityAdded = parsedStock - previousStock;
+        
+        console.log(`📦 Stock calculation: ${previousStock} → ${parsedStock} = ${quantityAdded} added`);
+        
         const menuItem = await MenuItem.findByIdAndUpdate(
             itemId,
             { currentStock: parsedStock },
@@ -3650,7 +3808,84 @@ app.put('/api/menu/:itemId/stock', verifyToken, async (req, res) => {
             });
         }
         
-        console.log(`✅ Stock updated for ${itemId}: ${parsedStock} units`);
+        console.log(`✅ Stock updated for ${itemId}: ${previousStock} → ${parsedStock} units (added: ${quantityAdded})`);
+        
+        // 🧂 DEDUCT RAW INGREDIENTS FROM INVENTORY when stock is added
+        if (quantityAdded > 0) {
+            console.log(`🧂 Deducting ingredients for added stock: ${menuItem.itemName} (Qty: ${quantityAdded})`);
+            
+            // ✅ FIX: Use stored requiredIngredients first, then fall back to reverseRecipeMapping
+            let ingredientsToDeduct = [];
+            
+            // Check if the menu item has stored required ingredients
+            if (menuItem.requiredIngredients && menuItem.requiredIngredients.length > 0) {
+                console.log(`✅ Using stored required ingredients from database`);
+                ingredientsToDeduct = menuItem.requiredIngredients.map(ing => ing.ingredientName);
+            } else {
+                // Fall back to reverseRecipeMapping for backward compatibility
+                console.log(`🧂 Looking for recipe in reverseRecipeMapping...`);
+                ingredientsToDeduct = reverseRecipeMapping[menuItem.itemName] || [];
+            }
+            
+            console.log(`🧂 Found ingredients:`, ingredientsToDeduct);
+            
+            try {
+                if (ingredientsToDeduct.length === 0) {
+                    console.log(`ℹ️ No ingredients required for: ${menuItem.itemName}`);
+                    if (!menuItem.requiredIngredients || menuItem.requiredIngredients.length === 0) {
+                        console.log(`🧂 Available recipes in reverseRecipeMapping:`, Object.keys(reverseRecipeMapping).slice(0, 10));
+                    }
+                } else {
+                    for (const ingredientName of ingredientsToDeduct) {
+                        try {
+                            // Try to find ingredient - be flexible with itemType
+                            const inventoryItem = await InventoryItem.findOne({
+                                itemName: { $regex: new RegExp(`^${ingredientName}$`, 'i') },
+                                isActive: true
+                            });
+                            
+                            if (!inventoryItem) {
+                                console.warn(`⚠️ Ingredient not found: ${ingredientName}`);
+                                continue;
+                            }
+                            
+                            const previousIngredientStock = inventoryItem.currentStock;
+                            const newIngredientStock = Math.max(0, previousIngredientStock - quantityAdded);
+                            
+                            // Update stock
+                            inventoryItem.currentStock = newIngredientStock;
+                            
+                            // Update status
+                            if (newIngredientStock <= 0) {
+                                inventoryItem.status = 'out_of_stock';
+                            } else if (newIngredientStock <= inventoryItem.minStock) {
+                                inventoryItem.status = 'low_stock';
+                            } else {
+                                inventoryItem.status = 'in_stock';
+                            }
+                            
+                            // Record usage
+                            inventoryItem.usageHistory.push({
+                                quantity: quantityAdded,
+                                notes: `Stock added to menu - ${menuItem.itemName}`,
+                                usedBy: req.user?.username || 'Admin',
+                                date: new Date()
+                            });
+                            
+                            await inventoryItem.save();
+                            
+                            console.log(`  ✓ ${ingredientName}: ${previousIngredientStock} → ${newIngredientStock} ${inventoryItem.unit} [${inventoryItem.status}]`);
+                            
+                        } catch (err) {
+                            console.error(`❌ Error deducting ingredient ${ingredientName}:`, err.message);
+                        }
+                    }
+                }
+            } catch (deductError) {
+                console.warn(`⚠️ Ingredient deduction error:`, deductError.message);
+                // Don't block stock update if deduction fails
+            }
+        }
         
         res.status(200).json({
             success: true,
@@ -4373,7 +4608,13 @@ app.post('/api/orders', verifyToken, async (req, res) => {
         }
         
         // 🆕 DEDUCT RAW INGREDIENTS FROM INVENTORY
-        // ENABLED: Deductions happen when orders are placed
+        // 🚫 DISABLED: Deductions ONLY happen when products are created in inventory, NOT when customers buy
+        // Ingredients are deducted at: POST /api/inventory/deduct-ingredients (when menu product is created)
+        // This ensures inventory is only deducted once during product creation, not again during purchase
+        console.log('ℹ️ Ingredient deduction DISABLED for customer orders - Only deducts when products are created');
+        
+        /* 
+        // DISABLED CODE - DO NOT USE
         console.log('🧂 Processing raw ingredient deductions...');
         console.log(`🧂 DEBUG: reverseRecipeMapping has ${Object.keys(reverseRecipeMapping).length} dishes:`, Object.keys(reverseRecipeMapping).slice(0, 10));
         
@@ -4458,6 +4699,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
                 console.error(`❌ Error processing ingredients for ${item.name}:`, err.message);
             }
         }
+        */
         
         RealTimeManager.sendOrderNotification(savedOrder);
         RealTimeManager.sendStatsUpdate();

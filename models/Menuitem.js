@@ -58,7 +58,22 @@ const menuItemSchema = new mongoose.Schema({
     default: 'in_stock'
   },
   description: String,
-  requiredIngredients: [String],
+  requiredIngredients: {
+    type: [
+      {
+        ingredientName: String,
+        quantity: {
+          type: Number,
+          default: 1
+        },
+        unit: {
+          type: String,
+          default: 'piece'
+        }
+      }
+    ],
+    default: []
+  },
   availableIngredients: [String],
   missingIngredients: [String],
   inventoryItemId: mongoose.Schema.Types.ObjectId,

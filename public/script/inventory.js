@@ -137,7 +137,7 @@ const validRawIngredients = {
     'Vinegar': 'dry',
     'Salt': 'dry',
     'Sugar': 'dry',
-    'Black pepper': 'dry',
+    'Black Pepper': 'dry',
     'Cooking oil': 'dry',
     'Sesame oil': 'dry',
     'Flour': 'dry',
@@ -2368,7 +2368,11 @@ function showSection(section) {
         renderDashboardGrid();
         updateDashboardStats();
     } else if (section === 'inventory') {
-        renderInventoryGrid();
+        // Fetch fresh data before rendering inventory
+        fetchInventoryItems().then(() => {
+            renderInventoryGrid();
+            updateDashboardStats();
+        });
     }
 }
 
@@ -2503,11 +2507,14 @@ function initializeEventListeners() {
     }
     
     if (elements.refreshDashboard) {
-        elements.refreshDashboard.addEventListener('click', () => {
+        elements.refreshDashboard.addEventListener('click', async () => {
+            console.log('🔄 Refreshing inventory data...');
+            await fetchInventoryItems();
             updateDashboardStats();
             renderDashboardGrid();
             renderInventoryGrid();
             updateCategoryCounts();
+            showToast('✅ Inventory refreshed', 'success');
         });
     }
     

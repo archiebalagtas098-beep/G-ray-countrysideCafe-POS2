@@ -1923,3 +1923,629 @@ textarea.form-control::placeholder {
         height: 2.5px;
     }
 }
+
+/* ==================== ADD NEW INGREDIENT STYLES - MOBILE RESPONSIVE ==================== */
+
+/* Add New Ingredient Button */
+.add-ingredient-btn {
+    background: linear-gradient(135deg, #4e8a6a 0%, #3d6f53 100%);
+    color: white;
+    border: 1px solid #4e8a6a;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(78, 138, 106, 0.2);
+    white-space: nowrap;
+}
+
+.add-ingredient-btn:hover {
+    background: linear-gradient(135deg, #3d6f53 0%, #2d5540 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 138, 106, 0.3);
+    border-color: #2d5540;
+}
+
+.add-ingredient-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(78, 138, 106, 0.2);
+}
+
+.add-ingredient-btn i {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Add New Ingredient Section */
+.add-ingredient-section {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.add-ingredient-section h3 {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #4e8a6a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-ingredient-section h3::before {
+    content: '+';
+    background: #4e8a6a;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Quick Add Form */
+.quick-add-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.quick-add-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.quick-add-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quick-add-group .form-control {
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.quick-add-group .form-control:focus {
+    border-color: #4e8a6a;
+    box-shadow: 0 0 0 3px rgba(78, 138, 106, 0.1);
+    outline: none;
+}
+
+.quick-add-btn {
+    background: #4e8a6a;
+    color: white;
+    border: 1px solid #4e8a6a;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    height: 42px;
+    white-space: nowrap;
+}
+
+.quick-add-btn:hover {
+    background: #3d6f53;
+    border-color: #3d6f53;
+}
+
+/* Ingredient Form in Modal */
+.ingredient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ingredient-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.ingredient-form .form-group {
+    margin-bottom: 0;
+}
+
+.ingredient-form .form-group.full-width {
+    grid-column: span 2;
+}
+
+/* Category Select with Add Option */
+.category-select-wrapper {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.category-select-wrapper select {
+    flex: 1;
+}
+
+.add-category-btn {
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4e8a6a;
+    transition: all 0.3s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-category-btn:hover {
+    background: #e0e0e0;
+    color: #3d6f53;
+}
+
+/* ==================== MOBILE RESPONSIVE STYLES ==================== */
+
+/* Large Tablets (768px - 992px) */
+@media (max-width: 992px) {
+    .add-ingredient-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    
+    .add-ingredient-btn i {
+        font-size: 16px;
+    }
+    
+    .quick-add-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Small Tablets (576px - 768px) */
+@media (max-width: 768px) {
+    /* Add Ingredient Button */
+    .add-ingredient-btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 15px;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    
+    /* Action Buttons Container */
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+    }
+    
+    /* Add Ingredient Section */
+    .add-ingredient-section {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .add-ingredient-section h3 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .add-ingredient-section h3::before {
+        width: 22px;
+        height: 22px;
+        font-size: 16px;
+    }
+    
+    /* Quick Add Form */
+    .quick-add-form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .quick-add-group {
+        width: 100%;
+    }
+    
+    .quick-add-group label {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .quick-add-group .form-control {
+        padding: 12px 14px;
+        font-size: 15px;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    .quick-add-btn {
+        width: 100%;
+        height: 48px;
+        margin-top: 8px;
+        font-size: 15px;
+        padding: 0 20px;
+    }
+    
+    /* Ingredient Form */
+    .ingredient-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .ingredient-form .form-group.full-width {
+        grid-column: span 1;
+    }
+    
+    /* Category Select Wrapper */
+    .category-select-wrapper {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .category-select-wrapper select {
+        width: 100%;
+    }
+    
+    .add-category-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    /* Modal adjustments for mobile */
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .modal-body {
+        padding: 20px 15px;
+    }
+    
+    .modal-header {
+        padding: 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Form Controls on Mobile */
+    .form-control {
+        font-size: 15px;
+        padding: 12px 14px;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    select.form-control {
+        background-position: right 14px center;
+    }
+    
+    textarea.form-control {
+        min-height: 80px;
+    }
+    
+    /* Stock Fields Group */
+    .stock-fields-group {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .stock-field input[type="number"] {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+}
+
+/* Mobile Phones (480px and below) */
+@media (max-width: 480px) {
+    /* Header and Controls */
+    .header {
+        padding: 12px;
+    }
+    
+    .header-controls {
+        width: 100%;
+    }
+    
+    .inventory-type {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .type-btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    /* Content Header */
+    .content-header {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .content-title h2 {
+        font-size: 18px;
+    }
+    
+    .content-title p {
+        font-size: 13px;
+    }
+    
+    /* Add Ingredient Button */
+    .add-ingredient-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .add-ingredient-btn i {
+        font-size: 15px;
+    }
+    
+    /* Add Ingredient Section */
+    .add-ingredient-section {
+        padding: 15px 12px;
+    }
+    
+    .add-ingredient-section h3 {
+        font-size: 15px;
+    }
+    
+    .add-ingredient-section h3::before {
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+    }
+    
+    /* Form Elements */
+    .quick-add-group .form-control {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .quick-add-btn {
+        height: 44px;
+        font-size: 14px;
+    }
+    
+    /* Modal */
+    .modal-content {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+        max-height: 100vh;
+    }
+    
+    .modal-header {
+        border-radius: 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: white;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        padding: 15px;
+    }
+    
+    /* Form Labels */
+    .form-group label {
+        font-size: 13px;
+    }
+    
+    /* Stock Fields */
+    .stock-field label {
+        font-size: 12px;
+    }
+    
+    .stock-field .form-hint {
+        font-size: 11px;
+    }
+    
+    /* Category Badge */
+    .category-badge {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+    
+    /* Status Badge */
+    .status-badge {
+        font-size: 11px;
+        padding: 4px 12px;
+    }
+}
+
+/* Small Mobile Phones (360px and below) */
+@media (max-width: 360px) {
+    .add-ingredient-section h3 {
+        font-size: 14px;
+    }
+    
+    .quick-add-group label {
+        font-size: 11px;
+    }
+    
+    .quick-add-group .form-control {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    
+    .quick-add-btn {
+        height: 40px;
+        font-size: 13px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1rem;
+    }
+    
+    .close {
+        font-size: 24px;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
+
+/* Touch-friendly improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .add-ingredient-btn,
+    .quick-add-btn,
+    .btn,
+    .type-btn,
+    .nav-link,
+    .category-item {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(78, 138, 106, 0.2);
+    }
+    
+    .add-ingredient-btn:active,
+    .quick-add-btn:active,
+    .btn:active {
+        transform: scale(0.98);
+    }
+    
+    /* Increase touch targets on mobile */
+    .nav-link,
+    .category-item,
+    .dashboard-menu a {
+        min-height: 44px;
+    }
+    
+    .form-control,
+    select.form-control,
+    .quick-add-group .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .modal-content {
+        max-height: 85vh;
+        min-height: auto;
+        border-radius: 12px;
+        margin: 20px auto;
+    }
+    
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+    
+    .quick-add-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stock-fields-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Handle notched phones */
+@supports (padding: max(0px)) {
+    @media (max-width: 768px) {
+        .modal-header {
+            padding-left: max(15px, env(safe-area-inset-left));
+            padding-right: max(15px, env(safe-area-inset-right));
+            padding-top: max(15px, env(safe-area-inset-top));
+        }
+        
+        .modal-footer {
+            padding-left: max(15px, env(safe-area-inset-left));
+            padding-right: max(15px, env(safe-area-inset-right));
+            padding-bottom: max(15px, env(safe-area-inset-bottom));
+        }
+        
+        .add-ingredient-section {
+            padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right));
+        }
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .add-ingredient-btn {
+        border: 2px solid #000000;
+    }
+    
+    .quick-add-btn {
+        border: 2px solid #000000;
+    }
+    
+    .add-ingredient-section {
+        border: 2px solid #000000;
+    }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    /* Add dark mode styles if your app supports it */
+}

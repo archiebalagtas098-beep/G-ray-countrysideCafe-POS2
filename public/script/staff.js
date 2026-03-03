@@ -1059,7 +1059,7 @@ function createProductCard(product) {
         if (product.stock > 0) {
             addItemToOrder(product.name, product.price, product);
         } else {
-            showToast(`❌ ${product.name} is out of stock`, 'error', 2000);
+            showToast(`${product.name} is out of stock`, 'error', 2000);
         }
     };
     
@@ -1127,7 +1127,7 @@ function addItemToOrder(name, price, product = null) {
     }
     
     if (!product || product.stock <= 0) {
-        showToast(`❌ ${name} is out of stock`, 'error', 2000);
+        showToast(`${name} is out of stock`, 'error', 2000);
         return;
     }
     

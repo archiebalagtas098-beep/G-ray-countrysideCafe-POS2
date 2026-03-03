@@ -3213,51 +3213,6 @@ async function saveMenuItem(itemData) {
             await fetchMenuItems();
             updateCategoryCounts();
             
-            if (!isEdit) {
-                console.log(`✅ Product "${itemData.itemName}" created successfully`);
-                
-                // 🧂 DEDUCT RAW INGREDIENTS FROM INVENTORY
-                console.log(`🧂 Deducting ingredients for: ${itemData.itemName}`);
-                try {
-                    const deductResponse = await fetch('/api/inventory/deduct-ingredients', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            itemName: itemData.itemName,
-                            quantity: 1, // 1 unit of product created
-                            reason: 'Product created in menu'
-                        }),
-                        credentials: 'include'
-                    });
-                    
-                    if (deductResponse.ok) {
-                        const deductData = await deductResponse.json();
-                        console.log(`✅ Ingredients deducted:`, deductData);
-                        
-                        // Check if any ingredients were deducted
-                        if (deductData.deductedIngredients && deductData.deductedIngredients.length > 0) {
-                            const ingredientsList = deductData.deductedIngredients
-                                .map(ing => `${ing.ingredient} (-${ing.quantity} ${ing.unit})`)
-                                .join(', ');
-                            showToast(`✅ Ingredients deducted: ${ingredientsList}`, 'success');
-                        } else {
-                            // No ingredients found - product not in recipe mapping
-                            console.warn(`⚠️ Product "${itemData.itemName}" not found in recipe mapping`);
-                            showToast(`⚠️ Note: Recipe not defined for "${itemData.itemName}"\nIngredients will not auto-deduct.\nAdd recipe in server.js recipeMapping to enable deduction.`, 'warning');
-                        }
-                    } else {
-                        console.warn(`⚠️ Could not deduct ingredients - endpoint error`);
-                        showToast(`⚠️ Ingredient deduction unavailable`, 'warning');
-                    }
-                } catch (deductError) {
-                    console.warn(`⚠️ Ingredient deduction error:`, deductError.message);
-                    // Don't block product creation if deduction fails
-                }
-            }
-            
             saveInventoryStockValues();
             
         } else {
@@ -3480,7 +3435,7 @@ function filterByCategory(category, fullname) {
     }
 }
 
-// ==================== RENDER MENU GRID ====================
+// ==================== RENDER MENU GRID (FIXED VERSION) ====================
 function renderMenuGrid() {
     if (!elements.menuGrid) return;
     
@@ -3488,6 +3443,8 @@ function renderMenuGrid() {
         elements.menuGrid.innerHTML = `
             <div class="empty-state">
                 <h3>No products found</h3>
+                <p>Click "Add New Product" to create your first menu item.</p>
+                <button class="btn btn-primary" onclick="openAddModal()">Add New Product</button>
             </div>
         `;
         return;
@@ -3504,8 +3461,8 @@ function renderMenuGrid() {
             <div class="empty-state">
                 <div class="empty-state-icon">📭</div>
                 <h3>No products in this category</h3>
-                <p>Add products to this category using the "    Add New Product" button</p>
-                <button class="btn btn-primary" onclick="openAddModal()">    Add New Product</button>
+                <p>Add products to this category using the "Add New Product" button</p>
+                <button class="btn btn-primary" onclick="openAddModal()">Add New Product</button>
             </div>
         `;
         return;
@@ -3515,29 +3472,43 @@ function renderMenuGrid() {
         const itemName = item.name || item.itemName || 'Unnamed Product';
         const itemPrice = item.price || 0;
         const currentStock = item.currentStock || 0;
-        const maxStock = item.maxStock || 0;
-        const minStock = item.minStock || 0;
-        const unit = item.unit || '';
+        const maxStock = item.maxStock || 100;
+        const minStock = item.minStock || 5;
+        const unit = item.unit || 'unit';
         const displayUnit = unitDisplayLabels[unit] || unit;
         const itemValue = itemPrice * currentStock;
         const stockPercentage = maxStock > 0 ? ((currentStock / maxStock) * 100) : 0;
         
         let stockClass = '';
         let progressClass = '';
+        let statusText = '';
+        let statusClass = '';
+        
         if (currentStock === 0) {
             stockClass = 'out-of-stock';
             progressClass = 'danger';
+            statusText = 'Out of Stock';
+            statusClass = 'status-out';
         } else if (currentStock <= minStock) {
             stockClass = 'low-stock';
             progressClass = 'warning';
+            statusText = 'Low Stock';
+            statusClass = 'status-low';
+        } else {
+            statusText = 'In Stock';
+            statusClass = 'status-available';
         }
+        
+        // Calculate max allowed to add
+        const maxCanAdd = maxStock - currentStock;
+        // Determine if button should be disabled
+        const isAddDisabled = maxCanAdd <= 0;
         
         return `
         <div class="menu-card ${stockClass}">
             <div class="card-header">
                 <h4>${escapeHtml(itemName)}</h4>
                 <div class="card-actions">
-                    <button class="btn-icon" onclick="openEditModal('${item._id}')" title="Edit product">✏️</button>
                     <button class="btn-icon delete" onclick="deleteMenuItem('${item._id}', event)" title="Delete product">🗑️</button>
                 </div>
             </div>
@@ -3555,8 +3526,8 @@ function renderMenuGrid() {
                         <div class="progress-bar ${progressClass}" style="width: ${Math.min(stockPercentage, 100)}%"></div>
                     </div>
                     <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
-                        <span class="status-badge ${currentStock === 0 ? 'status-out' : currentStock <= minStock ? 'status-low' : 'status-available'}">
-                            ${currentStock === 0 ? 'Out of Stock' : currentStock <= minStock ? 'Low Stock' : 'In Stock'}
+                        <span class="status-badge ${statusClass}">
+                            ${statusText}
                         </span>
                         <span><span class="label">Min:</span> ${minStock} ${displayUnit}</span>
                     </div>
@@ -3565,7 +3536,7 @@ function renderMenuGrid() {
                 <div class="card-info"><span class="label">Stock Value:</span> ₱${itemValue.toFixed(2)}</div>
             </div>
             
-            <!-- Quick Add Stock Section - Integrated directly in the product card -->
+            <!-- Quick Add Stock Section - FIXED: Button is NEVER disabled based on stock status -->
             <div class="quick-add-section">
                 <div class="quick-add-title">
                     <i class="fas fa-plus-circle" style="color: #28a745;"></i>
@@ -3577,22 +3548,20 @@ function renderMenuGrid() {
                            class="quick-add-input" 
                            placeholder="Qty to add"
                            min="1"
-                           max="${maxStock - currentStock}"
+                           max="${maxCanAdd}"
                            step="1"
                            value="1"
-                           ${item.status === 'out_of_stock' && currentStock === 0 ? 'disabled' : ''}>
+                           ${isAddDisabled ? 'disabled' : ''}>
                     <button class="quick-add-btn" 
                             onclick="quickAddStock('${item._id}', '${escapeHtml(itemName).replace(/'/g, "\\'")}')"
-                            ${currentStock >= maxStock || (item.status === 'out_of_stock' && currentStock === 0) ? 'disabled' : ''}
-                            title="${item.status === 'out_of_stock' && currentStock === 0 ? '❌ Cannot add stock - Out of Stock' : ''}">
+                            ${isAddDisabled ? 'disabled' : ''}
+                            title="${isAddDisabled ? 'Cannot add - Max stock reached' : 'Add stock'}">
                         Add
                     </button>
                 </div>
-                ${item.status === 'out_of_stock' && currentStock === 0 ?
-                    '<div style="font-size: 11px; color: #dc3545; margin-top: 5px;">🚫 Out of Stock - Cannot add stock</div>' :
-                    currentStock >= maxStock ? 
+                ${isAddDisabled ?
                     '<div style="font-size: 11px; color: #dc3545; margin-top: 5px;">⚠️ Max stock reached</div>' : 
-                    `<div style="font-size: 11px; color: #6c757d; margin-top: 5px;">Can add up to ${maxStock - currentStock} ${displayUnit}</div>`
+                    `<div style="font-size: 11px; color: #6c757d; margin-top: 5px;">Can add up to ${maxCanAdd} ${displayUnit}</div>`
                 }
             </div>
         </div>
@@ -3846,7 +3815,7 @@ async function renderDashboardGrid() {
                 <div style="margin-bottom: 20px;">
                     <h3 style="color: #2196f3; display: flex; align-items: center; gap: 10px;">
                         <i class="fas fa-bell"></i>
-                        Pending Stock Requests from Staff(${staffRequestCount})
+                        Pending Stock Requests from Staff (${staffRequestCount})
                     </h3>
                 </div>
                 ${requestsHTML}
@@ -4066,16 +4035,20 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// ==================== QUICK ADD STOCK FUNCTION ====================
+// ==================== QUICK ADD STOCK FUNCTION (FIXED VERSION) ====================
 async function quickAddStock(itemId, itemName) {
+    console.log(`🚀 quickAddStock called for: ${itemName} (${itemId})`);
+    
     let inputElement = document.getElementById(`addStock-${itemId}`);
     
     if (!inputElement) {
+        console.error(`❌ Input element not found for ID: addStock-${itemId}`);
         showToast('❌ Input element not found', 'error');
         return;
     }
     
     const quantityToAdd = parseInt(inputElement.value) || 0;
+    console.log(`📊 Quantity to add: ${quantityToAdd}`);
     
     if (quantityToAdd <= 0) {
         showToast('❌ Please enter a quantity greater than 0', 'error');
@@ -4084,27 +4057,124 @@ async function quickAddStock(itemId, itemName) {
     
     const product = allMenuItems.find(p => p._id === itemId);
     if (!product) {
+        console.error(`❌ Product not found with ID: ${itemId}`);
         showToast(`❌ Product "${itemName}" not found`, 'error');
         return;
     }
     
-    // 🚫 CHECK: Block adding stock if item is out of stock
-    if (product.status === 'out_of_stock' && product.currentStock === 0) {
-        showToast(`🚫 Cannot add stock to "${itemName}" - Item is Out of Stock and blocked from stock additions. Please contact administrator.`, 'error');
-        console.warn(`🚫 Blocked: Attempting to add stock to out-of-stock item: ${itemName}`);
-        return;
-    }
+    console.log(`📦 Product found:`, {
+        name: product.name || product.itemName,
+        currentStock: product.currentStock,
+        maxStock: product.maxStock,
+        unit: product.unit
+    });
     
     const currentStock = product.currentStock || 0;
     const maxStock = product.maxStock || 100;
     const newStock = currentStock + quantityToAdd;
+    const unit = product.unit || 'unit';
     
+    // Check if would exceed max stock
     if (newStock > maxStock) {
         showToast(`❌ Would exceed max stock (${maxStock}). Current: ${currentStock}, Can add: ${maxStock - currentStock}`, 'warning');
         return;
     }
     
-    const unit = product.unit || 'unit';
+    // ============= SIMPLIFIED INGREDIENT CHECK =============
+    try {
+        console.log(`🔍 Checking if ingredients are available for "${itemName}"...`);
+        
+        // First, check if this product has a recipe
+        let hasRecipe = false;
+        let outOfStockIngredients = [];
+        let lowStockIngredients = [];
+        
+        // Get recipe for this product
+        const recipe = productIngredientMap[product.name || product.itemName];
+        
+        if (recipe && recipe.ingredients && Object.keys(recipe.ingredients).length > 0) {
+            hasRecipe = true;
+            console.log(`📋 Recipe found with ${Object.keys(recipe.ingredients).length} ingredients`);
+            
+            // Fetch current inventory
+            const inventoryResponse = await fetch('/api/inventory', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+            
+            if (inventoryResponse.ok) {
+                const inventoryData = await inventoryResponse.json();
+                let inventoryItems = [];
+                
+                if (Array.isArray(inventoryData)) {
+                    inventoryItems = inventoryData;
+                } else if (inventoryData && inventoryData.success && Array.isArray(inventoryData.data)) {
+                    inventoryItems = inventoryData.data;
+                }
+                
+                console.log(`📦 Found ${inventoryItems.length} inventory items`);
+                
+                // Check each ingredient
+                for (const [ingredientName, requiredAmount] of Object.entries(recipe.ingredients)) {
+                    // Normalize ingredient name
+                    const normalizedName = ingredientName.toLowerCase().replace(/[_\s]+/g, ' ').trim();
+                    
+                    // Find in inventory
+                    const ingredient = inventoryItems.find(item => {
+                        const itemName = (item.itemName || item.name || '').toLowerCase().replace(/[_\s]+/g, ' ').trim();
+                        return itemName.includes(normalizedName) || normalizedName.includes(itemName);
+                    });
+                    
+                    if (ingredient) {
+                        const stock = parseFloat(ingredient.currentStock || 0);
+                        console.log(`   ${ingredientName}: ${stock} available`);
+                        
+                        if (stock === 0) {
+                            outOfStockIngredients.push(ingredientName);
+                            console.log(`   ❌ OUT OF STOCK: ${ingredientName}`);
+                        } else if (stock <= (ingredient.minThreshold || 5)) {
+                            lowStockIngredients.push(`${ingredientName} (${stock} left)`);
+                            console.log(`   ⚠️ LOW STOCK: ${ingredientName}`);
+                        }
+                    } else {
+                        console.log(`   ⚠️ Ingredient not found in inventory: ${ingredientName}`);
+                        // If ingredient not in inventory, treat as out of stock
+                        outOfStockIngredients.push(ingredientName);
+                    }
+                }
+            }
+        } else {
+            console.log(`ℹ️ No recipe found for "${itemName}" - no ingredient restrictions`);
+        }
+        
+        // DECISION TIME:
+        // BLOCK only if there are OUT OF STOCK ingredients
+        if (outOfStockIngredients.length > 0) {
+            const ingredientList = outOfStockIngredients.join(', ');
+            console.warn(`🚫 BLOCKING: Out of stock ingredients: ${ingredientList}`);
+            showToast(`🚫 Cannot add stock - Required ingredients OUT OF STOCK: ${ingredientList}`, 'error', 8000);
+            return; // STOP HERE - DO NOT ADD STOCK
+        }
+        
+        // WARN but ALLOW for low stock
+        if (lowStockIngredients.length > 0) {
+            const ingredientList = lowStockIngredients.join(', ');
+            console.warn(`⚠️ WARNING: Low stock ingredients: ${ingredientList} but ALLOWING`);
+            showToast(`⚠️ Warning: Low stock ingredients: ${ingredientList}`, 'warning', 5000);
+            // CONTINUE - DO NOT BLOCK
+        }
+        
+        console.log(`✅ Ingredient check passed - proceeding with stock addition`);
+        
+    } catch (error) {
+        console.error('⚠️ Error during ingredient check:', error);
+        // If there's an error checking, ALLOW the stock addition (don't block)
+        console.log(`⚠️ Error in ingredient check - allowing stock addition anyway`);
+    }
+    // ============= END OF INGREDIENT CHECK =============
+    
+    // ✅ PROCEED WITH STOCK ADDITION
     const confirmMsg = `Add ${quantityToAdd} ${unit} to "${itemName}"?\n\nCurrent: ${currentStock} ${unit}\nAfter add: ${newStock} ${unit}`;
     
     if (!confirm(confirmMsg)) {
@@ -4141,22 +4211,25 @@ async function quickAddStock(itemId, itemName) {
         const responseData = await response.json();
         console.log(`✅ MongoDB UPDATED: ${itemName} stock is now ${newStock}`);
         
+        // Update local product
         product.currentStock = newStock;
         
+        // Reset input
         inputElement.value = '1';
         inputElement.max = maxStock - newStock;
         
         showToast(`✅ Added ${quantityToAdd} ${unit} to "${itemName}" (New: ${newStock} ${unit})`, 'success');
         
+        // Add notification
         addNotification(
             `Added ${quantityToAdd} ${unit} to "${itemName}"`,
             'success',
             itemName
         );
         
+        // Refresh UI
         renderMenuGrid();
         updateDashboardStats();
-        
         await fetchMenuItems();
         
         console.log(`✅ Stock added and saved to MongoDB`);
