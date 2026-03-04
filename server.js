@@ -437,7 +437,7 @@ const recipeMapping = {
     'Ampalaya': [
         'Paknet (Pakbet w/ Bagnet)'
     ],
-    'String beans': [
+    'Pork hocks': [
         'Kare-Kare'
     ],
     'Green Beans': [
@@ -2787,12 +2787,9 @@ const recipeMapping = {
         'Oxtail',
         'Tripe',
         'Peanut butter',
-        'Rice flour',
         'Onion',
         'Garlic',
-        'Eggplant',
-        'String beans',
-        'Banana blossom',
+        'Pork hocks',
         'Bagoong',
         'Cooking oil',
         'Rice'
@@ -3089,7 +3086,24 @@ const recipeMapping = {
         'Whipped cream',
         'Paper cups',
         'Boba straws'
-    ]
+    ],
+
+    'Oxtail ': [
+        'Kare-Kare'
+    ],
+
+    'Peanut butter': [
+        'Kare-Kare'
+    ],
+
+    'Tripe': [
+        'Kare-Kare'
+    ],
+
+    'Bagoong': [
+        'Kare-Kare'
+    ],
+
 };
 
 const reverseRecipeMapping = {};
