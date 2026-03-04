@@ -5,18 +5,29 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html, body {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 body {
     background-color: white;
     font-size: 14px;
     color: black;
-    min-height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden;
+    position: relative;
 }
 
 /* DASHBOARD CONTAINER */
 .dashboard-container {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    position: relative;
 }
 
 /* NAVBAR */
@@ -83,16 +94,8 @@ body {
     left: 0;
     top: 50px;
     bottom: 0;
-    overflow-y: auto;
-}
-
-.main-content {
-    flex: 1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    margin-left: 250px;
-    margin-top: 50px;
+    overflow: hidden;
+    height: calc(100vh - 50px);
 }
 
 /* SEARCH SECTION */
@@ -168,25 +171,14 @@ body {
   background: #ffffff;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   border: 1px solid #000000;
-  overflow-y: auto;
-}
-
-.main-content::-webkit-scrollbar {
-  width: 10px;
-}
-
-.main-content::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 4px;
-  border: 1px solid #000000;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-  background: #cccccc;
-  border-radius: 4px;
-  border: 1px solid #000000;
+  overflow: hidden;
+  margin-left: 250px;
+  margin-top: 50px;
+  height: calc(100vh - 50px);
+  max-height: calc(100vh - 50px);
+  min-height: calc(100vh - 50px);
 }
 
 .section-content {
@@ -205,6 +197,23 @@ body {
   border-radius: 15px;
   border: 1px solid #000000;
   margin: 0 auto;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+/* Style the form container scrollbar if needed */
+.simple-form-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.simple-form-container::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.simple-form-container::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 4px;
 }
 
 .form-header {
@@ -495,6 +504,18 @@ body {
 
 /* ==================== MOBILE RESPONSIVE FIXES ==================== */
 @media (max-width: 768px) {
+  html, body {
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+  }
+
+  body {
+    overflow: hidden;
+    position: fixed;
+  }
+
   .logo-img {
     width: 30px;
     height: 30px;
@@ -511,6 +532,9 @@ body {
   
   .dashboard-container {
     flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
   }
   
   .sidebar {
@@ -523,8 +547,8 @@ body {
     max-height: calc(100vh - 50px);
     transition: left 0.3s ease;
     z-index: 999;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    padding: 10px;
   }
   
   .sidebar.active {
@@ -537,15 +561,21 @@ body {
   
   .main-content {
     margin-left: 0;
-    margin-top: 0;
-    padding: 15px;
+    margin-top: 50px;
+    padding: 20px 15px;
+    height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px);
+    min-height: calc(100vh - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
   
   body.menu-open {
     overflow: hidden;
   }
   
-  /* FIXED: Make menu items vertical, not horizontal */
   .dashboard-menu {
     display: flex;
     flex-direction: column;
@@ -568,8 +598,11 @@ body {
   
   .simple-form-container {
     padding: 25px;
-    margin: 20px;
+    margin: 0 auto;
     max-width: 95%;
+    width: 100%;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
   }
   
   .form-header h2 {
@@ -578,6 +611,18 @@ body {
 }
 
 @media (max-width: 480px) {
+  html, body {
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+  }
+
+  body {
+    overflow: hidden;
+    position: fixed;
+  }
+
   .logo-img {
     width: 25px;
     height: 25px;
@@ -637,8 +682,7 @@ body {
     max-height: calc(100vh - 50px);
     transition: left 0.3s ease;
     z-index: 999;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     padding: 10px;
   }
   
@@ -648,12 +692,17 @@ body {
   
   .main-content {
     margin-left: 0;
-    margin-top: 0;
-    padding: 10px;
-    min-height: auto;
+    margin-top: 50px;
+    padding: 15px 10px;
+    height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px);
+    min-height: calc(100vh - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
   
-  /* FIXED: Keep menu items vertical on small screens too */
   .dashboard-menu {
     display: flex;
     flex-direction: column;
@@ -677,10 +726,12 @@ body {
   
   .simple-form-container {
     width: 100%;
-    max-width: none;
+    max-width: 400px;
     padding: 20px;
-    margin: 10px;
+    margin: 0 auto;
     border-radius: 10px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
   }
   
   .form-header h2 {
@@ -727,58 +778,5 @@ body {
     padding: 12px 15px;
     font-size: 13px;
     gap: 10px;
-  }
-}
-
-/* Add this to your existing CSS - around line 240-250 where you have .main-content styles */
-.main-content {
-  flex-grow: 1;
-  padding: 30px;
-  background: #ffffff;
-  display: flex;
-  justify-content: center;  /* This centers horizontally */
-  align-items: flex-start;  /* Changed from center to flex-start to keep at top */
-  border: 1px solid #000000;
-  overflow-y: auto;
-  min-height: calc(100vh - 50px); /* Ensure it takes full height minus navbar */
-}
-
-/* Update the mobile styles section (around line 440) */
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 0;
-    margin-top: 50px; /* Add back the navbar height */
-    padding: 20px 15px;
-    min-height: calc(100vh - 50px);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .simple-form-container {
-    padding: 25px;
-    margin: 20px auto; /* Changed to auto for horizontal centering */
-    max-width: 95%;
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-content {
-    margin-left: 0;
-    margin-top: 50px; /* Add back the navbar height */
-    padding: 15px 10px;
-    min-height: calc(100vh - 50px);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .simple-form-container {
-    width: 100%;
-    max-width: 400px; /* Set a max-width for better appearance */
-    padding: 20px;
-    margin: 15px auto; /* This centers it horizontally */
-    border-radius: 10px;
   }
 }
