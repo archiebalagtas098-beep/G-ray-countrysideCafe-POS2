@@ -57,15 +57,15 @@ body {
 
 .brandname h2 {
   font-size: 13px; /* Decreased from 16px */
-  color: rgb(16, 95, 16);
+  color:  black;
   font-weight: 700;
   margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 2px white;
 }
 
 .brandname h5 {
   font-size: 9px; /* Decreased from 12px */
-  color: green;
+  color: black;
   margin: 0;
   font-weight: 400;
 }
@@ -79,6 +79,7 @@ body {
   cursor: pointer;
   background-color: transparent;
   color: black;
+  text-shadow: 1px 1px 2px white;
   border-radius: 3px;
   margin: 0;
   font-size: 9px; /* Decreased from 12px */
@@ -435,6 +436,7 @@ body {
   color: black;
   border-radius: 2px; /* Decreased */
   margin: 0;
+  text-shadow: 1px 1px 2px white;
   font-size: 10px; /* Decreased from 13px */
 }
 
@@ -1803,6 +1805,12 @@ body {
 
 /* ==================== MOBILE RESPONSIVE DESIGN ==================== */
 @media screen and (max-width: 768px) {
+    /* Logo and Brand Responsive */
+    .logo-img {
+        width: 22px;
+        height: 22px;
+    }
+    
     /* Header Navigation */
     .header-navbar {
         height: auto;
@@ -1862,10 +1870,11 @@ body {
     .Contacts h6 {
         padding: 4px 8px;
         font-size: 9px;
-        background-color: rgba(255, 255, 255, 0.9);
+        color: black;
         border-radius: 3px;
-        border: 1px solid black;
+        border: 1px solid whitesmoke;
         margin: 2px 0;
+        color: whitesmoke;
         display: inline-block;
         width: auto;
         min-width: 150px;

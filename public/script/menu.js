@@ -2945,7 +2945,14 @@ function openAddModal() {
         elements.maximumStock.title = 'Select a product above to auto-calculate maximum stock';
     }
     
-    if (elements.currentStock) elements.currentStock.value = '0';
+    if (elements.currentStock) {
+        elements.currentStock.value = '0';
+        elements.currentStock.readOnly = false;
+        elements.currentStock.style.backgroundColor = '';
+        elements.currentStock.style.borderColor = '';
+        elements.currentStock.style.color = '';
+        elements.currentStock.title = 'Current quantity in stock';
+    }
     if (elements.minimumStock) elements.minimumStock.value = '20';
     if (elements.itemPrice) elements.itemPrice.value = '';
     
@@ -3005,7 +3012,14 @@ async function openEditModal(itemId) {
             
             if (elements.itemUnit) elements.itemUnit.value = item.unit || '';
             if (elements.itemPrice) elements.itemPrice.value = item.price || '';
-            if (elements.currentStock) elements.currentStock.value = item.currentStock || 0;
+            if (elements.currentStock) {
+                elements.currentStock.value = item.currentStock || 0;
+                elements.currentStock.readOnly = true;
+                elements.currentStock.style.backgroundColor = '#f0f0f0';
+                elements.currentStock.style.borderColor = '#ccc';
+                elements.currentStock.style.color = '#666';
+                elements.currentStock.title = 'Current stock cannot be changed when editing. Use "Add Stock" to adjust inventory.';
+            }
             if (elements.minimumStock) elements.minimumStock.value = item.minStock || 20;
             if (elements.maximumStock) {
                 elements.maximumStock.value = item.maxStock || 200;
@@ -3509,6 +3523,7 @@ function renderMenuGrid() {
             <div class="card-header">
                 <h4>${escapeHtml(itemName)}</h4>
                 <div class="card-actions">
+                    <button class="btn-icon edit" onclick="openEditModal('${item._id}')" title="Edit product">✏️</button>
                     <button class="btn-icon delete" onclick="deleteMenuItem('${item._id}', event)" title="Delete product">🗑️</button>
                 </div>
             </div>

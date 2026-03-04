@@ -10,9 +10,8 @@ let pendingStockRequests = [];
 let outOfStockItems = [];
 let currentUser = null;
 
-// Track active stock requests
-let activeStockRequestModals = new Set();
-let stockRequestTimestamps = {};
+// Track active stock requests with their status
+let activeStockRequests = new Map(); // key: productName, value: { timestamp, quantity, status }
 
 // Flag to prevent multiple submissions
 let isSubmittingStockRequest = false;
@@ -1069,8 +1068,8 @@ function createProductCard(product) {
     
     const stockColor = product.stock > 0 ? '#28a745' : '#dc3545';
     
-    const hasPendingRequest = pendingStockRequests.includes(product.name);
-    const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">⏳ Request Pending</span>' : '';
+    const hasPendingRequest = activeStockRequests.has(product.name);
+    const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">⏳ Request Pending (Waiting for Admin)</span>' : '';
     
     card.innerHTML = `
         <img src="/images/${product.image}" 
@@ -1211,6 +1210,11 @@ function removeItemFromOrder(index) {
         if (product.stock > 0) {
             product.status = 'in_stock';
             outOfStockItems = outOfStockItems.filter(name => name !== product.name);
+            
+            // If stock becomes available, remove from active requests if exists
+            if (activeStockRequests.has(product.name)) {
+                activeStockRequests.delete(product.name);
+            }
         }
     }
     
@@ -1237,6 +1241,11 @@ function clearCurrentOrder() {
             if (product.stock > 0) {
                 product.status = 'in_stock';
                 outOfStockItems = outOfStockItems.filter(name => name !== product.name);
+                
+                // If stock becomes available, remove from active requests if exists
+                if (activeStockRequests.has(product.name)) {
+                    activeStockRequests.delete(product.name);
+                }
             }
         }
     });
@@ -2233,6 +2242,11 @@ function printReceipt(receiptHTML) {
 }
 
 // ==================== 📦 STOCK REQUEST FUNCTIONS ====================
+// Check if product has pending request
+function hasPendingRequest(productName) {
+    return activeStockRequests.has(productName);
+}
+
 function requestStock(productId) {
     // console.log('🛒 Requesting stock for ID:', productId);
     
@@ -2304,6 +2318,12 @@ function requestStock(productId) {
     if (!productName) {
         // console.error('❌ Product not found with ID:', productId);
         showToast('❌ Product not found', 'error', 3000);
+        return;
+    }
+    
+    // Check if there's already a pending request for this product
+    if (hasPendingRequest(productName)) {
+        showToast(`⏳ Request already pending for ${productName}. Please wait for admin to process.`, 'warning', 3000);
         return;
     }
     
@@ -2444,6 +2464,13 @@ function submitStockRequest(productName) {
         return;
     }
     
+    // Double-check if request is still not pending (in case of rapid clicks)
+    if (hasPendingRequest(productName)) {
+        closeStockRequestModal();
+        showToast(`⏳ Request already pending for ${productName}. Please wait for admin to process.`, 'warning', 3000);
+        return;
+    }
+    
     closeStockRequestModal();
     
     // Save to MongoDB via API
@@ -2462,6 +2489,13 @@ function submitStockRequest(productName) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
+            // Add to active stock requests
+            activeStockRequests.set(productName, {
+                timestamp: Date.now(),
+                quantity: quantityNum,
+                status: 'pending'
+            });
+            
             // console.log('✅ Stock request saved to MongoDB:', data);
             if (data.updated) {
                 showToast(`🔄 Updated request: ${quantityNum} units`, 'success', 3000);
@@ -2473,6 +2507,9 @@ function submitStockRequest(productName) {
             const count = (parseInt(localStorage.getItem('stockRequestCount')) || 0) + 1;
             localStorage.setItem('stockRequestCount', count);
             updateStockRequestNotification();
+            
+            // Update UI to show pending indicator
+            renderMenu();
         } else {
             throw new Error(data.message || 'Failed to save request');
         }
@@ -2484,6 +2521,18 @@ function submitStockRequest(productName) {
     
     if (!pendingStockRequests.includes(productName)) {
         pendingStockRequests.push(productName);
+    }
+}
+
+// Function to check for fulfilled stock requests (called when stock is updated)
+function checkFulfilledStockRequests(productName) {
+    const product = productCatalog.find(p => p.name === productName);
+    if (product && product.stock > 0 && activeStockRequests.has(productName)) {
+        // Stock has been replenished by admin, remove from pending requests
+        activeStockRequests.delete(productName);
+        pendingStockRequests = pendingStockRequests.filter(name => name !== productName);
+        renderMenu();
+        showToast(`✅ Stock received for ${productName}!`, 'success', 3000);
     }
 }
 
@@ -2591,11 +2640,31 @@ function loadInventoryFromStorage() {
     }
 }
 
+// Load active stock requests from localStorage
+function loadActiveStockRequests() {
+    const saved = localStorage.getItem('activeStockRequests');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            activeStockRequests = new Map(parsed);
+        } catch (e) {}
+    }
+}
+
+// Save active stock requests to localStorage
+function saveActiveStockRequests() {
+    try {
+        const toSave = Array.from(activeStockRequests.entries());
+        localStorage.setItem('activeStockRequests', JSON.stringify(toSave));
+    } catch (e) {}
+}
+
 // ==================== 🚀 INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', async function() {
     // console.log('🚀 Initializing POS System...');
     
     loadInventoryFromStorage();
+    loadActiveStockRequests();
     await getCurrentUser();
     
     // console.log('📋 Loading menu items from MongoDB...');
@@ -2667,10 +2736,24 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderMenu();
     updatePayButtonState();
     
+    // Check for stock updates periodically
+    setInterval(() => {
+        // Check if any pending requests should be cleared (e.g., stock has been added)
+        productCatalog.forEach(product => {
+            if (product.stock > 0 && activeStockRequests.has(product.name)) {
+                activeStockRequests.delete(product.name);
+                pendingStockRequests = pendingStockRequests.filter(name => name !== product.name);
+                saveActiveStockRequests();
+                renderMenu();
+            }
+        });
+    }, 5000);
+    
     // console.log('✅ POS System initialized');
 });
 
 setInterval(saveInventoryToStorage, 30000);
+setInterval(saveActiveStockRequests, 10000);
 
 // ==================== 🎯 EXPORT GLOBAL FUNCTIONS ====================
 window.requestStock = requestStock;
@@ -2688,3 +2771,4 @@ window.searchFood = searchFood;
 window.handleLogout = handleLogout;
 window.productCatalog = productCatalog;
 window.pendingStockRequests = pendingStockRequests;
+window.checkFulfilledStockRequests = checkFulfilledStockRequests;
