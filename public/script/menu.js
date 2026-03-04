@@ -109,190 +109,506 @@ const servingwareInventory = {
 
 // ==================== PRODUCT INGREDIENT MAPPING ====================
 const productIngredientMap = {
+    // ==================== RICE BOWL MEALS ====================
     'Korean Spicy Bulgogi (Pork)': {
-        ingredients: { 'Pork': 0.25, 'gochujang': 0.03, 'soy_sauce': 0.03, 'garlic': 0.02, 'onion': 0.05, 'sugar': 0.01, 'sesame_oil': 0.02, 'chili flakes': 0.005, 'black_pepper': 0.005 },
+        ingredients: { 
+            'Pork': 0.25, 
+            'gochujang': 0.03, 
+            'soy_sauce': 0.03, 
+            'garlic': 0.02, 
+            'onion': 0.05, 
+            'sugar': 0.01, 
+            'sesame_oil': 0.02, 
+            'chili flakes': 0.005, 
+            'black_pepper': 0.005 
+        },
         servingware: 'plate'
     },
     'Korean Salt and Pepper (Pork)': {
-        ingredients: { 'Pork': 0.25, 'salt': 0.01, 'black_pepper': 0.01, 'garlic': 0.02, 'chili flakes': 0.005, 'cornstarch': 0.02 },
+        ingredients: { 
+            'Pork': 0.25, 
+            'salt': 0.01, 
+            'black_pepper': 0.01, 
+            'garlic': 0.02, 
+            'chili flakes': 0.005, 
+            'cornstarch': 0.02 
+        },
         servingware: 'plate'
     },
     'Crispy Pork Lechon Kawali': {
-        ingredients: { 'Pork Belly': 0.35, 'garlic': 0.03, 'bay_leaves': 2, 'peppercorn': 0.01, 'salt': 0.01, 'cooking_oil': 0.25 },
+        ingredients: { 
+            'Pork Belly': 0.35, 
+            'garlic': 0.03, 
+            'bay_leaves': 2, 
+            'peppercorn': 0.01, 
+            'salt': 0.01, 
+            'cooking_oil': 0.25 
+        },
         servingware: 'plate'
     },
     'Cream Dory Fish Fillet': {
-        ingredients: { 'Cream Dory': 0.25, 'flour': 0.05, 'salt': 0.01, 'black_pepper': 0.005, 'butter': 0.05, 'garlic': 0.02, 'cream': 0.1 },
+        ingredients: { 
+            'Cream Dory': 0.25, 
+            'flour': 0.05, 
+            'salt': 0.01, 
+            'black_pepper': 0.005, 
+            'butter': 0.05, 
+            'garlic': 0.02, 
+            'cream': 0.1 
+        },
         servingware: 'plate'
     },
     'Buttered Honey Chicken': {
-        ingredients: { 'chicken': 0.25, 'butter': 0.05, 'honey': 0.07, 'garlic': 0.02, 'soy_sauce': 0.02, 'black_pepper': 0.005 },
+        ingredients: { 
+            'chicken': 0.25, 
+            'butter': 0.05, 
+            'honey': 0.07, 
+            'garlic': 0.02, 
+            'soy_sauce': 0.02, 
+            'black_pepper': 0.005 
+        },
         servingware: 'plate'
     },
     'Buttered Spicy Chicken': {
-        ingredients: { 'chicken': 0.25, 'butter': 0.05, 'chili flakes': 0.01, 'garlic': 0.02, 'soy_sauce': 0.02 },
+        ingredients: { 
+            'chicken': 0.25, 
+            'butter': 0.05, 
+            'chili flakes': 0.01, 
+            'garlic': 0.02, 
+            'soy_sauce': 0.02 
+        },
         servingware: 'plate'
     },
     'Chicken Adobo': {
-        ingredients: { 'chicken': 0.3, 'soy_sauce': 0.05, 'vinegar': 0.04, 'garlic': 0.03, 'bay_leaves': 2, 'peppercorn': 0.01 },
+        ingredients: { 
+            'chicken': 0.3, 
+            'soy_sauce': 0.05, 
+            'vinegar': 0.04, 
+            'garlic': 0.03, 
+            'bay_leaves': 2, 
+            'peppercorn': 0.01 
+        },
         servingware: 'plate'
     },
     'Pork Shanghai': {
-        ingredients: { 'Ground Pork': 0.2, 'carrot': 0.03, 'onion': 0.03, 'garlic': 0.02, 'egg': 1, 'breadcrumbs': 0.03, 'lumpia_wrapper': 10, 'cooking_oil': 0.1 },
+        ingredients: { 
+            'Ground Pork': 0.2, 
+            'carrot': 0.03, 
+            'onion': 0.03, 
+            'garlic': 0.02, 
+            'egg': 1, 
+            'breadcrumbs': 0.03, 
+            'lumpia_wrapper': 10, 
+            'cooking_oil': 0.1 
+        },
         servingware: 'plate'
     },
+
+    // ==================== HOT SIZZLERS ====================
     'Sizzling Pork Sisig': {
-        ingredients: { 'Pork': 0.3, 'onion': 0.08, 'chili': 0.02, 'calamansi': 0.03, 'mayonnaise': 0.05, 'soy_sauce': 0.02, 'egg': 1, 'cooking_oil': 0.1 },
+        ingredients: { 
+            'Pork': 0.3, 
+            'onion': 0.08, 
+            'chili': 0.02, 
+            'calamansi': 0.03, 
+            'mayonnaise': 0.05, 
+            'soy_sauce': 0.02, 
+            'egg': 1, 
+            'cooking_oil': 0.1 
+        },
         servingware: 'sizzling plate'
     },
     'Sizzling Liempo': {
-        ingredients: { 'Pork Belly': 0.3, 'garlic': 0.02, 'soy_sauce': 0.03, 'black_pepper': 0.01, 'cooking_oil': 0.1 },
+        ingredients: { 
+            'Pork Belly': 0.3, 
+            'garlic': 0.02, 
+            'soy_sauce': 0.03, 
+            'black_pepper': 0.01, 
+            'cooking_oil': 0.1 
+        },
         servingware: 'sizzling plate'
     },
     'Sizzling Porkchop': {
-        ingredients: { 'Pork Chop': 0.35, 'garlic': 0.02, 'soy_sauce': 0.03, 'black_pepper': 0.01, 'cooking_oil': 0.1 },
+        ingredients: { 
+            'Pork Chop': 0.35, 
+            'garlic': 0.02, 
+            'soy_sauce': 0.03, 
+            'black_pepper': 0.01, 
+            'cooking_oil': 0.1 
+        },
         servingware: 'sizzling plate'
     },
     'Sizzling Fried Chicken': {
-        ingredients: { 'fried_chicken': 0.35, 'flour': 0.03, 'garlic': 0.02, 'black_pepper': 0.01, 'gravy': 0.2, 'cooking_oil': 0.1 },
+        ingredients: { 
+            'fried_chicken': 0.35, 
+            'flour': 0.03, 
+            'garlic': 0.02, 
+            'black_pepper': 0.01, 
+            'gravy': 0.2, 
+            'cooking_oil': 0.1 
+        },
         servingware: 'sizzling plate'
     },
+
+    // ==================== PARTY TRAYS ====================
     'Pancit Bihon': {
-        ingredients: { 'rice_noodles': 0.5, 'chicken': 0.1, 'cabbage': 0.15, 'carrot': 0.1, 'garlic': 0.03, 'onion': 0.05, 'soy_sauce': 0.05, 'oyster_sauce': 0.02, 'cooking_oil': 0.05 },
+        ingredients: { 
+            'rice_noodles': 0.5, 
+            'chicken': 0.1, 
+            'cabbage': 0.15, 
+            'carrot': 0.1, 
+            'garlic': 0.03, 
+            'onion': 0.05, 
+            'soy_sauce': 0.05, 
+            'oyster_sauce': 0.02, 
+            'cooking_oil': 0.05 
+        },
         servingware: 'tray'
     },
     'Pancit Canton + Bihon (Mixed)': {
-        ingredients: { 'Pancit Canton': 0.3, 'Bihon noodles': 0.3, 'chicken': 0.15, 'cabbage': 0.2, 'carrot': 0.15, 'garlic': 0.04, 'onion': 0.08, 'soy_sauce': 0.08, 'oyster_sauce': 0.03, 'chicken_broth': 0.2, 'cooking_oil': 0.08 },
+        ingredients: { 
+            'Pancit Canton': 0.3, 
+            'Bihon noodles': 0.3, 
+            'chicken': 0.15, 
+            'cabbage': 0.2, 
+            'carrot': 0.15, 
+            'garlic': 0.04, 
+            'onion': 0.08, 
+            'soy_sauce': 0.08, 
+            'oyster_sauce': 0.03, 
+            'chicken_broth': 0.2, 
+            'cooking_oil': 0.08 
+        },
         servingware: 'tray'
     },
     'Spaghetti': {
-        ingredients: { 'spaghetti_pasta': 0.5, 'sweet_tomato_sauce': 0.2, 'ground_meat': 0.15, 'hotdog': 0.1, 'cheese': 0.08, 'garlic': 0.02, 'onion': 0.03, 'cooking_oil': 0.05 },
+        ingredients: { 
+            'spaghetti_pasta': 0.5, 
+            'sweet_tomato_sauce': 0.2, 
+            'ground_meat': 0.15, 
+            'hotdog': 0.1, 
+            'cheese': 0.08, 
+            'garlic': 0.02, 
+            'onion': 0.03, 
+            'cooking_oil': 0.05 
+        },
         servingware: 'tray'
     },
+
+    // ==================== DRINKS ====================
     'Cucumber Lemonade': {
-        ingredients: { 'cucumber': 0.1, 'lemon': 0.1, 'sugar': 0.05, 'water': 0.3, 'ice': 0.1 },
+        ingredients: { 
+            'cucumber': 0.1, 
+            'lemon': 0.1, 
+            'sugar': 0.05, 
+            'water': 0.3, 
+            'ice': 0.1 
+        },
         servingware: 'glass'
     },
     'Blue Lemonade': {
-        ingredients: { 'lemon_juice': 0.15, 'blue_syrup': 0.05, 'sugar': 0.05, 'water': 0.3, 'ice': 0.1 },
+        ingredients: { 
+            'lemon_juice': 0.15, 
+            'blue_syrup': 0.05, 
+            'sugar': 0.05, 
+            'water': 0.3, 
+            'ice': 0.1 
+        },
         servingware: 'glass'
     },
     'Red Tea': {
-        ingredients: { 'tea': 0.02, 'sugar': 0.05, 'water': 0.3, 'ice': 0.1 },
+        ingredients: { 
+            'tea': 0.02, 
+            'sugar': 0.05, 
+            'water': 0.3, 
+            'ice': 0.1 
+        },
         servingware: 'glass'
     },
     'Soda (Mismo / 1.5L)': {
-        ingredients: { 'carbonated_soft_drink': 1 },
+        ingredients: { 
+            'carbonated_soft_drink': 1 
+        },
         servingware: 'bottle'
     },
+
+    // ==================== COFFEE & TEA ====================
     'Cafe Americano': {
-        ingredients: { 'espresso': 0.03, 'hot_water': 0.2 },
+        ingredients: { 
+            'espresso': 0.03, 
+            'hot_water': 0.2 
+        },
         servingware: 'cup'
     },
     'Cafe Latte': {
-        ingredients: { 'espresso': 0.03, 'steamed_milk': 0.25 },
+        ingredients: { 
+            'espresso': 0.03, 
+            'steamed_milk': 0.25 
+        },
         servingware: 'cup'
     },
     'Caramel Macchiato': {
-        ingredients: { 'espresso': 0.03, 'milk': 0.2, 'caramel_syrup': 0.03, 'vanilla_syrup': 0.01 },
+        ingredients: { 
+            'espresso': 0.03, 
+            'milk': 0.2, 
+            'caramel_syrup': 0.03, 
+            'vanilla_syrup': 0.01 
+        },
         servingware: 'cup'
     },
+
+    // ==================== MILK TEA ====================
     'Milk Tea': {
-        ingredients: { 'black_tea': 0.02, 'milk': 0.2, 'sugar': 0.05, 'tapioca_pearls': 0.03 },
+        ingredients: { 
+            'black_tea': 0.02, 
+            'milk': 0.2, 
+            'sugar': 0.05, 
+            'tapioca_pearls': 0.03 
+        },
         servingware: 'cup'
     },
     'Matcha Green Tea': {
-        ingredients: { 'matcha_powder': 0.01, 'milk': 0.25, 'sugar': 0.05 },
+        ingredients: { 
+            'matcha_powder': 0.01, 
+            'milk': 0.25, 
+            'sugar': 0.05 
+        },
         servingware: 'cup'
     },
+
+    // ==================== FRAPPE ====================
     'Cookies & Cream Frappe': {
-        ingredients: { 'ice': 0.2, 'milk': 0.2, 'cookie_crumbs': 0.03, 'cream': 0.1 },
+        ingredients: { 
+            'ice': 0.2, 
+            'milk': 0.2, 
+            'cookie_crumbs': 0.03, 
+            'cream': 0.1 
+        },
         servingware: 'cup'
     },
     'Strawberry & Cream Frappe': {
-        ingredients: { 'Strawberry syrup': 0.05, 'milk': 0.2, 'ice': 0.2, 'cream': 0.1 },
+        ingredients: { 
+            'Strawberry syrup': 0.05, 
+            'milk': 0.2, 
+            'ice': 0.2, 
+            'cream': 0.1 
+        },
         servingware: 'cup'
     },
     'Mango Cheesecake Frappe': {
-        ingredients: { 'Mango syrup': 0.05, 'cream_cheese_flavor': 0.03, 'milk': 0.2, 'ice': 0.2 },
+        ingredients: { 
+            'Mango syrup': 0.05, 
+            'cream_cheese_flavor': 0.03, 
+            'milk': 0.2, 
+            'ice': 0.2 
+        },
         servingware: 'cup'
     },
+
+    // ==================== SNACKS & APPETIZERS ====================
     'Cheesy Nachos': {
-        ingredients: { 'nacho_chips': 0.3, 'cheese_sauce': 0.15 },
+        ingredients: { 
+            'nacho_chips': 0.3, 
+            'cheese_sauce': 0.15 
+        },
         servingware: 'serving'
     },
     'Nachos Supreme': {
-        ingredients: { 'nacho_chips': 0.3, 'cheese': 0.15, 'ground_meat': 0.1, 'tomato': 0.05, 'onion': 0.03 },
+        ingredients: { 
+            'nacho_chips': 0.3, 
+            'cheese': 0.15, 
+            'ground_meat': 0.1, 
+            'tomato': 0.05, 
+            'onion': 0.03 
+        },
         servingware: 'serving'
     },
     'French Fries': {
-        ingredients: { 'potato': 0.25, 'cooking_oil': 0.1, 'salt': 0.005 },
+        ingredients: { 
+            'potato': 0.25, 
+            'cooking_oil': 0.1, 
+            'salt': 0.005 
+        },
         servingware: 'serving'
     },
     'Clubhouse Sandwich': {
-        ingredients: { 'bread': 0.1, 'chicken': 0.1, 'ham': 0.05, 'egg': 1, 'lettuce': 0.03, 'tomato': 0.05, 'mayonnaise': 0.02 },
+        ingredients: { 
+            'bread': 0.1, 
+            'chicken': 0.1, 
+            'ham': 0.05, 
+            'egg': 1, 
+            'lettuce': 0.03, 
+            'tomato': 0.05, 
+            'mayonnaise': 0.02 
+        },
         servingware: 'sandwich'
     },
     'Fish and Fries': {
-        ingredients: { 'fish_fillet': 0.15, 'batter': 0.05, 'potato': 0.2, 'cooking_oil': 0.15, 'salt': 0.005 },
+        ingredients: { 
+            'fish_fillet': 0.15, 
+            'batter': 0.05, 
+            'potato': 0.2, 
+            'cooking_oil': 0.15, 
+            'salt': 0.005 
+        },
         servingware: 'serving'
     },
     'Cheesy Dynamite Lumpia': {
-        ingredients: { 'Siling Green': 0.05, 'cheese': 0.05, 'lumpia_wrapper': 10, 'cooking_oil': 0.1 },
+        ingredients: { 
+            'Siling Green': 0.05, 
+            'cheese': 0.05, 
+            'lumpia_wrapper': 10, 
+            'cooking_oil': 0.1 
+        },
         servingware: 'plate'
     },
     'Lumpiang Shanghai': {
-        ingredients: { 'Ground Pork': 0.15, 'vegetables': 0.1, 'lumpia_wrapper': 15, 'cooking_oil': 0.15 },
+        ingredients: { 
+            'Ground Pork': 0.15, 
+            'vegetables': 0.1, 
+            'lumpia_wrapper': 15, 
+            'cooking_oil': 0.15 
+        },
         servingware: 'plate'
     },
     'Fried Chicken': {
-        ingredients: { 'chicken': 0.25, 'flour': 0.05, 'garlic': 0.02, 'black_pepper': 0.005, 'cooking_oil': 0.2, 'salt': 0.01 },
+        ingredients: { 
+            'chicken': 0.25, 
+            'flour': 0.05, 
+            'garlic': 0.02, 
+            'black_pepper': 0.005, 
+            'cooking_oil': 0.2, 
+            'salt': 0.01 
+        },
         servingware: 'plate'
     },
+
+    // ==================== RICE VARIETIES ====================
     'Tinapa Rice': {
-        ingredients: { 'tinapa': 0.1, 'rice': 0.3, 'garlic': 0.02, 'egg': 1, 'cooking_oil': 0.05 },
+        ingredients: { 
+            'tinapa': 0.1, 
+            'rice': 0.3, 
+            'garlic': 0.02, 
+            'egg': 1, 
+            'cooking_oil': 0.05 
+        },
         servingware: 'meal'
     },
     'Tuyo Pesto': {
-        ingredients: { 'tuyo': 0.08, 'pasta': 0.3, 'garlic': 0.02, 'cooking_oil': 0.05, 'herbs': 0.01 },
+        ingredients: { 
+            'tuyo': 0.08, 
+            'pasta': 0.3, 
+            'garlic': 0.02, 
+            'cooking_oil': 0.05, 
+            'herbs': 0.01 
+        },
         servingware: 'meal'
     },
     'Fried Rice': {
-        ingredients: { 'rice': 0.3, 'garlic': 0.03, 'egg': 1, 'soy_sauce': 0.02, 'cooking_oil': 0.05 },
+        ingredients: { 
+            'rice': 0.3, 
+            'garlic': 0.03, 
+            'egg': 1, 
+            'soy_sauce': 0.02, 
+            'cooking_oil': 0.05 
+        },
         servingware: 'bowl'
     },
     'Plain Rice': {
-        ingredients: { 'rice': 0.25, 'water': 0.5 },
+        ingredients: { 
+            'rice': 0.25, 
+            'water': 0.5 
+        },
         servingware: 'bowl'
     },
+
+    // ==================== FILIPINO SPECIALTIES ====================
     'Sinigang (Pork)': {
-        ingredients: { 'Pork': 0.4, 'tamarind_mix': 0.05, 'tomato': 0.05, 'onion': 0.05, 'radish': 0.1, 'kangkong': 0.1 },
+        ingredients: { 
+            'Pork': 0.4, 
+            'tamarind_mix': 0.05, 
+            'tomato': 0.05, 
+            'onion': 0.05, 
+            'radish': 0.1, 
+            'kangkong': 0.1 
+        },
         servingware: 'pot'
     },
     'Sinigang (Shrimp)': {
-        ingredients: { 'Shrimp': 0.35, 'tamarind_mix': 0.05, 'tomato': 0.05, 'onion': 0.05, 'kangkong': 0.1 },
+        ingredients: { 
+            'Shrimp': 0.35, 
+            'tamarind_mix': 0.05, 
+            'tomato': 0.05, 
+            'onion': 0.05, 
+            'kangkong': 0.1 
+        },
         servingware: 'pot'
     },
     'Paknet (Pakbet w/ Bagnet)': {
-        ingredients: { 'bagnet': 0.2, 'eggplant': 0.15, 'squash': 0.15, 'okra': 0.1, 'ampalaya': 0.1, 'shrimp_paste': 0.02, 'cooking_oil': 0.05 },
+        ingredients: { 
+            'bagnet': 0.2, 
+            'eggplant': 0.15, 
+            'squash': 0.15, 
+            'okra': 0.1, 
+            'ampalaya': 0.1, 
+            'shrimp_paste': 0.02, 
+            'cooking_oil': 0.05 
+        },
         servingware: 'serving'
     },
     'Buttered Shrimp': {
-        ingredients: { 'shrimp': 0.3, 'butter': 0.1, 'garlic': 0.03, 'sugar': 0.01, 'salt': 0.005 },
+        ingredients: { 
+            'shrimp': 0.3, 
+            'butter': 0.1, 
+            'garlic': 0.03, 
+            'sugar': 0.01, 
+            'salt': 0.005 
+        },
         servingware: 'serving'
     },
     'Special Bulalo': {
-        ingredients: { 'Beef Shank': 0.8, 'corn': 0.1, 'cabbage': 0.3, 'potato': 0.2, 'onion': 0.1, 'peppercorn': 0.01 },
+        ingredients: { 
+            'Beef Shank': 0.8, 
+            'corn': 0.1, 
+            'cabbage': 0.3, 
+            'potato': 0.2, 
+            'onion': 0.1, 
+            'peppercorn': 0.01 
+        },
         servingware: 'pot'
     },
     'Special Bulalo (good for 2-3 Persons)': {
-        ingredients: { 'Beef Shank': 0.8, 'corn': 0.1, 'potato': 0.2, 'cabbage': 0.3, 'carrot': 0.15, 'bay_leaves': 2, 'peppercorn': 0.01, 'salt': 0.01, 'water': 1.5, 'beef_broth': 0.2 },
+        ingredients: { 
+            'Beef Shank': 0.8, 
+            'corn': 0.1, 
+            'potato': 0.2, 
+            'cabbage': 0.3, 
+            'carrot': 0.15, 
+            'bay_leaves': 2, 
+            'peppercorn': 0.01, 
+            'salt': 0.01, 
+            'water': 1.5, 
+            'beef_broth': 0.2 
+        },
         servingware: 'pot'
     },
     'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)': {
-        ingredients: { 'Beef Shank': 1.6, 'corn': 0.2, 'potato': 0.4, 'cabbage': 0.6, 'carrot': 0.3, 'bay_leaves': 4, 'peppercorn': 0.02, 'salt': 0.02, 'water': 3.0, 'beef_broth': 0.4 },
+        ingredients: { 
+            'Beef Shank': 1.6, 
+            'corn': 0.2, 
+            'potato': 0.4, 
+            'cabbage': 0.6, 
+            'carrot': 0.3, 
+            'bay_leaves': 4, 
+            'peppercorn': 0.02, 
+            'salt': 0.02, 
+            'water': 3.0, 
+            'beef_broth': 0.4 
+        },
         servingware: 'pot'
     },
+
+    // ==================== PACKAGING SUPPLIES ====================
     'Paper Cups (12oz)': {
         ingredients: {},
         servingware: 'pack'
@@ -427,7 +743,7 @@ const categoryDisplayNames = {
     'Party': 'Party Trays',
     'Drink': 'Drinks',
     'Cafe': 'Coffee',
-    'Milk': 'Milk Tea',
+    'Milk Tea': 'Milk Tea',
     'Frappe': 'Frappe',
     'Snack & Appetizer': 'Snacks & Appetizers',
     'Budget Meals Served with Rice': 'Budget Meals',
@@ -478,7 +794,7 @@ const categoryUnitsMapping = {
     'Party': ['tray'],
     'Drink': ['glass', 'cup', 'pitcher', 'bottle'],
     'Cafe': ['cup', 'glass'],
-    'Milk': ['cup', 'glass'],
+    'Milk Tea': ['cup', 'glass'],
     'Frappe': ['cup', 'glass'],
     'Snack & Appetizer': ['serving', 'piece', 'sandwich'],
     'Budget Meals Served with Rice': ['meal', 'bowl'],
@@ -488,60 +804,91 @@ const categoryUnitsMapping = {
 // ==================== MENU DATABASE ====================
 const menuDatabase = {
     'Rice': [
-        { name: 'Korean Spicy Bulgogi (Pork)', unit: 'plate', defaultPrice: 180 },
-        { name: 'Korean Salt and Pepper (Pork)', unit: 'plate', defaultPrice: 175 },
-        { name: 'Crispy Pork Lechon Kawali', unit: 'plate', defaultPrice: 165 },
-        { name: 'Cream Dory Fish Fillet', unit: 'plate', defaultPrice: 160 },
-        { name: 'Buttered Honey Chicken', unit: 'plate', defaultPrice: 155 },
-        { name: 'Buttered Spicy Chicken', unit: 'plate', defaultPrice: 155 },
-        { name: 'Chicken Adobo', unit: 'plate', defaultPrice: 145 },
-        { name: 'Pork Shanghai', unit: 'plate', defaultPrice: 140 }
+        { name: 'Korean Spicy Bulgogi (Pork)', unit: 'plate', defaultPrice: 158 },
+        { name: 'Korean Salt and Pepper (Pork)', unit: 'plate', defaultPrice: 158 },
+        { name: 'Crispy Pork Lechon Kawali', unit: 'plate', defaultPrice: 158 },
+        { name: 'Cream Dory Fish Fillet', unit: 'plate', defaultPrice: 138 },
+        { name: 'Buttered Honey Chicken', unit: 'plate', defaultPrice: 128 },
+        { name: 'Buttered Spicy Chicken', unit: 'plate', defaultPrice: 128 },
+        { name: 'Chicken Adobo', unit: 'plate', defaultPrice: 128 },
+        { name: 'Pork Shanghai', unit: 'plate', defaultPrice: 128 }
     ],
     'Sizzling': [
-        { name: 'Sizzling Pork Sisig', unit: 'sizzling plate', defaultPrice: 220 },
-        { name: 'Sizzling Liempo', unit: 'sizzling plate', defaultPrice: 210 },
-        { name: 'Sizzling Porkchop', unit: 'sizzling plate', defaultPrice: 195 },
-        { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', defaultPrice: 185 }
+        { name: 'Sizzling Pork Sisig', unit: 'sizzling plate', defaultPrice: 168 },
+        { name: 'Sizzling Liempo', unit: 'sizzling plate', defaultPrice: 168 },
+        { name: 'Sizzling Porkchop', unit: 'sizzling plate', defaultPrice: 148 },
+        { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', defaultPrice: 148 }
     ],
     'Party': [
-        { name: 'Pancit Bihon (S)', unit: 'tray', defaultPrice: 350 },
-        { name: 'Pancit Bihon (M)', unit: 'tray', defaultPrice: 550 },
-        { name: 'Pancit Bihon (L)', unit: 'tray', defaultPrice: 750 },
-        { name: 'Pancit Canton (S)', unit: 'tray', defaultPrice: 380 },
-        { name: 'Pancit Canton (M)', unit: 'tray', defaultPrice: 580 },
-        { name: 'Pancit Canton (L)', unit: 'tray', defaultPrice: 780 },
-        { name: 'Spaghetti (S)', unit: 'tray', defaultPrice: 400 },
-        { name: 'Spaghetti (M)', unit: 'tray', defaultPrice: 600 },
-        { name: 'Spaghetti (L)', unit: 'tray', defaultPrice: 800 }
+        { name: 'Pansit Bihon', unit: 'tray', defaultPrice: 300 },
+        { name: 'Pancit Canton', unit: 'tray', defaultPrice: 300 },
+        { name: 'Spaghetti', unit: 'tray', defaultPrice: 400 },
+        { name: 'Creamy Carbonara', unit: 'tray', defaultPrice: 500 },
+        { name: 'Creamy Pesto', unit: 'tray', defaultPrice: 500 },
+        { name: 'Tuyo Pesto', unit: 'tray', defaultPrice: 600 },
+        { name: 'Kare-Kare', unit: 'tray', defaultPrice: 600 },
+        { name: 'Chicken Buffalo Wings', unit: 'tray', defaultPrice: 400 },
+        { name: 'Lumpia Shanghai', unit: 'tray', defaultPrice: 300 }
     ],
     'Drink': [
-        { name: 'Cucumber Lemonade (Glass)', unit: 'glass', defaultPrice: 60 },
-        { name: 'Cucumber Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 180 },
-        { name: 'Blue Lemonade (Glass)', unit: 'glass', defaultPrice: 65 },
-        { name: 'Blue Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 190 },
-        { name: 'Red Tea (Glass)', unit: 'glass', defaultPrice: 55 },
-        { name: 'Soda (Mismo)', unit: 'bottle', defaultPrice: 25 },
-        { name: 'Soda 1.5L', unit: 'bottle', defaultPrice: 65 }
+        { name: 'Cucumber Lemonade (Glass)', unit: 'glass', defaultPrice: 38 },
+        { name: 'Cucumber Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Blue Lemonade (Glass)', unit: 'glass', defaultPrice: 38 },
+        { name: 'Blue Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Red Tea (Glass)', unit: 'glass', defaultPrice: 38 },
+        { name: 'Red Tea (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Calamansi Juice (Glass)', unit: 'glass', defaultPrice: 38 },
+        { name: 'Calamansi Juice (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Soda (Mismo) Coke', unit: 'bottle', defaultPrice: 28 },
+        { name: 'Soda (Mismo) Sprite', unit: 'bottle', defaultPrice: 28 },
+        { name: 'Soda (Mismo) Royal', unit: 'bottle', defaultPrice: 28 },
+        { name: 'Soda 1.5L Coke', unit: 'bottle', defaultPrice: 118 },
+        { name: 'Soda 1.5L Coke Zero', unit: 'bottle', defaultPrice: 118 },
+        { name: 'Soda 1.5L Sprite', unit: 'bottle', defaultPrice: 118 },
+        { name: 'Soda 1.5L Royal', unit: 'bottle', defaultPrice: 118 }
     ],
     'Cafe': [
-        { name: 'Cafe Americano Tall', unit: 'cup', defaultPrice: 80 },
-        { name: 'Cafe Americano Grande', unit: 'cup', defaultPrice: 95 },
-        { name: 'Cafe Latte Tall', unit: 'cup', defaultPrice: 90 },
-        { name: 'Cafe Latte Grande', unit: 'cup', defaultPrice: 105 },
-        { name: 'Caramel Macchiato Tall', unit: 'cup', defaultPrice: 100 },
-        { name: 'Caramel Macchiato Grande', unit: 'cup', defaultPrice: 115 }
+        { name: 'Espresso Hot', unit: 'cup', defaultPrice: 88 },
+        { name: 'Café Americano Hot', unit: 'cup', defaultPrice: 108 },
+        { name: 'Cappuccino Hot', unit: 'cup', defaultPrice: 98 },
+        { name: 'Café Latte Hot', unit: 'cup', defaultPrice: 108 },
+        { name: 'Mocha Latte Hot', unit: 'cup', defaultPrice: 108 },
+        { name: 'Vanilla Latte Hot', unit: 'cup', defaultPrice: 108 },
+        { name: 'Caramel Macchiato Hot', unit: 'cup', defaultPrice: 108 },
+        { name: 'Green Tea Latte Hot', unit: 'cup', defaultPrice: 118 },
+        { name: 'White Chocolate Hot', unit: 'cup', defaultPrice: 108 },
+        { name: 'Green Tea Matcha Hot', unit: 'cup', defaultPrice: 118 },
+        { name: 'Hot Ceylon Tea Black', unit: 'cup', defaultPrice: 78 },
+        { name: 'Hot Ceylon Tea Lemon', unit: 'cup', defaultPrice: 78 },
+        { name: 'Hot Ceylon Tea Peppermint', unit: 'cup', defaultPrice: 78 },
+        { name: 'Iced Café Latte', unit: 'cup', defaultPrice: 108 },
+        { name: 'Iced Mocha Latte', unit: 'cup', defaultPrice: 118 },
+        { name: 'Iced Vanilla Latte', unit: 'cup', defaultPrice: 118 },
+        { name: 'Iced Caramel Macchiato', unit: 'cup', defaultPrice: 128 },
+        { name: 'Iced White Chocolate Latte', unit: 'cup', defaultPrice: 98 },
+        { name: 'Iced Dark Chocolate', unit: 'cup', defaultPrice: 98 }
     ],
-    'Milk': [
-        { name: 'Milk Tea Regular HC', unit: 'cup', defaultPrice: 85 },
-        { name: 'Milk Tea Regular MC', unit: 'cup', defaultPrice: 95 },
-        { name: 'Matcha Green Tea HC', unit: 'cup', defaultPrice: 90 },
-        { name: 'Matcha Green Tea MC', unit: 'cup', defaultPrice: 100 }
+    'Milk Tea': [
+        { name: 'Milk Tea Regular', unit: 'cup', defaultPrice: 68 },
+        { name: 'Caramel Milk Tea', unit: 'cup', defaultPrice: 78 },
+        { name: 'Cookies & Cream Milk Tea', unit: 'cup', defaultPrice: 78 },
+        { name: 'Dark Choco Milk Tea', unit: 'cup', defaultPrice: 78 },
+        { name: 'Okinawa Milk Tea', unit: 'cup', defaultPrice: 78 },
+        { name: 'Wintermelon Milk Tea', unit: 'cup', defaultPrice: 78 },
+        { name: 'Matcha Green Tea Milk Tea', unit: 'cup', defaultPrice: 88 }
     ],
     'Frappe': [
-        { name: 'Cookies & Cream HC', unit: 'cup', defaultPrice: 120 },
-        { name: 'Cookies & Cream MC', unit: 'cup', defaultPrice: 135 },
-        { name: 'Strawberry & Cream HC', unit: 'cup', defaultPrice: 130 },
-        { name: 'Mango cheese cake HC', unit: 'cup', defaultPrice: 135 }
+        { name: 'Matcha Green Tea Frappe', unit: 'cup', defaultPrice: 108 },
+        { name: 'Salted Caramel Frappe', unit: 'cup', defaultPrice: 108 },
+        { name: 'Strawberry Cheesecake Frappe', unit: 'cup', defaultPrice: 108 },
+        { name: 'Mango Cheesecake Frappe', unit: 'cup', defaultPrice: 108 },
+        { name: 'Strawberry Cream Frappe', unit: 'cup', defaultPrice: 98 },
+        { name: 'Cookies & Cream Frappe', unit: 'cup', defaultPrice: 98 },
+        { name: 'Rocky Road Frappe', unit: 'cup', defaultPrice: 88 },
+        { name: 'Choco Fudge Frappe', unit: 'cup', defaultPrice: 88 },
+        { name: 'Choco Mousse Frappe', unit: 'cup', defaultPrice: 88 },
+        { name: 'Coffee Crumble Frappe', unit: 'cup', defaultPrice: 88 },
+        { name: 'Vanilla Cream Frappe', unit: 'cup', defaultPrice: 88 }
     ],
     'Snack & Appetizer': [
         { name: 'Cheesy Nachos', unit: 'serving', defaultPrice: 150 },
@@ -569,6 +916,17 @@ const menuDatabase = {
         { name: 'Special Bulalo (good for 2-3 Persons)', unit: 'pot', defaultPrice: 450 },
         { name: 'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)', unit: 'pot', defaultPrice: 850 }
     ],
+    'Packaging Supplies': [
+        { name: 'Paper Cups (12oz)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Paper Cups (16oz)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Straws (Regular)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Straws (Boba)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Food Containers (Small)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Food Containers (Medium)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Food Containers (Large)', unit: 'pack', defaultPrice: 0 },
+        { name: 'Plastic Utensils Set', unit: 'set', defaultPrice: 0 },
+        { name: 'Napkins (Pack of 50)', unit: 'pack', defaultPrice: 0 }
+    ]
 };
 
 // ==================== DOM ELEMENTS CACHE ====================
@@ -2820,7 +3178,7 @@ function updateUnitOptions(category) {
             'Party': 'tray',
             'Drink': 'glass',
             'Cafe': 'cup',
-            'Milk': 'cup',
+            'Milk Tea': 'cup',
             'Frappe': 'cup',
             'Snack & Appetizer': 'serving',
             'Budget Meals Served with Rice': 'meal',
@@ -3383,7 +3741,7 @@ function updateCategoryCounts() {
         'Party': allMenuItems.filter(item => item.category === 'Party').length,
         'Drink': allMenuItems.filter(item => item.category === 'Drink').length,
         'Cafe': allMenuItems.filter(item => item.category === 'Cafe').length,
-        'Milk': allMenuItems.filter(item => item.category === 'Milk').length,
+        'Milk Tea': allMenuItems.filter(item => item.category === 'Milk Tea').length,
         'Frappe': allMenuItems.filter(item => item.category === 'Frappe').length,
         'Snack & Appetizer': allMenuItems.filter(item => item.category === 'Snack & Appetizer').length,
         'Budget Meals Served with Rice': allMenuItems.filter(item => item.category === 'Budget Meals Served with Rice').length,

@@ -39,67 +39,96 @@ async function loadProducts() {
 function loadProductsFromDatabase() {
     const menuDatabase = {
         'Rice Bowl Meals': [
-            { name: 'Korean Spicy Bulgogi (Pork)', unit: 'plate', price: 180 },
-            { name: 'Korean Salt and Pepper (Pork)', unit: 'plate', price: 175 },
-            { name: 'Crispy Pork Lechon Kawali', unit: 'plate', price: 165 },
-            { name: 'Cream Dory Fish Fillet', unit: 'plate', price: 160 },
-            { name: 'Buttered Honey Chicken', unit: 'plate', price: 155 },
-            { name: 'Buttered Spicy Chicken', unit: 'plate', price: 155 },
-            { name: 'Chicken Adobo', unit: 'plate', price: 145 },
-            { name: 'Pork Shanghai', unit: 'plate', price: 140 }
+            { name: 'Korean Spicy Bulgogi (Pork)', unit: 'plate', price: 158 },
+            { name: 'Korean Salt and Pepper (Pork)', unit: 'plate', price: 158 },
+            { name: 'Crispy Pork Lechon Kawali', unit: 'plate', price: 158 },
+            { name: 'Cream Dory Fish Fillet', unit: 'plate', price: 138 },
+            { name: 'Buttered Honey Chicken', unit: 'plate', price: 128 },
+            { name: 'Buttered Spicy Chicken', unit: 'plate', price: 128 },
+            { name: 'Chicken Adobo', unit: 'plate', price: 128 },
+            { name: 'Pork Shanghai', unit: 'plate', price: 128 }
         ],
         'Hot Sizzlers': [
-            { name: 'Sizzling Pork Sisig', unit: 'sizzling plate', price: 220 },
-            { name: 'Sizzling Liempo', unit: 'sizzling plate', price: 210 },
-            { name: 'Sizzling Porkchop', unit: 'sizzling plate', price: 195 },
-            { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', price: 185 }
+            { name: 'Sizzling Pork Sisig', unit: 'sizzling plate', price: 168 },
+            { name: 'Sizzling Liempo', unit: 'sizzling plate', price: 168 },
+            { name: 'Sizzling Porkchop', unit: 'sizzling plate', price: 148 },
+            { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', price: 148 }
         ],
         'Party Tray': [
-            { name: 'Pancit Bihon (S)', unit: 'tray', price: 350 },
-            { name: 'Pancit Bihon (M)', unit: 'tray', price: 550 },
-            { name: 'Pancit Bihon (L)', unit: 'tray', price: 750 },
-            { name: 'Pancit Canton (S)', unit: 'tray', price: 380 },
-            { name: 'Pancit Canton (M)', unit: 'tray', price: 580 },
-            { name: 'Pancit Canton (L)', unit: 'tray', price: 780 },
-            { name: 'Spaghetti (S)', unit: 'tray', price: 400 },
-            { name: 'Spaghetti (M)', unit: 'tray', price: 600 },
-            { name: 'Spaghetti (L)', unit: 'tray', price: 800 }
+            { name: 'Pansit Bihon', unit: 'tray', price: 300 },
+            { name: 'Pancit Canton', unit: 'tray', price: 300 },
+            { name: 'Spaghetti', unit: 'tray', price: 400 },
+            { name: 'Creamy Carbonara', unit: 'tray', price: 500 },
+            { name: 'Creamy Pesto', unit: 'tray', price: 500 },
+            { name: 'Tuyo Pesto', unit: 'tray', price: 600 },
+            { name: 'Kare-Kare', unit: 'tray', price: 600 },
+            { name: 'Chicken Buffalo Wings', unit: 'tray', price: 400 },
+            { name: 'Lumpia Shanghai', unit: 'tray', price: 300 }
         ],
         'Drinks': [
-            { name: 'Cucumber Lemonade (Glass)', unit: 'glass', price: 60 },
-            { name: 'Cucumber Lemonade (Pitcher)', unit: 'pitcher', price: 180 },
-            { name: 'Blue Lemonade (Glass)', unit: 'glass', price: 65 },
-            { name: 'Blue Lemonade (Pitcher)', unit: 'pitcher', price: 190 },
-            { name: 'Red Tea (Glass)', unit: 'glass', price: 55 },
-            { name: 'Soda (Mismo)', unit: 'bottle', price: 25 },
-            { name: 'Soda 1.5L', unit: 'bottle', price: 65 }
+            { name: 'Cucumber Lemonade (Glass)', unit: 'glass', price: 38 },
+            { name: 'Cucumber Lemonade (Pitcher)', unit: 'pitcher', price: 114 },
+            { name: 'Blue Lemonade (Glass)', unit: 'glass', price: 38 },
+            { name: 'Blue Lemonade (Pitcher)', unit: 'pitcher', price: 114 },
+            { name: 'Red Tea (Glass)', unit: 'glass', price: 38 },
+            { name: 'Red Tea (Pitcher)', unit: 'pitcher', price: 114 },
+            { name: 'Calamansi Juice (Glass)', unit: 'glass', price: 38 },
+            { name: 'Calamansi Juice (Pitcher)', unit: 'pitcher', price: 114 },
+            { name: 'Soda (Mismo) Coke', unit: 'bottle', price: 28 },
+            { name: 'Soda (Mismo) Sprite', unit: 'bottle', price: 28 },
+            { name: 'Soda (Mismo) Royal', unit: 'bottle', price: 28 },
+            { name: 'Soda 1.5L Coke', unit: 'bottle', price: 118 },
+            { name: 'Soda 1.5L Coke Zero', unit: 'bottle', price: 118 },
+            { name: 'Soda 1.5L Sprite', unit: 'bottle', price: 118 },
+            { name: 'Soda 1.5L Royal', unit: 'bottle', price: 118 }
         ],
         'Coffee': [
-            { name: 'Cafe Americano Tall', unit: 'cup', price: 80 },
-            { name: 'Cafe Americano Grande', unit: 'cup', price: 95 },
-            { name: 'Cafe Latte Tall', unit: 'cup', price: 90 },
-            { name: 'Cafe Latte Grande', unit: 'cup', price: 105 },
-            { name: 'Caramel Macchiato Tall', unit: 'cup', price: 100 },
-            { name: 'Caramel Macchiato Grande', unit: 'cup', price: 115 }
+            { name: 'Espresso Hot', unit: 'cup', price: 88 },
+            { name: 'Café Americano Hot', unit: 'cup', price: 108 },
+            { name: 'Cappuccino Hot', unit: 'cup', price: 98 },
+            { name: 'Café Latte Hot', unit: 'cup', price: 108 },
+            { name: 'Mocha Latte Hot', unit: 'cup', price: 108 },
+            { name: 'Vanilla Latte Hot', unit: 'cup', price: 108 },
+            { name: 'Caramel Macchiato Hot', unit: 'cup', price: 108 },
+            { name: 'Green Tea Latte Hot', unit: 'cup', price: 118 },
+            { name: 'White Chocolate Hot', unit: 'cup', price: 108 },
+            { name: 'Green Tea Matcha Hot', unit: 'cup', price: 118 },
+            { name: 'Hot Ceylon Tea Black', unit: 'cup', price: 78 },
+            { name: 'Hot Ceylon Tea Lemon', unit: 'cup', price: 78 },
+            { name: 'Hot Ceylon Tea Peppermint', unit: 'cup', price: 78 },
+            { name: 'Iced Café Latte', unit: 'cup', price: 108 },
+            { name: 'Iced Mocha Latte', unit: 'cup', price: 118 },
+            { name: 'Iced Vanilla Latte', unit: 'cup', price: 118 },
+            { name: 'Iced Caramel Macchiato', unit: 'cup', price: 128 },
+            { name: 'Iced White Chocolate Latte', unit: 'cup', price: 98 },
+            { name: 'Iced Dark Chocolate', unit: 'cup', price: 98 }
         ],
         'Milk Tea': [
-            { name: 'Milk Tea Regular HC', unit: 'cup', price: 85 },
-            { name: 'Milk Tea Regular MC', unit: 'cup', price: 95 },
-            { name: 'Matcha Green Tea HC', unit: 'cup', price: 90 },
-            { name: 'Matcha Green Tea MC', unit: 'cup', price: 100 }
+            { name: 'Milk Tea Regular', unit: 'cup', price: 68 },
+            { name: 'Caramel Milk Tea', unit: 'cup', price: 78 },
+            { name: 'Cookies & Cream Milk Tea', unit: 'cup', price: 78 },
+            { name: 'Dark Choco Milk Tea', unit: 'cup', price: 78 },
+            { name: 'Okinawa Milk Tea', unit: 'cup', price: 78 },
+            { name: 'Wintermelon Milk Tea', unit: 'cup', price: 78 },
+            { name: 'Matcha Green Tea Milk Tea', unit: 'cup', price: 88 }
         ],
         'Frappe': [
-            { name: 'Matcha Green Tea HC', unit: 'cup', price: 120 },
-            { name: 'Matcha Green Tea MC', unit: 'cup', price: 135 },
-            { name: 'Cookies & Cream HC', unit: 'cup', price: 125 },
-            { name: 'Cookies & Cream MC', unit: 'cup', price: 140 },
-            { name: 'Strawberry & Cream HC', unit: 'cup', price: 130 },
-            { name: 'Mango cheese cake HC', unit: 'cup', price: 135 }
+            { name: 'Matcha Green Tea Frappe', unit: 'cup', price: 108 },
+            { name: 'Salted Caramel Frappe', unit: 'cup', price: 108 },
+            { name: 'Strawberry Cheesecake Frappe', unit: 'cup', price: 108 },
+            { name: 'Mango Cheesecake Frappe', unit: 'cup', price: 108 },
+            { name: 'Strawberry Cream Frappe', unit: 'cup', price: 98 },
+            { name: 'Cookies & Cream Frappe', unit: 'cup', price: 98 },
+            { name: 'Rocky Road Frappe', unit: 'cup', price: 88 },
+            { name: 'Choco Fudge Frappe', unit: 'cup', price: 88 },
+            { name: 'Choco Mousse Frappe', unit: 'cup', price: 88 },
+            { name: 'Coffee Crumble Frappe', unit: 'cup', price: 88 },
+            { name: 'Vanilla Cream Frappe', unit: 'cup', price: 88 }
         ],
         'Snacks & Appetizer': [
             { name: 'Cheesy Nachos', unit: 'serving', price: 150 },
             { name: 'Nachos Supreme', unit: 'serving', price: 180 },
-            { name: 'French fries', unit: 'serving', price: 90 },
+            { name: 'French Fries', unit: 'serving', price: 90 },
             { name: 'Clubhouse Sandwich', unit: 'sandwich', price: 120 },
             { name: 'Fish and Fries', unit: 'serving', price: 160 },
             { name: 'Cheesy Dynamite Lumpia', unit: 'piece', price: 25 },
@@ -107,20 +136,30 @@ function loadProductsFromDatabase() {
         ],
         'Budget Meals Served with Rice': [
             { name: 'Fried Chicken', unit: 'meal', price: 95 },
-            { name: 'Buttered Honey Chicken', unit: 'meal', price: 105 },
-            { name: 'Buttered Spicy Chicken', unit: 'meal', price: 105 },
+            { name: 'Budget Fried Chicken', unit: 'meal', price: 85 },
             { name: 'Tinapa Rice', unit: 'meal', price: 85 },
             { name: 'Tuyo Pesto', unit: 'meal', price: 80 },
             { name: 'Fried Rice', unit: 'serving', price: 50 },
             { name: 'Plain Rice', unit: 'bowl', price: 25 }
         ],
         'Specialties': [
-            { name: 'Sinigang (PORK)', unit: 'serving', price: 280 },
+            { name: 'Sinigang (Pork)', unit: 'serving', price: 280 },
             { name: 'Sinigang (Shrimp)', unit: 'serving', price: 320 },
             { name: 'Paknet (Pakbet w/ Bagnet)', unit: 'serving', price: 260 },
             { name: 'Buttered Shrimp', unit: 'serving', price: 300 },
             { name: 'Special Bulalo (good for 2-3 Persons)', unit: 'pot', price: 450 },
             { name: 'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)', unit: 'pot', price: 850 }
+        ],
+        'Packaging Supplies': [
+            { name: 'Paper Cups (12oz)', unit: 'pack', price: 0 },
+            { name: 'Paper Cups (16oz)', unit: 'pack', price: 0 },
+            { name: 'Straws (Regular)', unit: 'pack', price: 0 },
+            { name: 'Straws (Boba)', unit: 'pack', price: 0 },
+            { name: 'Food Containers (Small)', unit: 'pack', price: 0 },
+            { name: 'Food Containers (Medium)', unit: 'pack', price: 0 },
+            { name: 'Food Containers (Large)', unit: 'pack', price: 0 },
+            { name: 'Plastic Utensils Set', unit: 'set', price: 0 },
+            { name: 'Napkins (Pack of 50)', unit: 'pack', price: 0 }
         ]
     };
     
@@ -135,7 +174,7 @@ function loadProductsFromDatabase() {
                 category: category,
                 unit: product.unit,
                 price: product.price,
-                status: 'Out of Stock'
+                status: 'In Stock'
             });
             index++;
         });

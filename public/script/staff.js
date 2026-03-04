@@ -66,6 +66,7 @@ let ingredientInventory = {
 
 // ==================== 🍽️ PRODUCT INGREDIENT MAPPING ====================
 const productIngredientMap = {
+    // ==================== RICE BOWL MEALS ====================
     'Korean Spicy Bulgogi (Pork)': {
         ingredients: { 
             'pork': 0.2, 
@@ -107,37 +108,70 @@ const productIngredientMap = {
         },
         servingware: 'plate'
     },
-    'Pork Shanghai': {
+    'Cream Dory Fish Fillet': {
         ingredients: { 
-            'pork': 0.15, 
-            'garlic': 0.02, 
-            'onion': 0.03,
-            'carrots': 0.02,
-            'breadcrumbs': 0.03,
-            'flour': 0.02,
-            'cornstarch': 0.02,
-            'cooking_oil': 0.05,
-            'egg': 0.02
+            'cream_dory': 0.2,
+            'breadcrumbs': 0.05,
+            'flour': 0.05,
+            'egg': 0.05,
+            'cooking_oil': 0.1,
+            'salt': 0.01,
+            'black_pepper': 0.01,
+            'lemon': 0.02
         },
         servingware: 'plate'
     },
-    'Sinigang (Pork)': {
+    'Buttered Honey Chicken': {
         ingredients: { 
-            'pork': 0.25, 
-            'onion': 0.05, 
+            'chicken': 0.25,
+            'butter': 0.08,
+            'honey': 0.1,
             'garlic': 0.02,
-            'tomato': 0.05,
-            'calamansi': 0.02,
-            'chili': 0.01,
-            'shrimp_paste': 0.02,
-            'tamarind_mix': 0.03,
-            'salt': 0.01,
-            'black_pepper': 0.01,
-            'bay_leaves': 0.01,
-            'water': 0.3
+            'cooking_oil': 0.05,
+            'salt': 0.01
         },
-        servingware: 'bowl'
+        servingware: 'plate'
     },
+    'Buttered Spicy Chicken': {
+        ingredients: { 
+            'chicken': 0.25,
+            'butter': 0.08,
+            'chili': 0.05,
+            'garlic': 0.03,
+            'cooking_oil': 0.05,
+            'salt': 0.01,
+            'black_pepper': 0.01
+        },
+        servingware: 'plate'
+    },
+    'Chicken Adobo': {
+        ingredients: { 
+            'chicken': 0.25,
+            'soy_sauce': 0.1,
+            'vinegar': 0.08,
+            'garlic': 0.05,
+            'onion': 0.05,
+            'bay_leaves': 0.01,
+            'black_pepper': 0.01,
+            'cooking_oil': 0.03
+        },
+        servingware: 'plate'
+    },
+    'Pork Shanghai': {
+        ingredients: { 
+            'pork': 0.2,
+            'lumpia_wrapper': 0.1,
+            'carrots': 0.08,
+            'onion': 0.05,
+            'garlic': 0.03,
+            'cooking_oil': 0.15,
+            'salt': 0.01,
+            'black_pepper': 0.01
+        },
+        servingware: 'plate'
+    },
+
+    // ==================== HOT SIZZLERS ====================
     'Sizzling Pork Sisig': {
         ingredients: { 
             'pork': 0.2, 
@@ -175,96 +209,669 @@ const productIngredientMap = {
         },
         servingware: 'sizzling_plate'
     },
-    'Buttered Honey Chicken': {
-        ingredients: { 
-            'chicken': 0.25, 
-            'butter': 0.03,
-            'honey': 0.03,
-            'cooking_oil': 0.02
-        },
-        servingware: 'plate'
-    },
-    'Buttered Spicy Chicken': {
-        ingredients: { 
-            'chicken': 0.25, 
-            'butter': 0.03,
-            'cooking_oil': 0.02,
-            'chili': 0.02
-        },
-        servingware: 'plate'
-    },
-    'Chicken Adobo': {
-        ingredients: { 
-            'chicken': 0.25, 
-            'onion': 0.05, 
-            'garlic': 0.02,
-            'tomato': 0.05,
-            'soy_sauce': 0.04,
-            'bay_leaves': 0.01,
-            'salt': 0.01,
-            'cooking_oil': 0.02
-        },
-        servingware: 'plate'
-    },
-    'Fried Chicken': {
-        ingredients: { 
-            'chicken': 0.25, 
-            'breadcrumbs': 0.03,
-            'flour': 0.03,
-            'cooking_oil': 0.1,
-            'salt': 0.01
-        },
-        servingware: 'plate'
-    },
     'Sizzling Fried Chicken': {
         ingredients: { 
-            'chicken': 0.25, 
-            'onion': 0.05, 
-            'garlic': 0.02,
-            'cooking_oil': 0.1,
-            'salt': 0.01
+            'chicken': 0.3,
+            'flour': 0.08,
+            'breadcrumbs': 0.08,
+            'egg': 0.05,
+            'cooking_oil': 0.15,
+            'gravy': 0.1,
+            'salt': 0.01,
+            'black_pepper': 0.01
         },
         servingware: 'sizzling_plate'
     },
-    'Budget Fried Chicken': {
+
+    // ==================== PARTY TRAY ====================
+    'Pansit Bihon': {
         ingredients: { 
-            'chicken': 0.15, 
-            'breadcrumbs': 0.02,
-            'flour': 0.02,
-            'cooking_oil': 0.08,
+            'rice_noodles': 0.8,
+            'onion': 0.1, 
+            'garlic': 0.05,
+            'carrots': 0.15,
+            'soy_sauce': 0.08,
+            'oyster_sauce': 0.08,
+            'cooking_oil': 0.1,
+            'chicken': 0.2,
+            'cabbage': 0.15
+        },
+        servingware: 'tray'
+    },
+    'Pancit Canton': {
+        ingredients: { 
+            'pancit_canton': 0.8,
+            'onion': 0.1, 
+            'garlic': 0.05,
+            'carrots': 0.15,
+            'soy_sauce': 0.08,
+            'oyster_sauce': 0.08,
+            'cooking_oil': 0.1,
+            'chicken': 0.2,
+            'cabbage': 0.15
+        },
+        servingware: 'tray'
+    },
+    'Spaghetti': {
+        ingredients: { 
+            'spaghetti_pasta': 0.8,
+            'onion': 0.1, 
+            'garlic': 0.05,
+            'tomato_sauce': 0.3,
+            'ground_pork': 0.25,
+            'hotdog': 0.15,
+            'cheese': 0.1,
+            'sugar': 0.05,
+            'cooking_oil': 0.08
+        },
+        servingware: 'tray'
+    },
+    'Creamy Carbonara': {
+        ingredients: { 
+            'spaghetti_pasta': 0.8,
+            'bacon': 0.2,
+            'cream': 0.3,
+            'milk': 0.2,
+            'cheese': 0.15,
+            'egg': 0.1,
+            'garlic': 0.03,
+            'butter': 0.05,
+            'black_pepper': 0.01
+        },
+        servingware: 'tray'
+    },
+    'Creamy Pesto': {
+        ingredients: { 
+            'spaghetti_pasta': 0.8,
+            'basil_pesto': 0.15,
+            'cream': 0.25,
+            'cheese': 0.15,
+            'garlic': 0.03,
+            'pine_nuts': 0.05,
+            'olive_oil': 0.08,
             'salt': 0.01
+        },
+        servingware: 'tray'
+    },
+    'Tuyo Pesto': {
+        ingredients: { 
+            'spaghetti_pasta': 0.8,
+            'tuyo': 0.15,
+            'basil_pesto': 0.15,
+            'garlic': 0.05,
+            'olive_oil': 0.08,
+            'chili': 0.02,
+            'salt': 0.01
+        },
+        servingware: 'tray'
+    },
+    'Kare-Kare': {
+        ingredients: { 
+            'oxtail': 0.5,
+            'tripe': 0.3,
+            'peanut_butter': 0.15,
+            'rice_flour': 0.05,
+            'onion': 0.1,
+            'garlic': 0.05,
+            'eggplant': 0.15,
+            'string_beans': 0.15,
+            'banana_blossom': 0.1,
+            'bagoong': 0.05,
+            'cooking_oil': 0.08
+        },
+        servingware: 'pot'
+    },
+    'Chicken Buffalo Wings': {
+        ingredients: { 
+            'chicken_wings': 0.8,
+            'flour': 0.15,
+            'cornstarch': 0.1,
+            'buffalo_sauce': 0.2,
+            'butter': 0.1,
+            'garlic': 0.03,
+            'cooking_oil': 0.2,
+            'salt': 0.01,
+            'black_pepper': 0.01
         },
         servingware: 'plate'
     },
-    'Clubhouse Sandwich': {
+    'Lumpia Shanghai': {
         ingredients: { 
-            'chicken': 0.1, 
-            'bread': 0.1,
-            'mayonnaise': 0.02,
-            'gravy': 0.03
+            'lumpia_wrapper': 0.3,
+            'pork': 0.4,
+            'carrots': 0.15,
+            'onion': 0.1,
+            'garlic': 0.05,
+            'breadcrumbs': 0.1,
+            'egg': 0.05,
+            'cooking_oil': 0.2,
+            'salt': 0.01,
+            'black_pepper': 0.01
         },
         servingware: 'plate'
     },
-    'Cream Dory Fish Fillet': {
+
+    // ==================== DRINKS (GLASS) ====================
+    'Cucumber Lemonade (Glass)': {
         ingredients: { 
-            'cream_dory': 0.2, 
-            'breadcrumbs': 0.02,
-            'flour': 0.02,
-            'cooking_oil': 0.05,
-            'salt': 0.01
+            'cucumber': 0.08,
+            'lemon': 0.05,
+            'sugar': 0.03,
+            'water': 0.25,
+            'ice': 0.15
         },
-        servingware: 'plate'
+        servingware: 'glass'
     },
-    'Fish and Fries': {
+    'Blue Lemonade (Glass)': {
         ingredients: { 
-            'cream_dory': 0.15, 
-            'french_fries': 0.15,
-            'breadcrumbs': 0.02,
-            'flour': 0.02,
-            'cooking_oil': 0.08,
-            'salt': 0.01
+            'blue_syrup': 0.05,
+            'lemon': 0.05,
+            'sugar': 0.03,
+            'water': 0.25,
+            'ice': 0.15
         },
-        servingware: 'plate'
+        servingware: 'glass'
+    },
+    'Red Tea (Glass)': {
+        ingredients: { 
+            'red_tea': 0.02,
+            'sugar': 0.03,
+            'water': 0.25,
+            'ice': 0.15
+        },
+        servingware: 'glass'
+    },
+    'Calamansi Juice (Glass)': {
+        ingredients: { 
+            'calamansi': 0.1,
+            'sugar': 0.04,
+            'water': 0.2,
+            'ice': 0.15
+        },
+        servingware: 'glass'
+    },
+
+    // ==================== DRINKS (PITCHER) ====================
+    'Cucumber Lemonade (Pitcher)': {
+        ingredients: { 
+            'cucumber': 0.25,
+            'lemon': 0.15,
+            'sugar': 0.1,
+            'water': 0.8,
+            'ice': 0.3
+        },
+        servingware: 'pitcher'
+    },
+    'Blue Lemonade (Pitcher)': {
+        ingredients: { 
+            'blue_syrup': 0.15,
+            'lemon': 0.15,
+            'sugar': 0.1,
+            'water': 0.8,
+            'ice': 0.3
+        },
+        servingware: 'pitcher'
+    },
+    'Red Tea (Pitcher)': {
+        ingredients: { 
+            'red_tea': 0.06,
+            'sugar': 0.1,
+            'water': 0.8,
+            'ice': 0.3
+        },
+        servingware: 'pitcher'
+    },
+    'Calamansi Juice (Pitcher)': {
+        ingredients: { 
+            'calamansi': 0.3,
+            'sugar': 0.12,
+            'water': 0.7,
+            'ice': 0.3
+        },
+        servingware: 'pitcher'
+    },
+
+    // ==================== SODA ====================
+    'Soda (Mismo) Coke': {
+        ingredients: { 
+            'coke_syrup': 0.05,
+            'carbonated_water': 0.3
+        },
+        servingware: 'bottle'
+    },
+    'Soda (Mismo) Sprite': {
+        ingredients: { 
+            'sprite_syrup': 0.05,
+            'carbonated_water': 0.3
+        },
+        servingware: 'bottle'
+    },
+    'Soda (Mismo) Royal': {
+        ingredients: { 
+            'royal_syrup': 0.05,
+            'carbonated_water': 0.3
+        },
+        servingware: 'bottle'
+    },
+    'Soda 1.5L Coke': {
+        ingredients: { 
+            'coke_syrup': 0.2,
+            'carbonated_water': 1.3
+        },
+        servingware: 'bottle'
+    },
+    'Soda 1.5L Coke Zero': {
+        ingredients: { 
+            'coke_zero_syrup': 0.2,
+            'carbonated_water': 1.3
+        },
+        servingware: 'bottle'
+    },
+    'Soda 1.5L Sprite': {
+        ingredients: { 
+            'sprite_syrup': 0.2,
+            'carbonated_water': 1.3
+        },
+        servingware: 'bottle'
+    },
+    'Soda 1.5L Royal': {
+        ingredients: { 
+            'royal_syrup': 0.2,
+            'carbonated_water': 1.3
+        },
+        servingware: 'bottle'
+    },
+
+    // ==================== HOT COFFEE ====================
+    'Espresso Hot': {
+        ingredients: { 
+            'coffee_beans': 0.02,
+            'water': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Café Americano Hot': {
+        ingredients: { 
+            'espresso': 0.05,
+            'hot_water': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Cappuccino Hot': {
+        ingredients: { 
+            'espresso': 0.05,
+            'steamed_milk': 0.15,
+            'milk_foam': 0.1
+        },
+        servingware: 'cup'
+    },
+    'Café Latte Hot': {
+        ingredients: { 
+            'espresso': 0.05,
+            'steamed_milk': 0.25
+        },
+        servingware: 'cup'
+    },
+    'Mocha Latte Hot': {
+        ingredients: { 
+            'espresso': 0.05,
+            'chocolate_syrup': 0.03,
+            'steamed_milk': 0.22
+        },
+        servingware: 'cup'
+    },
+    'Vanilla Latte Hot': {
+        ingredients: { 
+            'espresso': 0.05,
+            'vanilla_syrup': 0.03,
+            'steamed_milk': 0.22
+        },
+        servingware: 'cup'
+    },
+    'Caramel Macchiato Hot': {
+        ingredients: { 
+            'espresso': 0.05,
+            'vanilla_syrup': 0.02,
+            'caramel_syrup': 0.03,
+            'steamed_milk': 0.2,
+            'milk_foam': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Green Tea Latte Hot': {
+        ingredients: { 
+            'matcha_powder': 0.02,
+            'steamed_milk': 0.25,
+            'sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== NON-COFFEE HOT ====================
+    'White Chocolate Hot': {
+        ingredients: { 
+            'white_chocolate_syrup': 0.05,
+            'steamed_milk': 0.25,
+            'cream': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Green Tea Matcha Hot': {
+        ingredients: { 
+            'matcha_powder': 0.03,
+            'steamed_milk': 0.25,
+            'sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== HOT CEYLON TEA ====================
+    'Hot Ceylon Tea Black': {
+        ingredients: { 
+            'black_tea': 0.02,
+            'hot_water': 0.25,
+            'sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Hot Ceylon Tea Lemon': {
+        ingredients: { 
+            'black_tea': 0.02,
+            'lemon': 0.03,
+            'hot_water': 0.25,
+            'sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Hot Ceylon Tea Peppermint': {
+        ingredients: { 
+            'peppermint_tea': 0.02,
+            'hot_water': 0.25,
+            'honey': 0.02
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== OVER-ICE COFFEE ====================
+    'Iced Café Latte': {
+        ingredients: { 
+            'espresso': 0.05,
+            'milk': 0.2,
+            'ice': 0.15,
+            'sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Iced Mocha Latte': {
+        ingredients: { 
+            'espresso': 0.05,
+            'chocolate_syrup': 0.03,
+            'milk': 0.18,
+            'ice': 0.15,
+            'sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Iced Vanilla Latte': {
+        ingredients: { 
+            'espresso': 0.05,
+            'vanilla_syrup': 0.03,
+            'milk': 0.18,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Iced Caramel Macchiato': {
+        ingredients: { 
+            'espresso': 0.05,
+            'vanilla_syrup': 0.02,
+            'caramel_syrup': 0.03,
+            'milk': 0.18,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Iced White Chocolate Latte': {
+        ingredients: { 
+            'white_chocolate_syrup': 0.04,
+            'milk': 0.2,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Iced Dark Chocolate': {
+        ingredients: { 
+            'dark_chocolate_syrup': 0.05,
+            'milk': 0.2,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== MILK TEA ====================
+    'Milk Tea Regular': {
+        ingredients: { 
+            'black_tea': 0.03,
+            'milk': 0.15,
+            'sugar': 0.03,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Caramel Milk Tea': {
+        ingredients: { 
+            'black_tea': 0.03,
+            'milk': 0.15,
+            'caramel_syrup': 0.04,
+            'sugar': 0.02,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Cookies & Cream Milk Tea': {
+        ingredients: { 
+            'black_tea': 0.03,
+            'milk': 0.15,
+            'cookie_crumbs': 0.05,
+            'sugar': 0.02,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Dark Choco Milk Tea': {
+        ingredients: { 
+            'black_tea': 0.03,
+            'milk': 0.15,
+            'chocolate_syrup': 0.05,
+            'sugar': 0.02,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Okinawa Milk Tea': {
+        ingredients: { 
+            'black_tea': 0.03,
+            'milk': 0.15,
+            'okinawa_syrup': 0.04,
+            'sugar': 0.02,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Wintermelon Milk Tea': {
+        ingredients: { 
+            'wintermelon_syrup': 0.04,
+            'milk': 0.15,
+            'sugar': 0.02,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Matcha Green Tea Milk Tea': {
+        ingredients: { 
+            'matcha_powder': 0.02,
+            'milk': 0.15,
+            'sugar': 0.03,
+            'tapioca_pearls': 0.08,
+            'ice': 0.15
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== FRAPPE - PREMIUM ====================
+    'Matcha Green Tea Frappe': {
+        ingredients: { 
+            'matcha_powder': 0.02,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'sugar': 0.03,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Salted Caramel Frappe': {
+        ingredients: { 
+            'coffee': 0.05,
+            'caramel_syrup': 0.05,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'salt': 0.005,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Strawberry Cheesecake Frappe': {
+        ingredients: { 
+            'strawberry_syrup': 0.05,
+            'cream_cheese': 0.03,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'sugar': 0.02,
+            'whipped_cream': 0.05,
+            'graham_crumbs': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Mango Cheesecake Frappe': {
+        ingredients: { 
+            'mango_puree': 0.06,
+            'cream_cheese': 0.03,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'sugar': 0.02,
+            'whipped_cream': 0.05,
+            'graham_crumbs': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Strawberry Cream Frappe': {
+        ingredients: { 
+            'strawberry_syrup': 0.05,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'sugar': 0.02,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Cookies & Cream Frappe': {
+        ingredients: { 
+            'coffee': 0.05,
+            'cookie_crumbs': 0.05,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'sugar': 0.02,
+            'whipped_cream': 0.05,
+            'chocolate_syrup': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Rocky Road Frappe': {
+        ingredients: { 
+            'chocolate_syrup': 0.05,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'marshmallows': 0.03,
+            'nuts': 0.02,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== FRAPPE - REGULAR ====================
+    'Choco Fudge Frappe': {
+        ingredients: { 
+            'chocolate_syrup': 0.06,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'whipped_cream': 0.05,
+            'chocolate_sauce': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Choco Mousse Frappe': {
+        ingredients: { 
+            'chocolate_syrup': 0.05,
+            'chocolate_mousse': 0.08,
+            'milk': 0.15,
+            'ice': 0.2,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Coffee Crumble Frappe': {
+        ingredients: { 
+            'coffee': 0.06,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'cookie_crumbs': 0.04,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Vanilla Cream Frappe': {
+        ingredients: { 
+            'vanilla_syrup': 0.05,
+            'milk': 0.15,
+            'ice_cream': 0.1,
+            'ice': 0.2,
+            'whipped_cream': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    // ==================== ADDITIONAL MENU ITEMS ====================
+    'Sinigang (Pork)': {
+        ingredients: { 
+            'pork': 0.25, 
+            'onion': 0.05, 
+            'garlic': 0.02,
+            'tomato': 0.05,
+            'calamansi': 0.02,
+            'chili': 0.01,
+            'shrimp_paste': 0.02,
+            'tamarind_mix': 0.03,
+            'salt': 0.01,
+            'black_pepper': 0.01,
+            'bay_leaves': 0.01,
+            'water': 0.3
+        },
+        servingware: 'bowl'
     },
     'Sinigang (Shrimp)': {
         ingredients: { 
@@ -337,114 +944,6 @@ const productIngredientMap = {
             'black_pepper': 0.01
         },
         servingware: 'plate'
-    },
-    'Pancit Bihon (S)': {
-        ingredients: { 
-            'rice_noodles': 0.15,
-            'onion': 0.03, 
-            'garlic': 0.02,
-            'carrots': 0.05,
-            'soy_sauce': 0.02,
-            'oyster_sauce': 0.02,
-            'cooking_oil': 0.02
-        },
-        servingware: 'tray'
-    },
-    'Pancit Bihon (M)': {
-        ingredients: { 
-            'rice_noodles': 0.25,
-            'onion': 0.05, 
-            'garlic': 0.03,
-            'carrots': 0.08,
-            'soy_sauce': 0.03,
-            'oyster_sauce': 0.03,
-            'cooking_oil': 0.03
-        },
-        servingware: 'tray'
-    },
-    'Pancit Bihon (L)': {
-        ingredients: { 
-            'rice_noodles': 0.4,
-            'onion': 0.08, 
-            'garlic': 0.05,
-            'carrots': 0.12,
-            'soy_sauce': 0.05,
-            'oyster_sauce': 0.05,
-            'cooking_oil': 0.05
-        },
-        servingware: 'tray'
-    },
-    'Pancit Canton (S)': {
-        ingredients: { 
-            'pancit_canton': 0.15,
-            'onion': 0.03, 
-            'garlic': 0.02,
-            'carrots': 0.05,
-            'soy_sauce': 0.02,
-            'oyster_sauce': 0.02,
-            'cooking_oil': 0.02
-        },
-        servingware: 'tray'
-    },
-    'Pancit Canton (M)': {
-        ingredients: { 
-            'pancit_canton': 0.25,
-            'onion': 0.05, 
-            'garlic': 0.03,
-            'carrots': 0.08,
-            'soy_sauce': 0.03,
-            'oyster_sauce': 0.03,
-            'cooking_oil': 0.03
-        },
-        servingware: 'tray'
-    },
-    'Pancit Canton (L)': {
-        ingredients: { 
-            'pancit_canton': 0.4,
-            'onion': 0.08, 
-            'garlic': 0.05,
-            'carrots': 0.12,
-            'soy_sauce': 0.05,
-            'oyster_sauce': 0.05,
-            'cooking_oil': 0.05
-        },
-        servingware: 'tray'
-    },
-    'Spaghetti (S)': {
-        ingredients: { 
-            'spaghetti_pasta': 0.15,
-            'onion': 0.03, 
-            'garlic': 0.02,
-            'tomato': 0.05,
-            'soy_sauce': 0.02,
-            'sweet_tomato_sauce': 0.05,
-            'cooking_oil': 0.02
-        },
-        servingware: 'tray'
-    },
-    'Spaghetti (M)': {
-        ingredients: { 
-            'spaghetti_pasta': 0.25,
-            'onion': 0.05, 
-            'garlic': 0.03,
-            'tomato': 0.08,
-            'soy_sauce': 0.03,
-            'sweet_tomato_sauce': 0.08,
-            'cooking_oil': 0.03
-        },
-        servingware: 'tray'
-    },
-    'Spaghetti (L)': {
-        ingredients: { 
-            'spaghetti_pasta': 0.4,
-            'onion': 0.08, 
-            'garlic': 0.05,
-            'tomato': 0.12,
-            'soy_sauce': 0.05,
-            'sweet_tomato_sauce': 0.12,
-            'cooking_oil': 0.05
-        },
-        servingware: 'tray'
     },
     'Tinapa Rice': {
         ingredients: { 
@@ -523,235 +1022,45 @@ const productIngredientMap = {
         },
         servingware: 'plate'
     },
-    'Lumpiang Shanghai': {
+    'Clubhouse Sandwich': {
         ingredients: { 
-            'lumpia_wrapper': 0.1,
-            'pork': 0.1,
-            'carrots': 0.03,
-            'onion': 0.02,
-            'garlic': 0.01,
-            'breadcrumbs': 0.02,
-            'flour': 0.02,
-            'cornstarch': 0.02,
-            'cooking_oil': 0.05
+            'chicken': 0.1, 
+            'bread': 0.1,
+            'mayonnaise': 0.02,
+            'gravy': 0.03
         },
         servingware: 'plate'
     },
-    'Cucumber Lemonade (Glass)': {
+    'Fish and Fries': {
         ingredients: { 
-            'cucumber': 0.05,
-            'lemon_juice': 0.03,
-            'honey': 0.02,
-            'sugar': 0.02,
-            'calamansi': 0.02,
-            'water': 0.25
+            'cream_dory': 0.15, 
+            'french_fries': 0.15,
+            'breadcrumbs': 0.02,
+            'flour': 0.02,
+            'cooking_oil': 0.08,
+            'salt': 0.01
         },
-        servingware: 'glass'
+        servingware: 'plate'
     },
-    'Cucumber Lemonade (Pitcher)': {
+    'Fried Chicken': {
         ingredients: { 
-            'cucumber': 0.15,
-            'lemon_juice': 0.09,
-            'honey': 0.06,
-            'sugar': 0.06,
-            'calamansi': 0.06,
-            'water': 0.75
+            'chicken': 0.25, 
+            'breadcrumbs': 0.03,
+            'flour': 0.03,
+            'cooking_oil': 0.1,
+            'salt': 0.01
         },
-        servingware: 'pitcher'
+        servingware: 'plate'
     },
-    'Blue Lemonade (Glass)': {
+    'Budget Fried Chicken': {
         ingredients: { 
-            'blue_syrup': 0.03,
-            'lemon_juice': 0.03,
-            'honey': 0.02,
-            'sugar': 0.02,
-            'calamansi': 0.02,
-            'water': 0.25
+            'chicken': 0.15, 
+            'breadcrumbs': 0.02,
+            'flour': 0.02,
+            'cooking_oil': 0.08,
+            'salt': 0.01
         },
-        servingware: 'glass'
-    },
-    'Blue Lemonade (Pitcher)': {
-        ingredients: { 
-            'blue_syrup': 0.09,
-            'lemon_juice': 0.09,
-            'honey': 0.06,
-            'sugar': 0.06,
-            'calamansi': 0.06,
-            'water': 0.75
-        },
-        servingware: 'pitcher'
-    },
-    'Red Tea (Glass)': {
-        ingredients: { 
-            'black_tea': 0.02,
-            'honey': 0.02,
-            'sugar': 0.02,
-            'hot_water': 0.25
-        },
-        servingware: 'glass'
-    },
-    'Soda (Mismo)': {
-        ingredients: { 
-            'carbonated_soft_drink': 0.33
-        },
-        servingware: 'bottle'
-    },
-    'Soda 1.5L': {
-        ingredients: { 
-            'carbonated_soft_drink': 1.5
-        },
-        servingware: 'bottle'
-    },
-    'Cafe Americano Tall': {
-        ingredients: { 
-            'coffee_beans': 0.02,
-            'sugar': 0.02,
-            'hot_water': 0.25
-        },
-        servingware: 'cup'
-    },
-    'Cafe Americano Grande': {
-        ingredients: { 
-            'coffee_beans': 0.03,
-            'sugar': 0.03,
-            'hot_water': 0.35
-        },
-        servingware: 'cup'
-    },
-    'Cafe Latte Tall': {
-        ingredients: { 
-            'espresso': 0.05,
-            'milk': 0.15,
-            'sugar': 0.02,
-            'vanilla_syrup': 0.02,
-            'steamed_milk': 0.1
-        },
-        servingware: 'cup'
-    },
-    'Cafe Latte Grande': {
-        ingredients: { 
-            'espresso': 0.07,
-            'milk': 0.2,
-            'sugar': 0.03,
-            'vanilla_syrup': 0.03,
-            'steamed_milk': 0.15
-        },
-        servingware: 'cup'
-    },
-    'Caramel Macchiato Tall': {
-        ingredients: { 
-            'espresso': 0.05,
-            'milk': 0.15,
-            'sugar': 0.02,
-            'caramel_syrup': 0.03,
-            'steamed_milk': 0.1,
-            'cream': 0.02
-        },
-        servingware: 'cup'
-    },
-    'Caramel Macchiato Grande': {
-        ingredients: { 
-            'espresso': 0.07,
-            'milk': 0.2,
-            'sugar': 0.03,
-            'caramel_syrup': 0.04,
-            'steamed_milk': 0.15,
-            'cream': 0.03
-        },
-        servingware: 'cup'
-    },
-    'Milk Tea Regular HC': {
-        ingredients: { 
-            'milk': 0.15,
-            'tea': 0.05,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05
-        },
-        servingware: 'cup'
-    },
-    'Milk Tea Regular MC': {
-        ingredients: { 
-            'milk': 0.15,
-            'tea': 0.05,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05,
-            'ice': 0.1
-        },
-        servingware: 'cup'
-    },
-    'Matcha Green Tea HC': {
-        ingredients: { 
-            'matcha_powder': 0.02,
-            'milk': 0.15,
-            'tea': 0.05,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05
-        },
-        servingware: 'cup'
-    },
-    'Matcha Green Tea MC': {
-        ingredients: { 
-            'matcha_powder': 0.02,
-            'milk': 0.15,
-            'tea': 0.05,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05,
-            'ice': 0.1
-        },
-        servingware: 'cup'
-    },
-    'Cookies & Cream HC': {
-        ingredients: { 
-            'milk': 0.15,
-            'cream': 0.05,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05,
-            'cookie_crumbs': 0.03
-        },
-        servingware: 'cup'
-    },
-    'Cookies & Cream MC': {
-        ingredients: { 
-            'milk': 0.15,
-            'cream': 0.05,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05,
-            'cookie_crumbs': 0.03,
-            'ice': 0.1
-        },
-        servingware: 'cup'
-    },
-    'Strawberry & Cream HC': {
-        ingredients: { 
-            'milk': 0.15,
-            'cream': 0.05,
-            'sugar': 0.02,
-            'strawberry_syrup': 0.03,
-            'tapioca_pearls': 0.05
-        },
-        servingware: 'cup'
-    },
-    'Strawberry & Cream MC': {
-        ingredients: { 
-            'milk': 0.15,
-            'cream': 0.05,
-            'sugar': 0.02,
-            'strawberry_syrup': 0.03,
-            'tapioca_pearls': 0.05,
-            'ice': 0.1
-        },
-        servingware: 'cup'
-    },
-    'Mango cheese cake HC': {
-        ingredients: { 
-            'milk': 0.15,
-            'cream': 0.05,
-            'cream_cheese_flavor': 0.03,
-            'mango_flavor': 0.03,
-            'sugar': 0.02,
-            'tapioca_pearls': 0.05
-        },
-        servingware: 'cup'
+        servingware: 'plate'
     }
 };
 
@@ -2308,7 +2617,14 @@ function requestStock(productId) {
         { id: 52, name: "Paknet (Pakbet w/ Bagnet)" },
         { id: 53, name: "Sinigang (Pork)" },
         { id: 54, name: "Sinigang (Shrimp)" },
-        { id: 55, name: "Buttered Shrimp" }
+        { id: 55, name: "Buttered Shrimp" },
+        { id: 56, name: "Kare kare" },
+        { id: 57, name: "Rocky Road" },
+        { id: 58, name: "Choco Fudge" },
+        { id: 59, name: "Choco Mousese" },
+        { id: 60, name: "Coffe Crumble" },
+        { id: 61, name: "Vanilla Cream" },
+
     ];
     
     // Find product name by ID

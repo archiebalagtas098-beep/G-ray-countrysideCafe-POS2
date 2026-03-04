@@ -225,11 +225,25 @@ const recipeMapping = {
         'Sinigang (Pork)',
         'Sizzling Pork Sisig',
         'Sizzling Liempo',
-        'Sizzling Porkchop'
+        'Sizzling Porkchop',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Pancit Bihon',
+        'Pancit Canton + Bihon (Mixed)',
+        'Spaghetti',
+        'Lumpiang Shanghai'
     ],
-    'Pork belly': [
+    'Pork Belly': [
         'Crispy Pork Lechon Kawali',
         'Sizzling Liempo'
+    ],
+    'Pork Chop': [
+        'Sizzling Porkchop'
+    ],
+    'Ground Pork': [
+        'Pork Shanghai',
+        'Lumpiang Shanghai',
+        'Spaghetti'
     ],
     'Chicken': [
         'Buttered Honey Chicken',
@@ -237,21 +251,31 @@ const recipeMapping = {
         'Chicken Adobo',
         'Fried Chicken',
         'Sizzling Fried Chicken',
-        'Clubhouse Sandwich'
+        'Budget Fried Chicken',
+        'Clubhouse Sandwich',
+        'Chicken Buffalo Wings',
+        'Pancit Bihon',
+        'Pancit Canton + Bihon (Mixed)'
+    ],
+    'Chicken Wings': [
+        'Chicken Buffalo Wings'
     ],
     'Fried chicken': [
         'Fried Chicken',
         'Budget Fried Chicken',
-        'Fish and Fries'
+        'Sizzling Fried Chicken'
     ],
-    'Cream dory': [
+    'Cream Dory': [
         'Cream Dory Fish Fillet',
         'Fish and Fries'
     ],
+    'Fish Fillet': [
+        'Fish and Fries',
+        'Cream Dory Fish Fillet'
+    ],
     'Shrimp': [
         'Sinigang (Shrimp)',
-        'Buttered Shrimp',
-        'Special Bulalo'
+        'Buttered Shrimp'
     ],
     'Bagnet': [
         'Paknet (Pakbet w/ Bagnet)'
@@ -261,6 +285,19 @@ const recipeMapping = {
     ],
     'Tuyo': [
         'Tuyo Pesto'
+    ],
+    'Beef Shank': [
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)'
+    ],
+    'Oxtail': [
+        'Kare-Kare'
+    ],
+    'Tripe': [
+        'Kare-Kare'
+    ],
+    'Bacon': [
+        'Creamy Carbonara'
     ],
     
     // ================ FRESH PRODUCE ================
@@ -274,44 +311,96 @@ const recipeMapping = {
         'Sizzling Fried Chicken',
         'Pork Shanghai',
         'Chicken Adobo',
+        'Fried Chicken',
+        'Budget Fried Chicken',
+        'Cream Dory Fish Fillet',
+        'Buttered Honey Chicken',
+        'Buttered Spicy Chicken',
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
         'Paknet (Pakbet w/ Bagnet)',
-        'Special Bulalo',
+        'Buttered Shrimp',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Pancit Bihon',
         'Pancit Canton + Bihon (Mixed)',
-        'Spaghetti (Filipino Style)',
-        'Fried Rice'
+        'Spaghetti',
+        'Creamy Carbonara',
+        'Creamy Pesto',
+        'Tuyo Pesto',
+        'Kare-Kare',
+        'Chicken Buffalo Wings',
+        'Fried Rice',
+        'Tinapa Rice',
+        'Tuyo Pesto',
+        'Cheesy Nachos',
+        'Nachos Supreme',
+        'French Fries',
+        'Clubhouse Sandwich',
+        'Fish and Fries',
+        'Cheesy Dynamite Lumpia',
+        'Lumpiang Shanghai'
     ],
     'Onion': [
         'Korean Spicy Bulgogi (Pork)',
         'Korean Salt and Pepper (Pork)',
         'Crispy Pork Lechon Kawali',
         'Sizzling Pork Sisig',
+        'Sizzling Liempo',
+        'Sizzling Porkchop',
+        'Pork Shanghai',
         'Chicken Adobo',
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
         'Paknet (Pakbet w/ Bagnet)',
-        'Special Bulalo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Pancit Bihon',
         'Pancit Canton + Bihon (Mixed)',
-        'Spaghetti (Filipino Style)',
+        'Spaghetti',
+        'Creamy Carbonara',
+        'Creamy Pesto',
+        'Tuyo Pesto',
+        'Kare-Kare',
+        'Chicken Buffalo Wings',
         'Fried Rice',
+        'Tinapa Rice',
         'Cheesy Nachos',
-        'Nachos Supreme'
+        'Nachos Supreme',
+        'Clubhouse Sandwich',
+        'Cheesy Dynamite Lumpia',
+        'Lumpiang Shanghai'
     ],
     'Chili': [
         'Korean Spicy Bulgogi (Pork)',
         'Korean Salt and Pepper (Pork)',
         'Sizzling Pork Sisig',
         'Sinigang (Pork)',
-        'Sinigang (Shrimp)'
+        'Sinigang (Shrimp)',
+        'Tuyo Pesto',
+        'Chicken Buffalo Wings'
+    ],
+    'Chili flakes': [
+        'Buttered Spicy Chicken',
+        'Korean Spicy Bulgogi (Pork)',
+        'Korean Salt and Pepper (Pork)'
     ],
     'Calamansi': [
         'Sizzling Pork Sisig',
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
         'Buttered Shrimp',
+        'Cucumber Lemonade',
+        'Blue Lemonade',
+        'Calamansi Juice'
+    ],
+    'Lemon': [
+        'Cucumber Lemonade',
+        'Blue Lemonade',
+        'Hot Ceylon Tea Lemon',
+        'Cream Dory Fish Fillet'
+    ],
+    'Lemon juice': [
         'Cucumber Lemonade',
         'Blue Lemonade'
     ],
@@ -320,63 +409,169 @@ const recipeMapping = {
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
         'Paknet (Pakbet w/ Bagnet)',
-        'Spaghetti (Filipino Style)'
+        'Spaghetti',
+        'Nachos Supreme',
+        'Clubhouse Sandwich'
+    ],
+    'Tomato sauce': [
+        'Spaghetti'
     ],
     'Cucumber': [
         'Cucumber Lemonade',
         'Paknet (Pakbet w/ Bagnet)'
     ],
     'Corn': [
-        'Special Bulalo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Paknet (Pakbet w/ Bagnet)'
     ],
     'Potato': [
-        'Special Bulalo',
-        'Paknet (Pakbet w/ Bagnet)'
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Paknet (Pakbet w/ Bagnet)',
+        'French Fries'
     ],
     'Carrot': [
-        'Special Bulalo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Paknet (Pakbet w/ Bagnet)',
+        'Pancit Bihon',
+        'Pancit Canton + Bihon (Mixed)',
+        'Pork Shanghai',
+        'Lumpiang Shanghai'
+    ],
+    'Carrots': [
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Paknet (Pakbet w/ Bagnet)',
         'Pancit Bihon',
         'Pancit Canton + Bihon (Mixed)'
+    ],
+    'Cabbage': [
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Pancit Bihon',
+        'Pancit Canton + Bihon (Mixed)'
+    ],
+    'Kangkong': [
+        'Sinigang (Pork)',
+        'Sinigang (Shrimp)'
+    ],
+    'Radish': [
+        'Sinigang (Pork)'
+    ],
+    'Eggplant': [
+        'Paknet (Pakbet w/ Bagnet)',
+        'Kare-Kare'
+    ],
+    'Squash': [
+        'Paknet (Pakbet w/ Bagnet)'
+    ],
+    'Okra': [
+        'Paknet (Pakbet w/ Bagnet)',
+        'Kare-Kare'
+    ],
+    'Ampalaya': [
+        'Paknet (Pakbet w/ Bagnet)'
+    ],
+    'String beans': [
+        'Kare-Kare'
+    ],
+    'Banana blossom': [
+        'Kare-Kare'
+    ],
+    'Siling Green': [
+        'Cheesy Dynamite Lumpia'
+    ],
+    'Lettuce': [
+        'Clubhouse Sandwich'
+    ],
+    'Pine nuts': [
+        'Creamy Pesto'
     ],
     
     // ================ DAIRY & EGGS ================
     'Egg': [
         'Sizzling Pork Sisig',
-        'Fried Rice'
+        'Pork Shanghai',
+        'Creamy Carbonara',
+        'Fried Rice',
+        'Tinapa Rice',
+        'Clubhouse Sandwich',
+        'Lumpiang Shanghai'
     ],
     'Butter': [
         'Buttered Honey Chicken',
         'Buttered Spicy Chicken',
-        'Buttered Shrimp'
+        'Buttered Shrimp',
+        'Cream Dory Fish Fillet',
+        'Creamy Carbonara',
+        'Chicken Buffalo Wings'
     ],
     'Mayonnaise': [
         'Sizzling Pork Sisig',
         'Clubhouse Sandwich'
     ],
     'Cream': [
-        'Caramel Macchiato',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake'
+        'Cream Dory Fish Fillet',
+        'Creamy Carbonara',
+        'Creamy Pesto',
+        'Cookies & Cream Frappe',
+        'Strawberry Cream Frappe',
+        'Mango Cheesecake Frappe'
     ],
     'Cream cheese flavor': [
-        'Mango Cheesecake'
+        'Mango Cheesecake Frappe'
     ],
     'Milk': [
         'Cafe Latte',
         'Caramel Macchiato',
         'Milk Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake',
+        'Matcha Green Tea',
+        'Cookies & Cream Frappe',
+        'Strawberry Cream Frappe',
+        'Mango Cheesecake Frappe',
+        'Iced Coffee Drinks',
         'Steamed milk'
     ],
     'Cheese': [
         'Cheesy Nachos',
         'Nachos Supreme',
+        'Cheesy Dynamite Lumpia',
+        'Spaghetti',
+        'Creamy Carbonara',
+        'Creamy Pesto'
+    ],
+    'Cheese sauce': [
+        'Cheesy Nachos',
+        'Nachos Supreme',
         'Cheesy Dynamite Lumpia'
+    ],
+    'Ice cream': [
+        'Matcha Green Tea Frappe',
+        'Salted Caramel Frappe',
+        'Strawberry Cheesecake Frappe',
+        'Mango Cheesecake Frappe',
+        'Strawberry Cream Frappe',
+        'Cookies & Cream Frappe',
+        'Rocky Road Frappe',
+        'Choco Fudge Frappe',
+        'Choco Mousse Frappe',
+        'Coffee Crumble Frappe',
+        'Vanilla Cream Frappe'
+    ],
+    'Whipped cream': [
+        'Matcha Green Tea Frappe',
+        'Salted Caramel Frappe',
+        'Strawberry Cheesecake Frappe',
+        'Mango Cheesecake Frappe',
+        'Strawberry Cream Frappe',
+        'Cookies & Cream Frappe',
+        'Rocky Road Frappe',
+        'Choco Fudge Frappe',
+        'Choco Mousse Frappe',
+        'Coffee Crumble Frappe',
+        'Vanilla Cream Frappe'
     ],
     
     // ================ PANTRY STAPLES ================
@@ -394,9 +589,11 @@ const recipeMapping = {
         'Korean Salt and Pepper (Pork)',
         'Chicken Adobo',
         'Sizzling Pork Sisig',
+        'Buttered Honey Chicken',
+        'Buttered Spicy Chicken',
         'Pancit Bihon',
         'Pancit Canton + Bihon (Mixed)',
-        'Spaghetti (Filipino Style)',
+        'Spaghetti',
         'Fried Rice'
     ],
     'Oyster sauce': [
@@ -404,10 +601,17 @@ const recipeMapping = {
         'Pancit Bihon',
         'Pancit Canton + Bihon (Mixed)'
     ],
+    'Vinegar': [
+        'Chicken Adobo'
+    ],
     'Shrimp paste': [
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
-        'Tuyo Pesto'
+        'Paknet (Pakbet w/ Bagnet)',
+        'Kare-Kare'
+    ],
+    'Bagoong': [
+        'Kare-Kare'
     ],
     'Tamarind mix': [
         'Sinigang (Pork)',
@@ -425,13 +629,23 @@ const recipeMapping = {
         'Fried Chicken',
         'Budget Fried Chicken',
         'Cream Dory Fish Fillet',
+        'Buttered Honey Chicken',
+        'Buttered Spicy Chicken',
+        'Chicken Adobo',
         'Fish and Fries',
         'French Fries',
         'Cheesy Dynamite Lumpia',
         'Lumpiang Shanghai',
         'Fried Rice',
+        'Tinapa Rice',
+        'Tuyo Pesto',
         'Cheesy Nachos',
-        'Nachos Supreme'
+        'Nachos Supreme',
+        'Pancit Bihon',
+        'Pancit Canton + Bihon (Mixed)',
+        'Spaghetti',
+        'Kare-Kare',
+        'Chicken Buffalo Wings'
     ],
     'Salt': [
         'Korean Spicy Bulgogi (Pork)',
@@ -444,6 +658,8 @@ const recipeMapping = {
         'Fried Chicken',
         'Budget Fried Chicken',
         'Cream Dory Fish Fillet',
+        'Buttered Honey Chicken',
+        'Buttered Spicy Chicken',
         'Fish and Fries',
         'French Fries',
         'Chicken Adobo',
@@ -451,33 +667,54 @@ const recipeMapping = {
         'Sinigang (Shrimp)',
         'Paknet (Pakbet w/ Bagnet)',
         'Buttered Shrimp',
-        'Special Bulalo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Creamy Pesto',
         'Fried Rice',
-        'Plain Rice'
+        'Plain Rice',
+        'Tinapa Rice',
+        'Tuyo Pesto'
     ],
     'Black pepper': [
         'Korean Spicy Bulgogi (Pork)',
         'Korean Salt and Pepper (Pork)',
         'Sizzling Pork Sisig',
+        'Sizzling Liempo',
+        'Sizzling Porkchop',
+        'Sizzling Fried Chicken',
+        'Fried Chicken',
+        'Budget Fried Chicken',
+        'Cream Dory Fish Fillet',
+        'Buttered Honey Chicken',
+        'Buttered Spicy Chicken',
+        'Fish and Fries',
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
         'Paknet (Pakbet w/ Bagnet)',
-        'Buttered Shrimp'
+        'Buttered Shrimp',
+        'Creamy Carbonara',
+        'Chicken Buffalo Wings'
     ],
     'Peppercorn': [
-        'Korean Salt and Pepper (Pork)'
+        'Korean Salt and Pepper (Pork)',
+        'Crispy Pork Lechon Kawali',
+        'Chicken Adobo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)'
     ],
     'Cornstarch': [
         'Crispy Pork Lechon Kawali',
         'Pork Shanghai',
         'Lumpiang Shanghai',
-        'Cheesy Dynamite Lumpia'
+        'Cheesy Dynamite Lumpia',
+        'Chicken Buffalo Wings'
     ],
     'Bay leaves': [
         'Chicken Adobo',
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
-        'Special Bulalo'
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)'
     ],
     'Honey': [
         'Buttered Honey Chicken',
@@ -486,25 +723,30 @@ const recipeMapping = {
         'Red Tea'
     ],
     'Sugar': [
+        'Korean Spicy Bulgogi (Pork)',
         'Cucumber Lemonade',
         'Blue Lemonade',
         'Red Tea',
-        'Cafe Latte',
+        'Calamansi Juice',
         'Cafe Americano',
+        'Cafe Latte',
         'Caramel Macchiato',
         'Milk Tea',
         'Matcha Green Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake',
-        'Fried Rice'
+        'Cookies & Cream Frappe',
+        'Strawberry Cream Frappe',
+        'Mango Cheesecake Frappe',
+        'Fried Rice',
+        'Spaghetti',
+        'Buttered Shrimp'
     ],
     'Breadcrumbs': [
         'Pork Shanghai',
         'Lumpiang Shanghai',
         'Fried Chicken',
         'Budget Fried Chicken',
-        'Cream Dory Fish Fillet'
+        'Cream Dory Fish Fillet',
+        'Fish and Fries'
     ],
     'Flour': [
         'Pork Shanghai',
@@ -512,47 +754,98 @@ const recipeMapping = {
         'Fried Chicken',
         'Budget Fried Chicken',
         'Cream Dory Fish Fillet',
+        'Fish and Fries',
         'French Fries',
-        'Fish and Fries'
+        'Chicken Buffalo Wings'
     ],
     'Gravy': [
-        'Clubhouse Sandwich'
-    ],
-    'Cheese sauce': [
-        'Cheesy Nachos',
-        'Nachos Supreme',
-        'Cheesy Dynamite Lumpia'
+        'Clubhouse Sandwich',
+        'Sizzling Fried Chicken'
     ],
     'Sweet tomato sauce': [
-        'Spaghetti (Filipino Style)'
+        'Spaghetti'
     ],
-    'Vegetables': [
-        'Special Bulalo',
-        'Paknet (Pakbet w/ Bagnet)'
+    'Basil pesto': [
+        'Creamy Pesto',
+        'Tuyo Pesto'
+    ],
+    'Herbs': [
+        'Tuyo Pesto'
     ],
     'Water': [
-        'Special Bulalo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Sinigang (Pork)',
         'Sinigang (Shrimp)',
-        'Fried Rice'
+        'Fried Rice',
+        'Plain Rice',
+        'Cucumber Lemonade',
+        'Blue Lemonade',
+        'Red Tea',
+        'Calamansi Juice'
     ],
-    
-    // ================ NOODLES & PASTA ================
-    'Pancit canton': [
+    'Beef broth': [
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)'
+    ],
+    'Chicken broth': [
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Pancit Canton + Bihon (Mixed)'
     ],
-    'noodles': [
+    'Graham crumbs': [
+        'Strawberry Cheesecake Frappe',
+        'Mango Cheesecake Frappe'
+    ],
+    'Marshmallows': [
+        'Rocky Road Frappe'
+    ],
+    'Nuts': [
+        'Rocky Road Frappe'
+    ],
+    'Chocolate sauce': [
+        'Choco Fudge Frappe'
+    ],
+    'Chocolate mousse': [
+        'Choco Mousse Frappe'
+    ],
+    'Hotdog': [
+        'Spaghetti'
+    ],
+    'Ham': [
+        'Clubhouse Sandwich'
+    ],
+    'Buffalo sauce': [
+        'Chicken Buffalo Wings'
+    ],
+    'Peanut butter': [
+        'Kare-Kare'
+    ],
+    'Rice flour': [
+        'Kare-Kare'
+    ],
+    'Olive oil': [
+        'Creamy Pesto',
+        'Tuyo Pesto'
+    ],
+    
+    // ================ NOODLES, PASTA & RICE ================
+    'Rice noodles': [
+        'Pancit Bihon'
+    ],
+    'Bihon noodles': [
         'Pancit Bihon',
         'Pancit Canton + Bihon (Mixed)'
     ],
+    'Pancit Canton noodles': [
+        'Pancit Canton + Bihon (Mixed)'
+    ],
     'Spaghetti pasta': [
-        'Spaghetti (Filipino Style)'
+        'Spaghetti',
+        'Creamy Carbonara',
+        'Creamy Pesto',
+        'Tuyo Pesto'
     ],
-    'Pasta Sauce': [
-        'Spaghetti (Filipino Style)'
-    ],
-    
-    // ================ RICE ================
     'Rice': [
         'Korean Spicy Bulgogi (Pork)',
         'Korean Salt and Pepper (Pork)',
@@ -576,75 +869,206 @@ const recipeMapping = {
         'Sinigang (Shrimp)',
         'Paknet (Pakbet w/ Bagnet)',
         'Buttered Shrimp',
-        'Special Bulalo'
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Kare-Kare'
     ],
     
-    // ================ BEVERAGES ================
-    'Lemon juice': [
+    // ================ BEVERAGE BASES ================
+    'Cucumber': [
+        'Cucumber Lemonade'
+    ],
+    'Lemon': [
         'Cucumber Lemonade',
-        'Blue Lemonade'
+        'Blue Lemonade',
+        'Hot Ceylon Tea Lemon'
     ],
     'Blue syrup': [
         'Blue Lemonade'
     ],
-    'Tea': [
+    'Black tea': [
         'Red Tea',
         'Milk Tea',
-        'Matcha Green Tea'
+        'Hot Ceylon Tea Black',
+        'Hot Ceylon Tea Lemon'
     ],
-    'Black tea': [
+    'Red tea': [
         'Red Tea'
+    ],
+    'Peppermint tea': [
+        'Hot Ceylon Tea Peppermint'
+    ],
+    'Coffee beans': [
+        'Espresso Hot',
+        'Café Americano Hot',
+        'Cappuccino Hot',
+        'Café Latte Hot',
+        'Mocha Latte Hot',
+        'Vanilla Latte Hot',
+        'Caramel Macchiato Hot',
+        'Green Tea Latte Hot',
+        'Iced Café Latte',
+        'Iced Mocha Latte',
+        'Iced Vanilla Latte',
+        'Iced Caramel Macchiato',
+        'Iced White Chocolate Latte',
+        'Iced Dark Chocolate',
+        'Coffee Crumble Frappe'
     ],
     'Espresso': [
-        'Cafe Americano',
-        'Cafe Latte',
-        'Caramel Macchiato'
-    ],
-    'Hot water': [
-        'Cafe Americano',
-        'Red Tea'
-    ],
-    'Steamed milk': [
-        'Cafe Latte',
-        'Caramel Macchiato'
-    ],
-    'Carbonated soft drink': [
-        'Soda'
-    ],
-    'Chicken broth': [
-        'Special Bulalo'
-    ],
-    
-    // ================ COFFEE & TEA INGREDIENTS ================
-    'Coffee beans': [
-        'Cafe Americano',
-        'Cafe Latte',
-        'Caramel Macchiato'
+        'Café Americano Hot',
+        'Cappuccino Hot',
+        'Café Latte Hot',
+        'Mocha Latte Hot',
+        'Vanilla Latte Hot',
+        'Caramel Macchiato Hot',
+        'Iced Café Latte',
+        'Iced Mocha Latte',
+        'Iced Vanilla Latte',
+        'Iced Caramel Macchiato'
     ],
     'Matcha powder': [
-        'Matcha Green Tea'
+        'Green Tea Latte Hot',
+        'Green Tea Matcha Hot',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Frappe'
+    ],
+    'White chocolate syrup': [
+        'White Chocolate Hot',
+        'Iced White Chocolate Latte'
+    ],
+    'Dark chocolate syrup': [
+        'Iced Dark Chocolate'
+    ],
+    'Chocolate syrup': [
+        'Mocha Latte Hot',
+        'Rocky Road Frappe',
+        'Choco Fudge Frappe',
+        'Choco Mousse Frappe',
+        'Dark Choco Milk Tea'
     ],
     'Caramel syrup': [
-        'Caramel Macchiato'
+        'Caramel Macchiato Hot',
+        'Iced Caramel Macchiato',
+        'Salted Caramel Frappe',
+        'Caramel Milk Tea'
     ],
     'Vanilla syrup': [
-        'Cafe Latte'
+        'Vanilla Latte Hot',
+        'Iced Vanilla Latte',
+        'Caramel Macchiato Hot'
     ],
     'Strawberry syrup': [
-        'Strawberry & Cream'
+        'Strawberry Cream Frappe',
+        'Strawberry Cheesecake Frappe',
+        'Strawberry & Cream HC',
+        'Strawberry & Cream MC'
     ],
-    'Mango flavor': [
-        'Mango Cheesecake'
+    'Mango syrup': [
+        'Mango Cheesecake Frappe',
+        'Mango cheese cake HC'
     ],
-    'Tapioca pearls': [
-        'Milk Tea',
-        'Matcha Green Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake'
+    'Mango puree': [
+        'Mango Cheesecake Frappe'
+    ],
+    'Okinawa syrup': [
+        'Okinawa Milk Tea'
+    ],
+    'Wintermelon syrup': [
+        'Wintermelon Milk Tea'
     ],
     'Cookie crumbs': [
-        'Cookies & Cream'
+        'Cookies & Cream Frappe',
+        'Cookies & Cream HC',
+        'Cookies & Cream MC',
+        'Coffee Crumble Frappe'
+    ],
+    'Tapioca pearls': [
+        'Milk Tea Regular',
+        'Caramel Milk Tea',
+        'Cookies & Cream Milk Tea',
+        'Dark Choco Milk Tea',
+        'Okinawa Milk Tea',
+        'Wintermelon Milk Tea',
+        'Matcha Green Tea Milk Tea',
+        'Milk Tea Regular HC',
+        'Milk Tea Regular MC',
+        'Matcha Green Tea HC',
+        'Matcha Green Tea MC',
+        'Cookies & Cream HC',
+        'Cookies & Cream MC',
+        'Strawberry & Cream HC',
+        'Strawberry & Cream MC',
+        'Mango cheese cake HC'
+    ],
+    'Steamed milk': [
+        'Cafe Latte Hot',
+        'Mocha Latte Hot',
+        'Vanilla Latte Hot',
+        'Caramel Macchiato Hot',
+        'Green Tea Latte Hot',
+        'White Chocolate Hot',
+        'Green Tea Matcha Hot'
+    ],
+    'Milk foam': [
+        'Cappuccino Hot',
+        'Caramel Macchiato Hot'
+    ],
+    'Hot water': [
+        'Café Americano Hot',
+        'Hot Ceylon Tea Black',
+        'Hot Ceylon Tea Lemon',
+        'Hot Ceylon Tea Peppermint'
+    ],
+    'Ice': [
+        'Iced Café Latte',
+        'Iced Mocha Latte',
+        'Iced Vanilla Latte',
+        'Iced Caramel Macchiato',
+        'Iced White Chocolate Latte',
+        'Iced Dark Chocolate',
+        'Cucumber Lemonade',
+        'Blue Lemonade',
+        'Red Tea',
+        'Calamansi Juice',
+        'Milk Tea Regular MC',
+        'Matcha Green Tea MC',
+        'Cookies & Cream MC',
+        'Strawberry & Cream MC',
+        'All Frappe drinks'
+    ],
+    'Carbonated soft drink': [
+        'Soda (Mismo) Coke',
+        'Soda (Mismo) Sprite',
+        'Soda (Mismo) Royal',
+        'Soda 1.5L Coke',
+        'Soda 1.5L Coke Zero',
+        'Soda 1.5L Sprite',
+        'Soda 1.5L Royal'
+    ],
+    'Coke syrup': [
+        'Soda (Mismo) Coke',
+        'Soda 1.5L Coke'
+    ],
+    'Coke zero syrup': [
+        'Soda 1.5L Coke Zero'
+    ],
+    'Sprite syrup': [
+        'Soda (Mismo) Sprite',
+        'Soda 1.5L Sprite'
+    ],
+    'Royal syrup': [
+        'Soda (Mismo) Royal',
+        'Soda 1.5L Royal'
+    ],
+    'Carbonated water': [
+        'Soda (Mismo) Coke',
+        'Soda (Mismo) Sprite',
+        'Soda (Mismo) Royal',
+        'Soda 1.5L Coke',
+        'Soda 1.5L Coke Zero',
+        'Soda 1.5L Sprite',
+        'Soda 1.5L Royal'
     ],
     
     // ================ SNACKS & SIDES ================
@@ -652,9 +1076,14 @@ const recipeMapping = {
         'Cheesy Nachos',
         'Nachos Supreme'
     ],
-    'Lumpiang wrapper': [
+    'Tortilla chips': [
+        'Cheesy Nachos',
+        'Nachos Supreme'
+    ],
+    'Lumpia wrapper': [
         'Lumpiang Shanghai',
-        'Cheesy Dynamite Lumpia'
+        'Cheesy Dynamite Lumpia',
+        'Pork Shanghai'
     ],
     'French fries': [
         'French Fries',
@@ -665,95 +1094,75 @@ const recipeMapping = {
     ],
     
     // ================ PACKAGING ================
-    'Paper cups': [
+    'Paper Cups (12oz)': [
+        'All 12oz beverages',
+        'Cucumber Lemonade (Glass)',
+        'Blue Lemonade (Glass)',
+        'Red Tea (Glass)',
+        'Calamansi Juice (Glass)',
+        'All Hot Coffee drinks',
+        'All Iced Coffee drinks',
+        'All Milk Tea drinks',
+        'All Frappe drinks'
+    ],
+    'Paper Cups (16oz)': [
+        'All 16oz beverages',
+        'Cucumber Lemonade (Pitcher) individual serving',
+        'Blue Lemonade (Pitcher) individual serving',
+        'All Grande coffee drinks'
+    ],
+    'Straws (Regular)': [
+        'All cold beverages',
         'Cucumber Lemonade',
         'Blue Lemonade',
         'Red Tea',
-        'Cafe Americano',
-        'Cafe Latte',
-        'Caramel Macchiato',
-        'Milk Tea',
-        'Matcha Green Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake',
-        'Soda'
+        'Calamansi Juice',
+        'Soda',
+        'Iced Coffee drinks'
     ],
-    'Straws': [
-        'Cucumber Lemonade',
-        'Blue Lemonade',
-        'Red Tea',
-        'Milk Tea',
-        'Matcha Green Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake',
-        'Soda'
+    'Straws (Boba)': [
+        'All Milk Tea drinks',
+        'All Frappe drinks',
+        'Matcha Green Tea drinks'
     ],
-    'Napkins': [
-        'Korean Spicy Bulgogi (Pork)',
-        'Korean Salt and Pepper (Pork)',
-        'Crispy Pork Lechon Kawali',
-        'Cream Dory Fish Fillet',
-        'Buttered Honey Chicken',
-        'Buttered Spicy Chicken',
-        'Chicken Adobo',
-        'Pork Shanghai',
-        'Sizzling Pork Sisig',
-        'Sizzling Liempo',
-        'Sizzling Porkchop',
-        'Sizzling Fried Chicken',
-        'Fried Chicken',
-        'Budget Fried Chicken',
-        'Cheesy Nachos',
-        'Nachos Supreme',
+    'Food Containers (Small)': [
         'French Fries',
-        'Clubhouse Sandwich',
-        'Fish and Fries',
         'Cheesy Dynamite Lumpia',
-        'Lumpiang Shanghai',
-        'Tinapa Rice',
-        'Tuyo Pesto',
-        'Sinigang (Pork)',
-        'Sinigang (Shrimp)',
-        'Paknet (Pakbet w/ Bagnet)',
-        'Buttered Shrimp',
-        'Special Bulalo'
-    ],
-    'Food containers': [
-        'Korean Spicy Bulgogi (Pork)',
-        'Korean Salt and Pepper (Pork)',
-        'Crispy Pork Lechon Kawali',
-        'Cream Dory Fish Fillet',
-        'Buttered Honey Chicken',
-        'Buttered Spicy Chicken',
-        'Chicken Adobo',
-        'Pork Shanghai',
-        'Sizzling Pork Sisig',
-        'Sizzling Liempo',
-        'Sizzling Porkchop',
-        'Sizzling Fried Chicken',
-        'Fried Chicken',
-        'Budget Fried Chicken',
-        'Pancit Bihon',
-        'Pancit Canton + Bihon (Mixed)',
-        'Spaghetti (Filipino Style)',
-        'Cheesy Nachos',
-        'Nachos Supreme',
-        'French Fries',
-        'Clubhouse Sandwich',
-        'Fish and Fries',
-        'Cheesy Dynamite Lumpia',
-        'Lumpiang Shanghai',
-        'Fried Rice',
+        'Lumpiang Shanghai (6 pcs)',
         'Plain Rice',
+        'Fried Rice'
+    ],
+    'Food Containers (Medium)': [
+        'Rice Bowl Meals',
+        'Korean Spicy Bulgogi',
+        'Cream Dory Fish Fillet',
+        'Buttered Honey Chicken',
+        'Chicken Adobo',
+        'Pork Shanghai',
         'Tinapa Rice',
         'Tuyo Pesto',
-        'Sinigang (Pork)',
-        'Sinigang (Shrimp)',
-        'Paknet (Pakbet w/ Bagnet)',
-        'Buttered Shrimp',
-        'Special Bulalo'
+        'Budget Meals',
+        'Nachos',
+        'Fish and Fries'
+    ],
+    'Food Containers (Large)': [
+        'Sizzling meals',
+        'Party trays (individual serving)',
+        'Sinigang (individual serving)',
+        'Pakbet',
+        'Buttered Shrimp'
+    ],
+    'Plastic Utensils Set': [
+        'All Rice Bowl Meals',
+        'All Sizzling meals',
+        'All Party Tray items',
+        'All Specialties',
+        'All Snacks'
+    ],
+    'Napkins (Pack of 50)': [
+        'All food items',
+        'All dine-in orders',
+        'All takeout orders'
     ]
 };
 
@@ -3259,55 +3668,136 @@ window.getAvailableMenuItems = getAvailableMenuItems;
     console.log('🔍 Setting up auto-deduction for ALL menu items...');
     
     // Map of menu item categories to their ingredients (for verification)
-    const menuItemIngredients = {
-        'Cafe Americano': ['Coffee beans', 'Hot water', 'Sugar', 'Paper cups', 'Straws'],
-        'Cafe Latte': ['Coffee beans', 'Milk', 'Sugar', 'Vanilla syrup', 'Paper cups', 'Straws'],
-        'Caramel Macchiato': ['Coffee beans', 'Milk', 'Sugar', 'Caramel syrup', 'Paper cups', 'Straws'],
-        'Fried Chicken': ['Chicken', 'Flour', 'Cooking oil', 'Salt', 'Cornstarch', 'Breadcrumbs', 'Food containers'],
-        'Korean Spicy Bulgogi (Pork)': ['Pork', 'Garlic', 'Onion', 'Chili', 'Gochujang', 'Sesame oil', 'Soy sauce', 'Cooking oil', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins'],
-        'Korean Salt and Pepper (Pork)': ['Pork', 'Garlic', 'Onion', 'Chili', 'Gochujang', 'Sesame oil', 'Soy sauce', 'Cooking oil', 'Salt', 'Black pepper', 'Peppercorn', 'Rice', 'Food containers', 'Napkins'],
-        'Crispy Pork Lechon Kawali': ['Pork', 'Pork belly', 'Garlic', 'Onion', 'Cooking oil', 'Salt', 'Cornstarch', 'Rice', 'Food containers', 'Napkins'],
-        'Pork Shanghai': ['Pork', 'Garlic', 'Cooking oil', 'Cornstarch', 'Breadcrumbs', 'Flour', 'Rice', 'Food containers', 'Napkins'],
-        'Sinigang (Pork)': ['Pork', 'Garlic', 'Onion', 'Chili', 'Calamansi', 'Tomato', 'Tamarind mix', 'Shrimp paste', 'Salt', 'Black pepper', 'Bay leaves', 'Water', 'Rice', 'Food containers', 'Napkins'],
-        'Sizzling Pork Sisig': ['Pork', 'Garlic', 'Onion', 'Chili', 'Calamansi', 'Soy sauce', 'Oyster sauce', 'Cooking oil', 'Salt', 'Black pepper', 'Egg', 'Mayonnaise', 'Rice', 'Food containers', 'Napkins'],
-        'Sizzling Liempo': ['Pork', 'Pork belly', 'Garlic', 'Cooking oil', 'Salt', 'Rice', 'Food containers', 'Napkins'],
-        'Sizzling Porkchop': ['Pork', 'Pork chop', 'Garlic', 'Cooking oil', 'Salt', 'Rice', 'Food containers', 'Napkins'],
-        'Buttered Honey Chicken': ['Chicken', 'Butter', 'Honey', 'Rice', 'Food containers', 'Napkins'],
-        'Buttered Spicy Chicken': ['Chicken', 'Butter', 'Rice', 'Food containers', 'Napkins'],
-        'Chicken Adobo': ['Chicken', 'Garlic', 'Onion', 'Tomato', 'Soy sauce', 'Salt', 'Bay leaves', 'Rice','Black Pepper','Plates', 'Napkins'],
-        'Sizzling Fried Chicken': ['Chicken', 'Garlic', 'Cooking oil', 'Salt', 'Rice', 'Food containers', 'Napkins'],
-        'Clubhouse Sandwich': ['Chicken', 'Bread', 'Mayonnaise', 'Gravy', 'Napkins'],
-        'Budget Fried Chicken': ['Fried chicken', 'Cooking oil', 'Salt', 'Breadcrumbs', 'Flour', 'Rice', 'Food containers', 'Napkins'],
-        'Fish and Fries': ['Fried chicken', 'Cream dory', 'Cooking oil', 'Salt', 'Flour', 'French fries', 'Food containers', 'Napkins'],
-        'Cream Dory Fish Fillet': ['Cream dory', 'Cooking oil', 'Salt', 'Breadcrumbs', 'Flour', 'Rice', 'Food containers', 'Napkins'],
-        'Buttered Shrimp': ['Shrimp', 'Garlic', 'Calamansi', 'Butter', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins'],
-        'Special Bulalo': ['Beef shank', 'Shrimp', 'Garlic', 'Onion', 'Corn', 'Potato', 'Vegetables', 'Bay leaves', 'Salt', 'Water', 'Chicken broth', 'Rice', 'Food containers', 'Napkins'],
-        'Paknet (Pakbet w/ Bagnet)': ['Bagnet', 'Garlic', 'Onion', 'Tomato', 'Cucumber', 'Corn', 'Potato', 'Vegetables', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins'],
-        'Tinapa Rice': ['Tinapa', 'Rice', 'Food containers', 'Napkins'],
-        'Tuyo Pesto': ['Tuyo', 'Shrimp paste', 'Rice', 'Food containers', 'Napkins'],
-        'Pancit Bihon': [' noodles', 'Garlic', 'Onion', 'Carrot', 'Soy sauce', 'Oyster sauce', 'Food containers'],
-        'Pancit Canton + Bihon (Mixed)': ['Pancit canton', 'noodles', 'Garlic', 'Onion', 'Carrot', 'Soy sauce', 'Oyster sauce', 'Food containers'],
-        'Spaghetti (Filipino Style)': ['Spaghetti pasta', 'Garlic', 'Onion', 'Tomato', 'Soy sauce', 'Sweet tomato sauce', 'Food containers'],
-        'Fried Rice': ['Rice', 'Garlic', 'Onion', 'Sesame oil', 'Soy sauce', 'Cooking oil', 'Salt', 'Sugar', 'Egg', 'Water', 'Food containers'],
-        'Plain Rice': ['Rice', 'Salt', 'Water', 'Food containers'],
-        'Cucumber Lemonade': ['Lemon', 'Cucumber', 'Calamansi', 'Honey', 'Sugar', 'Lemon juice', 'Paper cups', 'Straws'],
-        'Blue Lemonade': ['Lemon', 'Calamansi', 'Honey', 'Sugar', 'Lemon juice', 'Blue syrup', 'Paper cups', 'Straws'],
-        'Red Tea': ['Tea', 'Black tea', 'Honey', 'Sugar', 'Hot water', 'Paper cups', 'Straws'],
-        'Milk Tea': ['Milk', 'Tea', 'Sugar', 'Tapioca pearls', 'Paper cups', 'Straws'],
-        'Matcha Green Tea': ['Matcha powder', 'Tea', 'Sugar', 'Tapioca pearls', 'Paper cups', 'Straws'],
-        'Cookies & Cream': ['Cream', 'Milk', 'Sugar', 'Tapioca pearls', 'Cookie crumbs', 'Paper cups', 'Straws'],
-        'Strawberry & Cream': ['Cream', 'Milk', 'Sugar', 'Strawberry syrup', 'Tapioca pearls', 'Paper cups', 'Straws'],
-        'Mango Cheesecake': ['Cream', 'Milk', 'Cream cheese flavor', 'Mango flavor', 'Sugar', 'Tapioca pearls', 'Paper cups', 'Straws'],
-        'Cafe Americano': ['Coffee beans', 'Espresso', 'Hot water', 'Sugar', 'Paper cups'],
-        'Cafe Latte': ['Coffee beans', 'Espresso', 'Milk', 'Steamed milk', 'Sugar', 'Vanilla syrup', 'Paper cups'],
-        'Caramel Macchiato': ['Coffee beans', 'Espresso', 'Milk', 'Steamed milk', 'Sugar', 'Caramel syrup', 'Paper cups'],
-        'Soda': ['Carbonated soft drink', 'Paper cups', 'Straws'],
-        'Cheesy Nachos': ['Nacho chips', 'Cheese', 'Cheese sauce', 'Cooking oil', 'Onion', 'Food containers', 'Napkins'],
-        'Nachos Supreme': ['Nacho chips', 'Cheese', 'Cheese sauce', 'Cooking oil', 'Onion', 'Food containers', 'Napkins'],
-        'French Fries': ['French fries', 'Cooking oil', 'Salt', 'Flour', 'Food containers', 'Napkins'],
-        'Cheesy Dynamite Lumpia': ['Lumpiang wrapper', 'Cheese', 'Cheese sauce', 'Cooking oil', 'Cornstarch', 'Food containers', 'Napkins'],
-        'Lumpiang Shanghai': ['Lumpiang wrapper', 'Pork', 'Cooking oil', 'Cornstarch', 'Breadcrumbs', 'Flour', 'Food containers', 'Napkins']
-    };
+const menuItemIngredients = {
+    // ==================== RICE BOWL MEALS ====================
+    'Korean Spicy Bulgogi (Pork)': ['Pork', 'Garlic', 'Onion', 'Chili', 'Gochujang', 'Sesame oil', 'Soy sauce', 'Cooking oil', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Korean Salt and Pepper (Pork)': ['Pork', 'Garlic', 'Onion', 'Chili', 'Gochujang', 'Sesame oil', 'Soy sauce', 'Cooking oil', 'Salt', 'Black pepper', 'Peppercorn', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Crispy Pork Lechon Kawali': ['Pork Belly', 'Garlic', 'Onion', 'Bay leaves', 'Peppercorn', 'Salt', 'Cooking oil', 'Cornstarch', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Cream Dory Fish Fillet': ['Cream Dory', 'Flour', 'Salt', 'Black pepper', 'Butter', 'Garlic', 'Cream', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Buttered Honey Chicken': ['Chicken', 'Butter', 'Honey', 'Garlic', 'Soy sauce', 'Black pepper', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Buttered Spicy Chicken': ['Chicken', 'Butter', 'Chili flakes', 'Garlic', 'Soy sauce', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Chicken Adobo': ['Chicken', 'Garlic', 'Onion', 'Soy sauce', 'Vinegar', 'Bay leaves', 'Peppercorn', 'Black pepper', 'Salt', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Pork Shanghai': ['Ground Pork', 'Carrot', 'Onion', 'Garlic', 'Egg', 'Breadcrumbs', 'Lumpia wrapper', 'Cooking oil', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+
+    // ==================== HOT SIZZLERS ====================
+    'Sizzling Pork Sisig': ['Pork', 'Onion', 'Chili', 'Calamansi', 'Mayonnaise', 'Soy sauce', 'Egg', 'Cooking oil', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Sizzling Liempo': ['Pork Belly', 'Garlic', 'Soy sauce', 'Black pepper', 'Cooking oil', 'Salt', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Sizzling Porkchop': ['Pork Chop', 'Garlic', 'Soy sauce', 'Black pepper', 'Cooking oil', 'Salt', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Sizzling Fried Chicken': ['Fried chicken', 'Flour', 'Garlic', 'Black pepper', 'Gravy', 'Cooking oil', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+
+    // ==================== PARTY TRAYS ====================
+    'Pancit Bihon': ['Rice noodles', 'Chicken', 'Cabbage', 'Carrot', 'Garlic', 'Onion', 'Soy sauce', 'Oyster sauce', 'Cooking oil', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Pancit Canton': ['Pancit Canton noodles', 'Chicken', 'Cabbage', 'Carrot', 'Garlic', 'Onion', 'Soy sauce', 'Oyster sauce', 'Cooking oil', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Pancit Canton + Bihon (Mixed)': ['Pancit Canton noodles', 'Bihon noodles', 'Chicken', 'Cabbage', 'Carrot', 'Garlic', 'Onion', 'Soy sauce', 'Oyster sauce', 'Chicken broth', 'Cooking oil', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Spaghetti': ['Spaghetti pasta', 'Sweet tomato sauce', 'Ground Pork', 'Hotdog', 'Cheese', 'Garlic', 'Onion', 'Sugar', 'Cooking oil', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Creamy Carbonara': ['Spaghetti pasta', 'Bacon', 'Cream', 'Milk', 'Cheese', 'Egg', 'Garlic', 'Butter', 'Black pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Creamy Pesto': ['Spaghetti pasta', 'Basil pesto', 'Cream', 'Cheese', 'Garlic', 'Pine nuts', 'Olive oil', 'Salt', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Tuyo Pesto': ['Spaghetti pasta', 'Tuyo', 'Basil pesto', 'Garlic', 'Olive oil', 'Chili', 'Salt', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Kare-Kare': ['Oxtail', 'Tripe', 'Peanut butter', 'Rice flour', 'Onion', 'Garlic', 'Eggplant', 'String beans', 'Banana blossom', 'Bagoong', 'Cooking oil', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Chicken Buffalo Wings': ['Chicken Wings', 'Flour', 'Cornstarch', 'Buffalo sauce', 'Butter', 'Garlic', 'Cooking oil', 'Salt', 'Black pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+
+    // ==================== DRINKS ====================
+    'Cucumber Lemonade (Glass)': ['Cucumber', 'Lemon', 'Sugar', 'Water', 'Ice', 'Paper cups', 'Straws'],
+    'Cucumber Lemonade (Pitcher)': ['Cucumber', 'Lemon', 'Sugar', 'Water', 'Ice', 'Pitcher'],
+    'Blue Lemonade (Glass)': ['Blue syrup', 'Lemon', 'Sugar', 'Water', 'Ice', 'Paper cups', 'Straws'],
+    'Blue Lemonade (Pitcher)': ['Blue syrup', 'Lemon', 'Sugar', 'Water', 'Ice', 'Pitcher'],
+    'Red Tea (Glass)': ['Red tea', 'Sugar', 'Water', 'Ice', 'Paper cups', 'Straws'],
+    'Red Tea (Pitcher)': ['Red tea', 'Sugar', 'Water', 'Ice', 'Pitcher'],
+    'Calamansi Juice (Glass)': ['Calamansi', 'Sugar', 'Water', 'Ice', 'Paper cups', 'Straws'],
+    'Calamansi Juice (Pitcher)': ['Calamansi', 'Sugar', 'Water', 'Ice', 'Pitcher'],
+    'Soda (Mismo) Coke': ['Coke syrup', 'Carbonated water', 'Bottle'],
+    'Soda (Mismo) Sprite': ['Sprite syrup', 'Carbonated water', 'Bottle'],
+    'Soda (Mismo) Royal': ['Royal syrup', 'Carbonated water', 'Bottle'],
+    'Soda 1.5L Coke': ['Coke syrup', 'Carbonated water', 'Bottle'],
+    'Soda 1.5L Coke Zero': ['Coke zero syrup', 'Carbonated water', 'Bottle'],
+    'Soda 1.5L Sprite': ['Sprite syrup', 'Carbonated water', 'Bottle'],
+    'Soda 1.5L Royal': ['Royal syrup', 'Carbonated water', 'Bottle'],
+
+    // ==================== HOT COFFEE ====================
+    'Espresso Hot': ['Coffee beans', 'Water', 'Paper cups'],
+    'Café Americano Hot': ['Espresso', 'Hot water', 'Paper cups'],
+    'Cappuccino Hot': ['Espresso', 'Steamed milk', 'Milk foam', 'Paper cups'],
+    'Café Latte Hot': ['Espresso', 'Steamed milk', 'Paper cups'],
+    'Mocha Latte Hot': ['Espresso', 'Chocolate syrup', 'Steamed milk', 'Paper cups'],
+    'Vanilla Latte Hot': ['Espresso', 'Vanilla syrup', 'Steamed milk', 'Paper cups'],
+    'Caramel Macchiato Hot': ['Espresso', 'Vanilla syrup', 'Caramel syrup', 'Steamed milk', 'Milk foam', 'Paper cups'],
+    'Green Tea Latte Hot': ['Matcha powder', 'Steamed milk', 'Sugar', 'Paper cups'],
+    'White Chocolate Hot': ['White chocolate syrup', 'Steamed milk', 'Cream', 'Paper cups'],
+    'Green Tea Matcha Hot': ['Matcha powder', 'Steamed milk', 'Sugar', 'Paper cups'],
+
+    // ==================== HOT CEYLON TEA ====================
+    'Hot Ceylon Tea Black': ['Black tea', 'Hot water', 'Sugar', 'Paper cups'],
+    'Hot Ceylon Tea Lemon': ['Black tea', 'Lemon', 'Hot water', 'Sugar', 'Paper cups'],
+    'Hot Ceylon Tea Peppermint': ['Peppermint tea', 'Hot water', 'Honey', 'Paper cups'],
+
+    // ==================== ICED COFFEE ====================
+    'Iced Café Latte': ['Espresso', 'Milk', 'Ice', 'Sugar', 'Paper cups', 'Straws'],
+    'Iced Mocha Latte': ['Espresso', 'Chocolate syrup', 'Milk', 'Ice', 'Sugar', 'Paper cups', 'Straws'],
+    'Iced Vanilla Latte': ['Espresso', 'Vanilla syrup', 'Milk', 'Ice', 'Paper cups', 'Straws'],
+    'Iced Caramel Macchiato': ['Espresso', 'Vanilla syrup', 'Caramel syrup', 'Milk', 'Ice', 'Paper cups', 'Straws'],
+    'Iced White Chocolate Latte': ['White chocolate syrup', 'Milk', 'Ice', 'Paper cups', 'Straws'],
+    'Iced Dark Chocolate': ['Dark chocolate syrup', 'Milk', 'Ice', 'Paper cups', 'Straws'],
+
+    // ==================== MILK TEA ====================
+    'Milk Tea Regular': ['Black tea', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+    'Caramel Milk Tea': ['Black tea', 'Milk', 'Caramel syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+    'Cookies & Cream Milk Tea': ['Black tea', 'Milk', 'Cookie crumbs', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+    'Dark Choco Milk Tea': ['Black tea', 'Milk', 'Chocolate syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+    'Okinawa Milk Tea': ['Black tea', 'Milk', 'Okinawa syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+    'Wintermelon Milk Tea': ['Wintermelon syrup', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+    'Matcha Green Tea Milk Tea': ['Matcha powder', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Paper cups', 'Boba straws'],
+
+    // ==================== FRAPPE - PREMIUM ====================
+    'Matcha Green Tea Frappe': ['Matcha powder', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Paper cups', 'Boba straws'],
+    'Salted Caramel Frappe': ['Coffee', 'Caramel syrup', 'Milk', 'Ice cream', 'Ice', 'Salt', 'Whipped cream', 'Paper cups', 'Boba straws'],
+    'Strawberry Cheesecake Frappe': ['Strawberry syrup', 'Cream cheese', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Graham crumbs', 'Paper cups', 'Boba straws'],
+    'Mango Cheesecake Frappe': ['Mango puree', 'Cream cheese', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Graham crumbs', 'Paper cups', 'Boba straws'],
+    'Strawberry Cream Frappe': ['Strawberry syrup', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Paper cups', 'Boba straws'],
+    'Cookies & Cream Frappe': ['Coffee', 'Cookie crumbs', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Chocolate syrup', 'Paper cups', 'Boba straws'],
+    'Rocky Road Frappe': ['Chocolate syrup', 'Milk', 'Ice cream', 'Ice', 'Marshmallows', 'Nuts', 'Whipped cream', 'Paper cups', 'Boba straws'],
+
+    // ==================== FRAPPE - REGULAR ====================
+    'Choco Fudge Frappe': ['Chocolate syrup', 'Milk', 'Ice cream', 'Ice', 'Whipped cream', 'Chocolate sauce', 'Paper cups', 'Boba straws'],
+    'Choco Mousse Frappe': ['Chocolate syrup', 'Chocolate mousse', 'Milk', 'Ice', 'Whipped cream', 'Paper cups', 'Boba straws'],
+    'Coffee Crumble Frappe': ['Coffee', 'Milk', 'Ice cream', 'Ice', 'Cookie crumbs', 'Whipped cream', 'Paper cups', 'Boba straws'],
+    'Vanilla Cream Frappe': ['Vanilla syrup', 'Milk', 'Ice cream', 'Ice', 'Whipped cream', 'Paper cups', 'Boba straws'],
+
+    // ==================== SNACKS & APPETIZERS ====================
+    'Cheesy Nachos': ['Nacho chips', 'Cheese sauce', 'Cheese', 'Cooking oil', 'Onion', 'Food containers', 'Napkins'],
+    'Nachos Supreme': ['Nacho chips', 'Cheese', 'Cheese sauce', 'Ground meat', 'Tomato', 'Onion', 'Cooking oil', 'Food containers', 'Napkins'],
+    'French Fries': ['Potato', 'Cooking oil', 'Salt', 'Flour', 'Food containers', 'Napkins'],
+    'Clubhouse Sandwich': ['Bread', 'Chicken', 'Ham', 'Egg', 'Lettuce', 'Tomato', 'Mayonnaise', 'Napkins'],
+    'Fish and Fries': ['Fish fillet', 'Batter', 'Potato', 'Cooking oil', 'Salt', 'Food containers', 'Napkins'],
+    'Cheesy Dynamite Lumpia': ['Siling Green', 'Cheese', 'Cheese sauce', 'Lumpia wrapper', 'Cooking oil', 'Cornstarch', 'Food containers', 'Napkins'],
+    'Lumpiang Shanghai': ['Ground Pork', 'Vegetables', 'Carrot', 'Onion', 'Garlic', 'Lumpia wrapper', 'Cooking oil', 'Breadcrumbs', 'Flour', 'Food containers', 'Napkins'],
+
+    // ==================== BUDGET MEALS ====================
+    'Fried Chicken': ['Chicken', 'Flour', 'Garlic', 'Black pepper', 'Cooking oil', 'Salt', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Budget Fried Chicken': ['Chicken', 'Cooking oil', 'Salt', 'Breadcrumbs', 'Flour', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Tinapa Rice': ['Tinapa', 'Rice', 'Garlic', 'Egg', 'Cooking oil', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Tuyo Pesto': ['Tuyo', 'Pasta', 'Garlic', 'Cooking oil', 'Herbs', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Fried Rice': ['Rice', 'Garlic', 'Onion', 'Sesame oil', 'Soy sauce', 'Cooking oil', 'Salt', 'Sugar', 'Egg', 'Water', 'Food containers', 'Napkins'],
+    'Plain Rice': ['Rice', 'Salt', 'Water', 'Food containers', 'Napkins'],
+
+    // ==================== FILIPINO SPECIALTIES ====================
+    'Sinigang (Pork)': ['Pork', 'Garlic', 'Onion', 'Chili', 'Calamansi', 'Tomato', 'Tamarind mix', 'Shrimp paste', 'Salt', 'Black pepper', 'Bay leaves', 'Water', 'Radish', 'Kangkong', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Sinigang (Shrimp)': ['Shrimp', 'Garlic', 'Onion', 'Chili', 'Calamansi', 'Tomato', 'Tamarind mix', 'Shrimp paste', 'Salt', 'Black pepper', 'Bay leaves', 'Water', 'Kangkong', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Paknet (Pakbet w/ Bagnet)': ['Bagnet', 'Garlic', 'Onion', 'Tomato', 'Cucumber', 'Corn', 'Potato', 'Eggplant', 'Squash', 'Okra', 'Ampalaya', 'Shrimp paste', 'Cooking oil', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Buttered Shrimp': ['Shrimp', 'Garlic', 'Calamansi', 'Butter', 'Salt', 'Black pepper', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Special Bulalo (good for 2-3 Persons)': ['Beef Shank', 'Corn', 'Potato', 'Cabbage', 'Carrot', 'Onion', 'Garlic', 'Bay leaves', 'Peppercorn', 'Salt', 'Water', 'Beef broth', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)': ['Beef Shank', 'Corn', 'Potato', 'Cabbage', 'Carrot', 'Onion', 'Garlic', 'Bay leaves', 'Peppercorn', 'Salt', 'Water', 'Beef broth', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+
+    // ==================== PACKAGING SUPPLIES ====================
+    'Paper Cups (12oz)': ['Paper cups pack'],
+    'Paper Cups (16oz)': ['Paper cups pack'],
+    'Straws (Regular)': ['Straws pack'],
+    'Straws (Boba)': ['Boba straws pack'],
+    'Food Containers (Small)': ['Food container pack'],
+    'Food Containers (Medium)': ['Food container pack'],
+    'Food Containers (Large)': ['Food container pack'],
+    'Plastic Utensils Set': ['Utensils set pack'],
+    'Napkins (Pack of 50)': ['Napkins pack']
+};
     
     // Listen for any button clicks that might create menu items
     document.addEventListener('click', async function(e) {
