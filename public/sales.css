@@ -1,3 +1,4 @@
+/* ===== sales.css – fully mobile responsive, desktop untouched ===== */
 * {
     margin: 0;
     padding: 0;
@@ -443,207 +444,190 @@ body {
 
 /* Export Button Styles */
 .sales-report-header {
-  position: relative;
+    position: relative;
 }
 
 .header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
 }
 
 .header-left h1 {
-  margin: 0;
-  font-size: 28px;
-  color: #2c3e50;
+    margin: 0;
+    font-size: 28px;
+    color: #2c3e50;
 }
 
 .header-right {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 /* Export Button Container */
 .export-btn-dropdown {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 /* Main Export Button */
 .export-btn {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
-  min-width: 150px;
-  justify-content: center;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+    min-width: 150px;
+    justify-content: center;
 }
 
 .export-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
 }
 
 .export-btn:active {
-  transform: translateY(0);
+    transform: translateY(0);
 }
 
 .export-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none !important;
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
 }
 
 .export-icon {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .export-arrow {
-  font-size: 12px;
-  margin-left: 4px;
+    font-size: 12px;
+    margin-left: 4px;
 }
 
 /* Dropdown Menu */
 .export-btn-dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 100%;
-  background: white;
-  min-width: 200px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  z-index: 1000;
-  overflow: hidden;
-  margin-top: 5px;
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 5px;
 }
 
 .export-btn-dropdown:hover .export-btn-dropdown-content {
-  display: block;
+    display: block;
 }
 
 .export-btn-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  color: #333;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .export-btn-dropdown-item:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .export-btn-dropdown-item:hover {
-  background: #f5f5f5;
-  color: #4CAF50;
+    background: #f5f5f5;
+    color: #4CAF50;
 }
 
 .export-btn-dropdown-item .export-icon {
-  width: 20px;
-  text-align: center;
+    width: 20px;
+    text-align: center;
 }
 
 /* Loading Spinner Animation */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .loading-spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
 }
 
 /* Success Animation */
 @keyframes exportSuccess {
-  0% { background-color: #4CAF50; }
-  50% { background-color: #45a049; }
-  100% { background-color: #4CAF50; }
+    0% { background-color: #4CAF50; }
+    50% { background-color: #45a049; }
+    100% { background-color: #4CAF50; }
 }
 
 .export-success {
-  animation: exportSuccess 0.5s ease-in-out;
+    animation: exportSuccess 0.5s ease-in-out;
 }
 
 /* Notification Styles */
 .export-notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 15px 20px;
-  border-radius: 8px;
-  color: white;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 10000;
-  transform: translateX(100%);
-  opacity: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10000;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .export-notification.show {
-  transform: translateX(0);
-  opacity: 1;
+    transform: translateX(0);
+    opacity: 1;
 }
 
 .export-notification-success {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+    background: linear-gradient(135deg, #4CAF50, #45a049);
 }
 
 .export-notification-error {
-  background: linear-gradient(135deg, #f44336, #d32f2f);
+    background: linear-gradient(135deg, #f44336, #d32f2f);
 }
 
 .export-notification-info {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
+    background: linear-gradient(135deg, #2196F3, #1976D2);
 }
 
 .notification-icon {
-  font-size: 18px;
-  font-weight: bold;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header-top {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .header-right {
-    align-self: flex-start;
-  }
-  
-  .export-btn {
-    padding: 10px 20px;
-    font-size: 13px;
-  }
-}
-
- /* Donut chart styles – added without breaking existing layout */
-  .revenue-breakdown-donut {
+/* Donut chart styles – added without breaking existing layout */
+.revenue-breakdown-donut {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
@@ -653,34 +637,38 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-  }
-  .donut-heading {
+}
+
+.donut-heading {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 6px;
     color: #1e293b;
-  }
-  .donut-container {
+}
+
+.donut-container {
     display: flex;
     align-items: center;
     gap: 30px;
     flex-wrap: wrap;
-  }
-  .donut-chart {
+}
+
+.donut-chart {
     width: 140px;
     height: 140px;
     border-radius: 50%;
     background: conic-gradient(
-      #3b82f6 0deg 126.36deg,   /* 35.1% → 126.36° */
-      #f59e0b 126.36deg 240.48deg, /* 31.7% → 114.12° */
-      #10b981 240.48deg 310.68deg, /* 19.5% → 70.2° */
-      #8b5cf6 310.68deg 360deg   /* 13.7% → 49.32° */
+        #3b82f6 0deg 126.36deg,   /* 35.1% → 126.36° */
+        #f59e0b 126.36deg 240.48deg, /* 31.7% → 114.12° */
+        #10b981 240.48deg 310.68deg, /* 19.5% → 70.2° */
+        #8b5cf6 310.68deg 360deg   /* 13.7% → 49.32° */
     );
     position: relative;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     flex-shrink: 0;
-  }
-  .donut-inner {
+}
+
+.donut-inner {
     width: 90px;
     height: 90px;
     background: white;
@@ -696,74 +684,80 @@ body {
     font-size: 20px;
     color: #0f172a;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-  }
-  .donut-legend {
+}
+
+.donut-legend {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
-  .donut-legend li {
+}
+
+.donut-legend li {
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 15px;
     color: #334155;
-  }
-  .legend-dot {
+}
+
+.legend-dot {
     width: 14px;
     height: 14px;
     border-radius: 4px;
-  }
-  .legend-percent {
+}
+
+.legend-percent {
     font-weight: 600;
     color: #0f172a;
     margin-left: 4px;
-  }
-  .legend-value {
+}
+
+.legend-value {
     margin-left: auto;
     color: #475569;
-  }
-  /* keep existing styles untouched, just addition */
-  .gross-profit-section + .revenue-breakdown-donut {
-    margin-top: 20px;
-  }
+}
 
-  /* ==================== 📊 REVENUE BREAKDOWN SECTION ==================== */
-  .revenue-breakdown-section {
+/* keep existing styles untouched, just addition */
+.gross-profit-section + .revenue-breakdown-donut {
+    margin-top: 20px;
+}
+
+/* ==================== 📊 REVENUE BREAKDOWN SECTION ==================== */
+.revenue-breakdown-section {
     background: white;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .breakdown-header {
+.breakdown-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     border-bottom: 2px solid #4e8a6a;
     padding-bottom: 12px;
-  }
+}
 
-  .breakdown-header h2 {
+.breakdown-header h2 {
     font-size: 18px;
     color: #0f172a;
     margin: 0;
     font-weight: 600;
-  }
+}
 
-  .breakdown-date {
+.breakdown-date {
     font-size: 14px;
     color: #6b7280;
     font-weight: 500;
-  }
+}
 
-  .breakdown-total {
+.breakdown-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -772,28 +766,28 @@ body {
     background: #f3f4f6;
     padding: 15px 20px;
     border-radius: 6px;
-  }
+}
 
-  .breakdown-total p {
+.breakdown-total p {
     font-size: 14px;
     color: #4b5563;
     font-weight: 500;
     margin: 0;
-  }
+}
 
-  .breakdown-total-amount {
+.breakdown-total-amount {
     font-size: 24px;
     font-weight: bold;
     color: #4e8a6a;
-  }
+}
 
-  .breakdown-container {
+.breakdown-container {
     display: flex;
     flex-direction: column;
     gap: 12px;
-  }
+}
 
-  .revenue-breakdown-row {
+.revenue-breakdown-row {
     display: grid;
     grid-template-columns: 200px 1fr 120px;
     gap: 15px;
@@ -805,108 +799,82 @@ body {
     transition: all 0.3s ease;
     animation: slideInLeft 0.5s ease forwards;
     opacity: 0;
-  }
+}
 
-  @keyframes slideInLeft {
+@keyframes slideInLeft {
     from {
-      opacity: 0;
-      transform: translateX(-20px);
+        opacity: 0;
+        transform: translateX(-20px);
     }
     to {
-      opacity: 1;
-      transform: translateX(0);
+        opacity: 1;
+        transform: translateX(0);
     }
-  }
+}
 
-  .revenue-breakdown-row:hover {
+.revenue-breakdown-row:hover {
     background: #eff6ff;
     box-shadow: 0 2px 4px rgba(78, 138, 106, 0.1);
-  }
+}
 
-  .breakdown-category {
+.breakdown-category {
     display: flex;
     flex-direction: column;
     gap: 4px;
-  }
+}
 
-  .category-name {
+.category-name {
     font-size: 14px;
     font-weight: 600;
     color: #0f172a;
-  }
+}
 
-  .category-count {
+.category-count {
     font-size: 12px;
     color: #6b7280;
-  }
+}
 
-  .breakdown-amounts {
+.breakdown-amounts {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
-  }
+}
 
-  .breakdown-amount {
+.breakdown-amount {
     font-size: 16px;
     font-weight: bold;
     color: #4e8a6a;
-  }
+}
 
-  .breakdown-percentage {
+.breakdown-percentage {
     font-size: 12px;
     color: #6b7280;
-  }
+}
 
-  .breakdown-bar {
+.breakdown-bar {
     display: flex;
     height: 6px;
     background: #e5e7eb;
     border-radius: 3px;
     overflow: hidden;
     grid-column: 1 / -1;
-  }
+}
 
-  .bar-fill {
+.bar-fill {
     background: linear-gradient(90deg, #4e8a6a, #6ba88a);
     height: 100%;
     border-radius: 3px;
     transition: width 0.6s ease;
     box-shadow: 0 0 4px rgba(78, 138, 106, 0.3);
-  }
+}
 
-  /* Loading and empty states */
-  .breakdown-container p {
+/* Loading and empty states */
+.breakdown-container p {
     text-align: center;
     color: #9ca3af;
     padding: 20px;
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .revenue-breakdown-row {
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    .breakdown-amounts {
-      flex-direction: row;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .breakdown-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .breakdown-total {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-  }
+}
 
 /* ==================== HAMBURGER MENU STYLES ==================== */
 .hamburger-menu {
@@ -958,7 +926,7 @@ body {
     display: block;
 }
 
-/* Sidebar Header */
+/* Sidebar Header (only visible on mobile) */
 .sidebar-header {
     display: none;
     justify-content: space-between;
@@ -998,68 +966,214 @@ body {
     content: '✕';
 }
 
-/* Mobile Responsive - Hamburger Menu Active */
+/* ========== MOBILE RESPONSIVE (only kicks in below 768px) ========== */
+/* desktop layout stays exactly as originally defined */
 @media (max-width: 768px) {
+    /* hamburger appears */
     .hamburger-menu {
         display: flex;
     }
-    
+
+    /* transform sidebar into off-canvas */
     .sidebar {
-        width: 200px;
+        width: 250px;
         position: fixed;
-        left: -200px;
+        left: -250px;           /* hidden by default */
         top: 50px;
         bottom: 0;
         height: calc(100vh - 50px);
-        max-height: calc(100vh - 50px);
         transition: left 0.3s ease;
         z-index: 999;
         overflow-y: auto;
-        overflow-x: hidden;
+        padding-top: 0;          /* because sidebar-header adds spacing */
     }
-    
+
     .sidebar.active {
         left: 0;
     }
-    
+
+    /* show sidebar header only on mobile */
     .sidebar-header {
         display: flex;
     }
-    
+
+    /* main content fills width */
     .main-content {
         margin-left: 0;
-        margin-top: 50px;
+        width: 100%;
         padding: 15px;
     }
-    
-    body.menu-open {
-        overflow: hidden;
+
+    /* stack summary stats */
+    .summary-stats {
+        grid-template-columns: repeat(2, 1fr);  /* 2 columns on mobile */
+        gap: 12px;
+    }
+
+    /* gross profit section column */
+    .gross-profit-section {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    /* graph header wrap */
+    .graph-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .graph-labels {
+        flex-wrap: wrap;
+    }
+
+    /* make graph container scrollable if needed (but keep proportions) */
+    .graph-visual {
+        width: 100%;
+        overflow-x: auto;
+        padding-left: 35px;
+    }
+
+    /* sales table horizontal scroll */
+    .sales-summary {
+        overflow-x: auto;
+    }
+
+    .sales-table {
+        min-width: 600px;        /* ensures table content is readable */
+    }
+
+    /* revenue breakdown rows adjust */
+    .revenue-breakdown-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .breakdown-amounts {
+        align-items: flex-start;
+    }
+
+    .breakdown-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .breakdown-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    /* donut container stacks */
+    .donut-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .donut-legend {
+        width: 100%;
+    }
+
+    /* header top for export */
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header-right {
+        align-self: flex-start;
+        width: 100%;
+    }
+
+    .export-btn-dropdown {
+        width: 100%;
+    }
+
+    .export-btn {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .export-btn-dropdown-content {
+        width: 100%;
+    }
+
+    /* reduce padding on cards */
+    .sales-report-header,
+    .gross-profit-section,
+    .sales-overview,
+    .sales-summary,
+    .revenue-breakdown-section {
+        padding: 18px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    /* ensure no horizontal overflow */
+    body, .dashboard-container {
+        overflow-x: hidden;
     }
 }
 
+/* small mobile (max-width: 480px) – further refinements */
 @media (max-width: 480px) {
+    .summary-stats {
+        grid-template-columns: 1fr;    /* single column */
+    }
+
     .sidebar {
-        width: 150px;
-        left: -150px;
-        height: calc(100vh - 50px);
-        max-height: calc(100vh - 50px);
-        overflow-y: auto;
-        overflow-x: hidden;
+        width: 220px;
+        left: -220px;
     }
-    
-    .main-content {
-        margin-top: 50px;
-        padding: 10px;
+
+    .brandname h2 {
+        font-size: 14px;
     }
-    
+
+    .navbar {
+        padding: 0 10px;
+    }
+
+    .logo-img {
+        width: 30px;
+        height: 30px;
+    }
+
     .hamburger-menu {
         width: 25px;
         height: 20px;
     }
-    
+
     .hamburger-menu span {
         height: 2.5px;
     }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .sales-report-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .profit-value {
+        font-size: 2rem;
+    }
+
+    .margin-value {
+        font-size: 1.5rem;
+    }
 }
-  
-  
+
+/* ensure desktop hover & large layout never changes – all original values remain */
+/* No changes above 768px – your design is untouched */
