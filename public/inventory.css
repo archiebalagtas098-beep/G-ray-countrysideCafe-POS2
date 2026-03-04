@@ -757,6 +757,10 @@ body {
     border: none;
     cursor: pointer;
     z-index: 1001;
+    position: fixed;
+    top: 12px;
+    right: 50%;
+    transform: translateX(50%);
 }
 
 .hamburger-menu span {
@@ -1201,8 +1205,12 @@ body {
     /* Show hamburger menu on mobile */
     .hamburger-menu {
         display: flex !important;
-        position: relative;
-        z-index: 1001;
+        position: fixed !important;
+        top: 12px !important;
+        right: auto !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 1001 !important;
     }
     
     .hamburger-menu span {

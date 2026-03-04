@@ -1291,6 +1291,9 @@ body {
     border: none;
     cursor: pointer;
     z-index: 1001;
+    position: fixed;
+    top: 12px;
+    right: 15px;
 }
 
 .hamburger-menu span {
@@ -1373,7 +1376,13 @@ body {
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .hamburger-menu {
-        display: flex;
+        display: flex !important;
+        position: fixed !important;
+        top: 12px !important;
+        right: auto !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 1001 !important;
     }
     
     .sidebar {
