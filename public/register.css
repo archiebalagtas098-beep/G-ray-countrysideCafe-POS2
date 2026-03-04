@@ -729,3 +729,56 @@ body {
     gap: 10px;
   }
 }
+
+/* Add this to your existing CSS - around line 240-250 where you have .main-content styles */
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;  /* This centers horizontally */
+  align-items: flex-start;  /* Changed from center to flex-start to keep at top */
+  border: 1px solid #000000;
+  overflow-y: auto;
+  min-height: calc(100vh - 50px); /* Ensure it takes full height minus navbar */
+}
+
+/* Update the mobile styles section (around line 440) */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    margin-top: 50px; /* Add back the navbar height */
+    padding: 20px 15px;
+    min-height: calc(100vh - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .simple-form-container {
+    padding: 25px;
+    margin: 20px auto; /* Changed to auto for horizontal centering */
+    max-width: 95%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    margin-left: 0;
+    margin-top: 50px; /* Add back the navbar height */
+    padding: 15px 10px;
+    min-height: calc(100vh - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .simple-form-container {
+    width: 100%;
+    max-width: 400px; /* Set a max-width for better appearance */
+    padding: 20px;
+    margin: 15px auto; /* This centers it horizontally */
+    border-radius: 10px;
+  }
+}
