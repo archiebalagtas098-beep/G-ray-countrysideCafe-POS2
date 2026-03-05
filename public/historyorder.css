@@ -69,6 +69,75 @@ body {
     font-size: 12px;
 }
 
+/* ==================== USER PROFILE DISPLAY ==================== */
+.navbar .logout-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-profile-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.user-profile-container:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+    border: 2px solid white;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-role {
+    font-size: 11px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Mobile responsive user profile */
+@media (max-width: 768px) {
+    .user-profile-container {
+        padding: 4px 8px;
+        gap: 5px;
+    }
+
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .user-role {
+        font-size: 9px;
+    }
+}
+
 /* MAIN LAYOUT */
 .sidebar {
     width: 250px;
@@ -231,7 +300,7 @@ body {
     border: #000000 1px solid;
     text-align: center;
     font-size: 10px;
-    color: #4e8a6a;
+    color: black;
     padding: 30px;
     background-color: white;
 }

@@ -4074,6 +4074,12 @@ async function renderDashboardGrid() {
                     productId: req.productId || ''
                 }));
                 
+                // ✅ SHOW MODAL IF THERE ARE PENDING REQUESTS
+                if (staffRequestCount > 0) {
+                    console.log('📋 Showing stock requests modal with', staffRequestCount, 'requests');
+                    showStockRequestsModal(pendingStockRequests);
+                }
+                
             } else {
                 console.error('Failed to fetch pending stock requests from MongoDB:', response.status, response.statusText);
                 const errorText = await response.text();
@@ -4083,136 +4089,242 @@ async function renderDashboardGrid() {
             console.error('Error fetching stock requests from MongoDB:', error);
         }
         
-        // Get low stock items from MongoDB data
-        const lowStockItems = (window.allMenuItems || []).filter(item => {
-            const currentStock = item.currentStock || 0;
-            const minStock = item.minStock || 0;
-            return currentStock <= minStock && currentStock > 0;
-        });
         
-        // Get out of stock items from MongoDB data
-        const outOfStockItems = (window.allMenuItems || []).filter(item => {
-            const currentStock = item.currentStock || 0;
-            return currentStock === 0;
-        });
-        
-        // If we have pending stock requests from MongoDB, show them
-        if (staffRequestCount > 0) {
-            console.log('Rendering', staffRequestCount, 'pending stock requests from MongoDB');
-            
-            const requestsHTML = pendingStockRequests.map((request) => {
-                const productName = request.productName || 'Unknown Product';
-                const quantity = request.quantity || 0;
-                const unit = request.unit || 'unit';
-                const requestedBy = request.requestedBy || 'Staff';
-                const timestamp = request.timestamp || new Date().toLocaleTimeString();
-                const date = request.date || new Date().toLocaleDateString();
-                const notes = request.notes ? `<div style="font-size: 12px; color: #666; margin-top: 8px;"><i>📝 Notes: ${escapeHtml(request.notes)}</i></div>` : '';
-                
-                return `
-                <div class="menu-card stock-request-card" style="border-left: 4px solid #2196f3; background: #e3f2fd; margin-bottom: 15px; border-radius: 8px; overflow: hidden;">
-                    <div class="card-header" style="background: #bbdefb; padding: 12px 15px;">
-                        <h4 style="display: flex; align-items: center; gap: 8px; color: #0b5e8a; margin: 0;">
-                            <i class="fas fa-box" style="color: #2196f3;"></i>
-                            ${escapeHtml(productName)}
-                            <span style="background: #2196f3; color: white; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-left: auto;">PENDING</span>
-                        </h4>
-                    </div>
-                    <div class="card-body" style="padding: 15px;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <div style="background: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                📦
-                            </div>
-                            <div>
-                                <div style="font-size: 13px; color: #666; margin-bottom: 5px;">
-                                    <span class="label">Requested by:</span> 
-                                    <strong style="color: #2196f3;">${escapeHtml(requestedBy)}</strong>
-                                </div>
-                                <div style="font-size: 13px; color: #666;">
-                                    <span class="label">Date:</span> ${date} ${timestamp}
-                                </div>
-                                <div style="font-size: 12px; color: #999;">
-                                    ID: ${request._id ? request._id.slice(-8) : 'N/A'}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <span style="font-size: 14px; color: #666;">
-                                    <i class="fas fa-clipboard-list" style="color: #2196f3; margin-right: 5px;"></i>
-                                    ${escapeHtml(request.message)}
-                                </span>
-                            </div>
-                            <div style="display: flex; align-items: baseline; gap: 10px; font-size: 13px;">
-                                <span class="label">Quantity requested:</span>
-                                <span style="font-size: 20px; font-weight: bold; color: #2196f3;">${quantity} ${unit}</span>
-                            </div>
-                            ${notes}
-                        </div>
-                        
-                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
-                            <button onclick="confirmStockRequest('${request._id}')" style="
-                                background: #4caf50;
-                                border: none;
-                                color: white;
-                                padding: 10px 24px;
-                                border-radius: 4px;
-                                font-size: 14px;
-                                cursor: pointer;
-                                font-weight: 600;
-                                transition: all 0.3s ease;
-                            " onmouseover="this.style.background='#45a049'" onmouseout="this.style.background='#4caf50'">
-                                ✓ Confirm Request
-                            </button>
-                            <button onclick="rejectStockRequest('${request._id}')" style="
-                                background: #f44336;
-                                border: none;
-                                color: white;
-                                padding: 10px 24px;
-                                border-radius: 4px;
-                                font-size: 14px;
-                                cursor: pointer;
-                                font-weight: 600;
-                                transition: all 0.3s ease;
-                            " onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#f44336'">
-                                ✕ Reject
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-            
-            elements.dashboardGrid.innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <h3 style="color: #2196f3; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-bell"></i>
-                        Pending Stock Requests from Staff (${staffRequestCount})
-                    </h3>
-                </div>
-                ${requestsHTML}
-            `;
-        } else {
-            // No pending requests
-            elements.dashboardGrid.innerHTML = `
-                <div class="empty-state" style="text-align: center; padding: 40px;">
-                    <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
-                    <h3>No Pending Stock Requests</h3>
-                    <p style="color: #666; margin-top: 10px;">When staff request stock from MongoDB, they will appear here.</p>
-                </div>
-            `;
-            console.log('No pending stock requests found in MongoDB');
-        }
+        // ✅ DASHBOARD GRID NOW SHOWS EMPTY
+        elements.dashboardGrid.innerHTML = '';
+        console.log('Dashboard grid cleared');
         
     } catch (error) {
         console.error('Error in renderDashboardGrid:', error);
         elements.dashboardGrid.innerHTML = `
             <div class="empty-state">
-                <h3>Error Loading Requests</h3>
+                <h3>Error Loading Dashboard</h3>
                 <p>Please try again later.</p>
             </div>
         `;
+    }
+}
+
+// ==================== STOCK REQUESTS MODAL ====================
+function showStockRequestsModal(pendingRequests) {
+    console.log(`📋 Creating stock requests modal with ${pendingRequests.length} requests`);
+    
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('stockRequestsModal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'stockRequestsModal';
+        modal.className = 'modal';
+        modal.style.cssText = `
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        `;
+        
+        modal.innerHTML = `
+            <div class="modal-content" style="
+                background: white;
+                padding: 0;
+                border-radius: 12px;
+                max-width: 700px;
+                width: 100%;
+                max-height: 85vh;
+                overflow: hidden;
+                box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+                display: flex;
+                flex-direction: column;
+            ">
+                <div class="modal-header" style="
+                    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+                    color: white;
+                    padding: 20px 25px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: none;
+                    flex-shrink: 0;
+                ">
+                    <h2 style="margin: 0; font-size: 24px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-inbox"></i> Pending Stock Requests
+                    </h2>
+                    <button id="closeStockRequestsModal" style="
+                        background: none;
+                        border: none;
+                        font-size: 28px;
+                        cursor: pointer;
+                        color: white;
+                        opacity: 0.9;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    " title="Close modal">&times;</button>
+                </div>
+                
+                <div id="stockRequestsContainer" class="modal-body" style="
+                    padding: 20px 25px;
+                    max-height: calc(85vh - 130px);
+                    overflow-y: auto;
+                    flex: 1;
+                "></div>
+                
+                <div class="modal-footer" style="
+                    padding: 15px 25px;
+                    background: #f5f5f5;
+                    border-top: 1px solid #e0e0e0;
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 10px;
+                    flex-shrink: 0;
+                ">
+                    <button id="closeStockRequestsBtn" class="btn btn-primary" style="
+                        padding: 12px 30px;
+                        background: #2196f3;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#1976d2'" onmouseout="this.style.background='#2196f3'">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    // Populate requests in the modal
+    const container = document.getElementById('stockRequestsContainer');
+    
+    const requestsHTML = pendingRequests.map((request) => {
+        const productName = request.productName || 'Unknown Product';
+        const quantity = request.quantity || 0;
+        const unit = request.unit || 'unit';
+        const requestedBy = request.requestedBy || 'Staff';
+        const timestamp = request.timestamp || new Date().toLocaleTimeString();
+        const date = request.date || new Date().toLocaleDateString();
+        const notes = request.notes ? `<div style="font-size: 12px; color: #666; margin-top: 8px;"><i>📝 Notes: ${escapeHtml(request.notes)}</i></div>` : '';
+        
+        return `
+        <div class="stock-request-item" style="
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            border-left: 4px solid #2196f3;
+        ">
+            <div style="display: flex; align-items: flex-start; gap: 15px;">
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 8px 0; color: #1976d2; font-size: 16px;">
+                        ${escapeHtml(productName)}
+                        <span style="background: #2196f3; color: white; font-size: 10px; padding: 2px 8px; border-radius: 12px; margin-left: 10px;">PENDING</span>
+                    </h4>
+                    
+                    <div style="font-size: 13px; color: #666; margin-bottom: 10px;">
+                        <div><span style="font-weight: 600;">Requested by:</span> ${escapeHtml(requestedBy)}</div>
+                        <div><span style="font-weight: 600;">Date & Time:</span> ${date} ${timestamp}</div>
+                        <div><span style="font-weight: 600;">Stock Requested:</span> <span style="color: #2196f3; font-weight: 700; font-size: 14px;">${quantity} ${unit}</span></div>
+                        <div><span style="font-weight: 600;">Request ID:</span> ${request._id ? request._id.slice(-8) : 'N/A'}</div>
+                    </div>
+                    
+                    ${notes}
+                    
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+                        <button onclick="confirmStockRequest('${request._id}')" style="
+                            background: #4caf50;
+                            border: none;
+                            color: white;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.background='#45a049'" onmouseout="this.style.background='#4caf50'" title="Approve this stock request">
+                            ✓ Confirm
+                        </button>
+                        <button onclick="rejectStockRequest('${request._id}')" style="
+                            background: #f44336;
+                            border: none;
+                            color: white;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#f44336'" title="Reject this stock request">
+                            ✕ Reject
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = requestsHTML;
+    
+    // Attach event listeners
+    const closeBtn = document.getElementById('closeStockRequestsBtn');
+    const closeModalBtn = document.getElementById('closeStockRequestsModal');
+    
+    if (closeBtn) {
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+        newCloseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeStockRequestsModal();
+        });
+    }
+    
+    if (closeModalBtn) {
+        const newCloseModalBtn = closeModalBtn.cloneNode(true);
+        closeModalBtn.parentNode.replaceChild(newCloseModalBtn, closeModalBtn);
+        newCloseModalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeStockRequestsModal();
+        });
+    }
+    
+    // Handle modal background click
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeStockRequestsModal();
+        }
+    };
+    
+    // Show modal
+    console.log('📋 Showing stock requests modal');
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+}
+
+function closeStockRequestsModal() {
+    const modal = document.getElementById('stockRequestsModal');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 150);
     }
 }
 
@@ -4694,11 +4806,14 @@ window.renderDashboardGrid = renderDashboardGrid;
 window.loadDashboardData = loadDashboardData;
 window.confirmStockRequest = confirmStockRequest;
 window.rejectStockRequest = rejectStockRequest;
+window.showStockRequestsModal = showStockRequestsModal;
+window.closeStockRequestsModal = closeStockRequestsModal;
 
 console.log('✅ Menu Management System loaded with integrated stock management!');
 console.log('📦 Products appear immediately in Product Menu with quick-add stock controls');
 console.log('🚫 Products cannot be added unless all ingredients are available in inventory');
 console.log('📡 Using actual inventory from MongoDB - No fallback data');
-console.log('🔔 Stock request notifications from staff appear in dashboard grid');
+console.log('🔔 Stock request notifications from staff appear in modal popup');
 console.log('⏱️ Dashboard render optimized with debouncing to prevent blinking');
 console.log('🧮 Max stock is auto-calculated based on current ingredient inventory');
+console.log('📋 Stock requests modal displays all pending requests with confirm/reject buttons');

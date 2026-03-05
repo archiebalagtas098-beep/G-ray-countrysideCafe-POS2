@@ -2967,6 +2967,47 @@ function loadActiveStockRequests() {
     }
 }
 
+// ==================== SYNC PENDING REQUESTS WITH SERVER ====================
+// Refresh pending requests from MongoDB to sync with admin actions
+async function syncPendingRequests() {
+    try {
+        console.log('🔄 Syncing pending requests with server...');
+        const response = await fetch('/api/stock-requests/pending');
+        
+        if (response.ok) {
+            const result = await response.json();
+            const pendingRequests = result.data || result || [];
+            
+            // Get list of product names in pending requests from server
+            const serverPendingNames = new Set(
+                pendingRequests.map(req => req.productName || req.product_name || '')
+            );
+            
+            console.log('📋 Server pending requests:', serverPendingNames);
+            
+            // Remove any requests from activeStockRequests that are NOT on the server anymore
+            // (meaning they were confirmed/rejected by admin)
+            for (const [productName] of activeStockRequests) {
+                if (!serverPendingNames.has(productName)) {
+                    console.log(`✅ Clearing completed request for: ${productName}`);
+                    activeStockRequests.delete(productName);
+                }
+            }
+            
+            // Save updated requests
+            saveActiveStockRequests();
+            
+        } else {
+            console.error('Failed to sync pending requests:', response.status);
+        }
+    } catch (error) {
+        console.error('Error syncing pending requests:', error);
+    }
+}
+
+// Call sync function periodically to clear completed requests
+setInterval(syncPendingRequests, 10000); // Check every 10 seconds
+
 // Save active stock requests to localStorage
 function saveActiveStockRequests() {
     try {

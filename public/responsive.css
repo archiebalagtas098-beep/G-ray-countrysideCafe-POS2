@@ -600,6 +600,27 @@ button, .btn {
 
 .navbar .logout-container {
     flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ==================== USER PROFILE DISPLAY - RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .user-profile-container {
+        padding: 4px 8px;
+        gap: 5px;
+    }
+
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .user-role {
+        font-size: 9px;
+    }
 }
 
 @media (min-width: 768px) {
