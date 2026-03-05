@@ -3693,7 +3693,7 @@ const menuItemIngredients = {
     'Creamy Carbonara': ['Spaghetti pasta', 'Bacon', 'Cream', 'Milk', 'Cheese', 'Egg', 'Garlic', 'Butter', 'Black pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
     'Creamy Pesto': ['Spaghetti pasta', 'Basil pesto', 'Cream', 'Cheese', 'Garlic', 'Pine nuts', 'Olive oil', 'Salt', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
     'Tuyo Pesto': ['Spaghetti pasta', 'Tuyo', 'Basil pesto', 'Garlic', 'Olive oil', 'Chili', 'Salt', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
-    'Kare-Kare': ['Oxtail', 'Tripe', 'Peanut butter', 'Rice flour', 'Onion', 'Garlic', 'Eggplant', 'Pork hocks', 'Banana blossom', 'Bagoong', 'Cooking oil', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Kare-Kare': ['Oxtail', 'Tripe', 'Peanut butter', 'Onion', 'Garlic', 'Pork hocks','Bagoong', 'Cooking oil', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
     'Chicken Buffalo Wings': ['Chicken Wings', 'Flour', 'Cornstarch', 'Buffalo sauce', 'Butter', 'Garlic', 'Cooking oil', 'Salt', 'Black pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
 
     // ==================== DRINKS ====================
