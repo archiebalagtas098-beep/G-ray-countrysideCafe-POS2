@@ -100,7 +100,7 @@ const servingwareInventory = {
     'cup': { name: 'Coffee Cup', current: 100, max: 100, unit: 'piece', minThreshold: 20 },
     'bowl': { name: 'Rice Bowl', current: 100, max: 100, unit: 'piece', minThreshold: 30 },
     'pitcher': { name: 'Pitcher', current: 50, max: 50, unit: 'piece', minThreshold: 10 },
-    'bottle': { name: 'Bottle', current: 100, max: 100, unit: 'piece', minThreshold: 20 },
+    'plastic_bottle': { name: 'Plastic Bottle', current: 100, max: 100, unit: 'piece', minThreshold: 20 },
     'serving': { name: 'Serving Plate', current: 80, max: 80, unit: 'piece', minThreshold: 15 },
     'sandwich': { name: 'Sandwich Plate', current: 50, max: 50, unit: 'piece', minThreshold: 10 },
     'meal': { name: 'Meal Tray', current: 100, max: 100, unit: 'piece', minThreshold: 20 },
@@ -763,8 +763,8 @@ const unitDisplayLabels = {
     'cups': 'Cups',
     'pitcher': 'Pitcher',
     'pitchers': 'Pitchers',
-    'bottle': 'Bottle',
-    'bottles': 'Bottles',
+    'plastic_bottle': 'Plastic Bottle',
+    'plastic_bottles': 'Plastic Bottles',
     'serving': 'Serving',
     'servings': 'Servings',
     'meal': 'Meal',
@@ -4769,17 +4769,22 @@ function quickAddStockForRequest(productName, quantity, unit) {
 
 // ==================== LOGOUT ====================
 function handleLogout() {
-    if (!confirm('Are you sure you want to logout?')) return;
-    
-    fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
-    })
-    .then(() => { window.location.href = '/login'; })
-    .catch(error => {
-        console.error('Logout error:', error);
-        window.location.href = '/login';
+    // Show logout confirmation modal
+    showLogoutConfirmation(() => {
+        // On confirm
+        fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        })
+        .then(() => { window.location.href = '/login'; })
+        .catch(error => {
+            console.error('Logout error:', error);
+            window.location.href = '/login';
+        });
+    }, () => {
+        // On cancel
+        console.log('🔙 Logout cancelled');
     });
 }
 

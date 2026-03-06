@@ -1392,48 +1392,278 @@ function autoFillItemFromCategory(category) {
 // ==================== DUPLICATE DETECTION ====================
 
 function checkAndShowDuplicateNotification() {
-    const itemName = elements.itemName?.value;
-    const itemId = elements.itemId?.value;
+    const itemId = elements.itemId ? elements.itemId.value : '';
     const isEdit = itemId && itemId.trim() !== '';
+    const itemNameValue = elements.itemName ? elements.itemName.value.trim() : '';
     
-    if (!itemName || !elements.duplicateNotification) {
+    if (!itemNameValue) {
+        // No item name entered, enable save button
+        if (elements.saveItemBtn) {
+            elements.saveItemBtn.disabled = false;
+            elements.saveItemBtn.style.opacity = '1';
+            elements.saveItemBtn.style.cursor = 'pointer';
+        }
         hideDuplicateNotification();
         return;
     }
     
-    // Check if this ingredient already exists
-    const isDuplicate = allInventoryItems.some(item => {
-        const isSameName = item.itemName.toLowerCase() === itemName.toLowerCase();
-        
-        // When adding new, any match is a duplicate
-        if (!isEdit) {
-            return isSameName;
-        }
-        
-        // When editing, exclude the current item from comparison
-        return isSameName && (item._id !== itemId && item.id !== itemId);
-    });
+    // Check for duplicates
+    let isDuplicate = false;
+    
+    if (!isEdit) {
+        // When adding new, check if any item has same name
+        isDuplicate = allInventoryItems.some(item => 
+            item.itemName.toLowerCase().trim() === itemNameValue.toLowerCase()
+        );
+    } else {
+        // When editing, check if another item (not current) has same name
+        isDuplicate = allInventoryItems.some(item => {
+            const sameNameCheck = item.itemName.toLowerCase().trim() === itemNameValue.toLowerCase();
+            const differentItemCheck = item._id !== itemId && item.id !== itemId;
+            return sameNameCheck && differentItemCheck;
+        });
+    }
     
     if (isDuplicate) {
-        showDuplicateNotification(itemName);
+        showDuplicateNotification(itemNameValue);
+        // DISABLE THE SAVE BUTTON
+        if (elements.saveItemBtn) {
+            elements.saveItemBtn.disabled = true;
+            elements.saveItemBtn.style.opacity = '0.5';
+            elements.saveItemBtn.style.cursor = 'not-allowed';
+            elements.saveItemBtn.title = '❌ This ingredient already exists. Cannot save.';
+        }
     } else {
         hideDuplicateNotification();
+        // ENABLE THE SAVE BUTTON
+        if (elements.saveItemBtn) {
+            elements.saveItemBtn.disabled = false;
+            elements.saveItemBtn.style.opacity = '1';
+            elements.saveItemBtn.style.cursor = 'pointer';
+            elements.saveItemBtn.title = '';
+        }
     }
 }
 
 function showDuplicateNotification(ingredientName) {
-    if (!elements.duplicateNotification || !elements.duplicateIngredientName) return;
+    // Remove any existing duplicate modal
+    const existingModal = document.getElementById('duplicateModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
     
-    elements.duplicateIngredientName.textContent = ingredientName;
-    elements.duplicateNotification.classList.add('show');
-    elements.duplicateNotification.style.display = 'flex';
+    // Create modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.id = 'duplicateModal';
+    modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s ease;
+    `;
+    
+    modalContent.innerHTML = `
+        <div style="text-align: center;">
+            <h2 style="color: #dc3545; margin: 0 0 15px 0; font-size: 24px;">Duplicate Ingredient</h2>
+            
+            <p style="color: #666; font-size: 16px; margin: 0 0 30px 0; line-height: 1.6;">
+                <strong style="color: #333;">"${ingredientName}"</strong> already exists in your inventory!
+            </p>
+            
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 6px; margin-bottom: 30px; text-align: left; color: #856404;">
+                <strong>Note:</strong> You cannot add duplicate ingredients. Please choose a different ingredient name.
+            </div>
+            
+            <button onclick="document.getElementById('duplicateModal').remove()" style="
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 12px 40px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                Got it!
+            </button>
+        </div>
+    `;
+    
+    // Add animations to document if not already there
+    if (!document.getElementById('duplicateNotificationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'duplicateNotificationStyles';
+        style.textContent = `
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes shake {
+                0%, 100% { transform: scale(1); }
+                25% { transform: scale(1.1); }
+                50% { transform: scale(1); }
+                75% { transform: scale(1.1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+    
+    // Close modal when clicking outside
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.remove();
+        }
+    });
 }
 
 function hideDuplicateNotification() {
-    if (!elements.duplicateNotification) return;
+    const modal = document.getElementById('duplicateModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// ==================== LOGOUT CONFIRMATION MODAL ====================
+
+function showLogoutConfirmation(onConfirm, onCancel) {
+    // Remove any existing logout modal
+    const existingModal = document.getElementById('logoutConfirmModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
     
-    elements.duplicateNotification.classList.remove('show');
-    elements.duplicateNotification.style.display = 'none';
+    // Create modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.id = 'logoutConfirmModal';
+    modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s ease;
+    `;
+    
+    modalContent.innerHTML = `
+        <div style="text-align: center;">
+            <div style="font-size: 60px; margin-bottom: 20px;">👋</div>
+            
+            <h2 style="color: #333; margin: 0 0 15px 0; font-size: 24px;">Confirm Logout</h2>
+            
+            <p style="color: #666; font-size: 16px; margin: 0 0 30px 0; line-height: 1.6;">
+                Are you sure you want to logout? You will need to login again to access the system.
+            </p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button id="cancelLogoutBtn" style="
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 12px 30px;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.3s ease;
+                " onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">
+                    Cancel
+                </button>
+                <button id="confirmLogoutBtn" style="
+                    background: #dc3545;
+                    color: white;
+                    border: none;
+                    padding: 12px 30px;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.3s ease;
+                " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                    Logout
+                </button>
+            </div>
+        </div>
+    `;
+    
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+    
+    // Cancel button
+    const cancelBtn = document.getElementById('cancelLogoutBtn');
+    cancelBtn.addEventListener('click', () => {
+        modalOverlay.remove();
+        if (onCancel) onCancel();
+    });
+    
+    // Confirm button
+    const confirmBtn = document.getElementById('confirmLogoutBtn');
+    confirmBtn.addEventListener('click', () => {
+        modalOverlay.remove();
+        if (onConfirm) onConfirm();
+    });
+    
+    // Close modal when clicking outside
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.remove();
+            if (onCancel) onCancel();
+        }
+    });
+    
+    // Allow ESC key to close
+    const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+            modalOverlay.remove();
+            document.removeEventListener('keydown', handleEsc);
+            if (onCancel) onCancel();
+        }
+    };
+    document.addEventListener('keydown', handleEsc);
 }
 
 // ==================== MODAL FUNCTIONS ====================
@@ -1445,6 +1675,14 @@ function openAddModal() {
     
     // Hide duplicate notification when opening add modal
     hideDuplicateNotification();
+    
+    // Enable save button by default for new ingredient
+    if (elements.saveItemBtn) {
+        elements.saveItemBtn.disabled = false;
+        elements.saveItemBtn.style.opacity = '1';
+        elements.saveItemBtn.style.cursor = 'pointer';
+        elements.saveItemBtn.title = '';
+    }
     
     updateCategoryOptions();
     updateItemNameOptions();
@@ -1513,6 +1751,14 @@ function openEditModal(itemId) {
     
     // Show recipe info
     showRecipeInfo(item.itemName);
+    
+    // Enable save button by default for editing
+    if (elements.saveItemBtn) {
+        elements.saveItemBtn.disabled = false;
+        elements.saveItemBtn.style.opacity = '1';
+        elements.saveItemBtn.style.cursor = 'pointer';
+        elements.saveItemBtn.title = '';
+    }
     
     // Check for duplicate notification (in case name was changed to match another)
     checkAndShowDuplicateNotification();
@@ -2564,7 +2810,16 @@ async function handleSaveItem() {
 
 function updateFromItemName() {
     const itemName = elements.itemName?.value;
-    if (!itemName) return;
+    if (!itemName) {
+        // Clear fields if no name selected
+        hideDuplicateNotification();
+        if (elements.saveItemBtn) {
+            elements.saveItemBtn.disabled = false;
+            elements.saveItemBtn.style.opacity = '1';
+            elements.saveItemBtn.style.cursor = 'pointer';
+        }
+        return;
+    }
     
     const category = getCategoryFromName(itemName);
     const unit = getUnitFromItem(itemName, category);
@@ -2580,7 +2835,7 @@ function updateFromItemName() {
     
     showRecipeInfo(itemName);
     
-    // Check for duplicate ingredients and show notification
+    // Check for duplicate ingredients in real-time and disable/enable button
     checkAndShowDuplicateNotification();
 }
 
@@ -2940,7 +3195,12 @@ function initializeEventListeners() {
     
     // Form field changes
     if (elements.itemName) {
+        // Real-time duplicate checking on both change and input events
         elements.itemName.addEventListener('change', updateFromItemName);
+        elements.itemName.addEventListener('input', () => {
+            // Check duplicates as user types/selects
+            checkAndShowDuplicateNotification();
+        });
     }
     
     if (elements.itemCategory) {
@@ -3335,6 +3595,7 @@ window.autoFillItemFromCategory = autoFillItemFromCategory;
 window.canMakeMenuItem = canMakeMenuItem;
 window.reduceStockForMenuItem = reduceStockForMenuItem;
 window.getAvailableMenuItems = getAvailableMenuItems;
+window.showLogoutConfirmation = showLogoutConfirmation;
 
 // ==================== AUTO-DETECT MENU ITEM CREATION & DEDUCT STOCK ====================
 // This system silently monitors menu item creation and automatically deducts raw ingredients
@@ -3693,7 +3954,7 @@ const menuItemIngredients = {
     'Creamy Carbonara': ['Spaghetti pasta', 'Bacon', 'Cream', 'Milk', 'Cheese', 'Egg', 'Garlic', 'Butter', 'Black pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
     'Creamy Pesto': ['Spaghetti pasta', 'Basil pesto', 'Cream', 'Cheese', 'Garlic', 'Pine nuts', 'Olive oil', 'Salt', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
     'Tuyo Pesto': ['Spaghetti pasta', 'Tuyo', 'Basil pesto', 'Garlic', 'Olive oil', 'Chili', 'Salt', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
-    'Kare-Kare': ['Oxtail', 'Tripe', 'Peanut butter', 'Onion', 'Garlic', 'Pork hocks','Bagoong', 'Cooking oil', 'Rice', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
+    'Kare-Kare': ['Oxtail', 'Banana flower bud', 'Pechay or bok choy', 'String beans', 'Chinese eggplant', 'Ground peanuts', 'Peanut butter', 'Shrimp paste', 'Water', 'Annatto seeds', 'Toasted ground rice', 'Garlic', 'Onion', 'Salt', 'Pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
     'Chicken Buffalo Wings': ['Chicken Wings', 'Flour', 'Cornstarch', 'Buffalo sauce', 'Butter', 'Garlic', 'Cooking oil', 'Salt', 'Black pepper', 'Food containers', 'Napkins', 'Plastic Utensils Set'],
 
     // ==================== DRINKS ====================
@@ -3705,13 +3966,13 @@ const menuItemIngredients = {
     'Red Tea (Pitcher)': ['Red tea', 'Sugar', 'Water', 'Ice', 'Pitcher'],
     'Calamansi Juice (Glass)': ['Calamansi', 'Sugar', 'Water', 'Ice', 'Paper cups', 'Straws'],
     'Calamansi Juice (Pitcher)': ['Calamansi', 'Sugar', 'Water', 'Ice', 'Pitcher'],
-    'Soda (Mismo) Coke': ['Coke syrup', 'Carbonated water', 'Bottle'],
-    'Soda (Mismo) Sprite': ['Sprite syrup', 'Carbonated water', 'Bottle'],
-    'Soda (Mismo) Royal': ['Royal syrup', 'Carbonated water', 'Bottle'],
-    'Soda 1.5L Coke': ['Coke syrup', 'Carbonated water', 'Bottle'],
-    'Soda 1.5L Coke Zero': ['Coke zero syrup', 'Carbonated water', 'Bottle'],
-    'Soda 1.5L Sprite': ['Sprite syrup', 'Carbonated water', 'Bottle'],
-    'Soda 1.5L Royal': ['Royal syrup', 'Carbonated water', 'Bottle'],
+    'Soda (Mismo) Coke': ['Coke syrup', 'Carbonated water', 'Plastic Bottle'],
+    'Soda (Mismo) Sprite': ['Sprite syrup', 'Carbonated water', 'Plastic Bottle'],
+    'Soda (Mismo) Royal': ['Royal syrup', 'Carbonated water', 'Plastic Bottle'],
+    'Soda 1.5L Coke': ['Coke syrup', 'Carbonated water', 'Plastic Bottle'],
+    'Soda 1.5L Coke Zero': ['Coke zero syrup', 'Carbonated water', 'Plastic Bottle'],
+    'Soda 1.5L Sprite': ['Sprite syrup', 'Carbonated water', 'Plastic Bottle'],
+    'Soda 1.5L Royal': ['Royal syrup', 'Carbonated water', 'Plastic Bottle'],
 
     // ==================== HOT COFFEE ====================
     'Espresso Hot': ['Coffee beans', 'Water', 'Paper cups'],

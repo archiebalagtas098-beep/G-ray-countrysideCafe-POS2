@@ -90,8 +90,59 @@ const CONFIG = {
     LOW_STOCK_THRESHOLD: 5,
     JWT_EXPIRY: "365d",
     SERVER_PORT: process.env.PORT || 5050,
-    REQUIRED_ENV_VARS: ['JWT_SECRET', 'MONGODB_URI']
+    REQUIRED_ENV_VARS: ['JWT_SECRET', 'MONGODB_URI'],
+    MAX_LOGIN_ATTEMPTS: 5,
+    LOCKOUT_TIME: 5 * 60 * 1000 // 5 minutes in milliseconds
 };
+
+// ==================== 🔐 LOGIN ATTEMPT TRACKING ====================
+const loginAttempts = new Map(); // { username: { attempts: number, lockedUntil: timestamp } }
+
+function getLoginAttempts(username) {
+    return loginAttempts.get(username) || { attempts: 0, lockedUntil: null };
+}
+
+function recordFailedAttempt(username) {
+    const current = getLoginAttempts(username);
+    current.attempts += 1;
+    
+    // Lock account after max attempts
+    if (current.attempts >= CONFIG.MAX_LOGIN_ATTEMPTS) {
+        current.lockedUntil = Date.now() + CONFIG.LOCKOUT_TIME;
+        console.log(`🔒 Account locked for ${username} until ${new Date(current.lockedUntil)}`);
+    }
+    
+    loginAttempts.set(username, current);
+}
+
+function resetLoginAttempts(username) {
+    loginAttempts.delete(username);
+    console.log(`✅ Login attempts reset for ${username}`);
+}
+
+function isAccountLocked(username) {
+    const current = getLoginAttempts(username);
+    
+    if (!current.lockedUntil) {
+        return false;
+    }
+    
+    // Check if lockout time has expired
+    if (Date.now() > current.lockedUntil) {
+        resetLoginAttempts(username);
+        return false;
+    }
+    
+    return true;
+}
+
+function getRemainingLockoutTime(username) {
+    const current = getLoginAttempts(username);
+    if (!current.lockedUntil) return 0;
+    
+    const remaining = current.lockedUntil - Date.now();
+    return remaining > 0 ? Math.ceil(remaining / 1000) : 0;
+}
 
 CONFIG.REQUIRED_ENV_VARS.forEach(varName => {
     if (!process.env[varName]) {
@@ -123,7 +174,8 @@ const recipeMapping = {
     ],
     'Ground Pork': [
         'Pork Shanghai',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
+        'Lumpia Shanghai',
         'Spaghetti',
         'Spaghetti (S)',
         'Spaghetti (M)',
@@ -247,7 +299,7 @@ const recipeMapping = {
         'Clubhouse Sandwich',
         'Fish and Fries',
         'Cheesy Dynamite Lumpia',
-        'Lumpiang Shanghai'
+        'Lumpia Shanghai',
     ],
     'Onion': [
         'Korean Spicy Bulgogi (Pork)',
@@ -284,7 +336,7 @@ const recipeMapping = {
         'Nachos Supreme (Medium)',
         'Nachos Supreme (Large)',
         'Clubhouse Sandwich',
-        'Lumpiang Shanghai'
+        'Lumpia Shanghai'
     ],
     'Chili': [
         'Korean Spicy Bulgogi (Pork)',
@@ -390,7 +442,7 @@ const recipeMapping = {
         'Pancit Canton (S)',
         'Pancit Canton (M)',
         'Pancit Canton (L)',
-        'Lumpiang Shanghai'
+        'Lumpia Shanghai',
     ],
     'Carrots': [
         'Special Bulalo',
@@ -477,7 +529,7 @@ const recipeMapping = {
         'Tinapa Rice (Large)',
         'Clubhouse Sandwich',
         'Fish and Fries',
-        'Lumpiang Shanghai'
+        'Lumpia Shanghai'
     ],
     'Butter': [
         'Buttered Honey Chicken',
@@ -669,7 +721,7 @@ const recipeMapping = {
         'French Fries (Medium)',
         'French Fries (Large)',
         'Cheesy Dynamite Lumpia',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Fried Rice',
         'Fried Rice (Small)',
         'Fried Rice (Medium)',
@@ -802,7 +854,7 @@ const recipeMapping = {
         'Korean Salt and Pepper (Pork)',
         'Crispy Pork Lechon Kawali',
         'Pork Shanghai',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Cheesy Dynamite Lumpia'
     ],
     'Bay leaves': [
@@ -898,7 +950,7 @@ const recipeMapping = {
     ],
     'Breadcrumbs': [
         'Pork Shanghai',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Fried Chicken',
         'Budget Fried Chicken',
         'Cream Dory Fish Fillet',
@@ -906,7 +958,7 @@ const recipeMapping = {
     ],
     'Flour': [
         'Pork Shanghai',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Sizzling Fried Chicken',
         'Fried Chicken',
         'Budget Fried Chicken',
@@ -930,7 +982,7 @@ const recipeMapping = {
         'Nachos Supreme (Small)',
         'Nachos Supreme (Medium)',
         'Nachos Supreme (Large)',
-        'Lumpiang Shanghai'
+        'Lumpia Shanghai'
     ],
     'Hotdog': [
         'Spaghetti',
@@ -953,7 +1005,7 @@ const recipeMapping = {
         'Special Bulalo (good for 2-3 Persons)',
         'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
         'Paknet (Pakbet w/ Bagnet)',
-        'Lumpiang Shanghai'
+        'Lumpia Shanghai'
     ],
     'Water': [
         'Special Bulalo',
@@ -1321,14 +1373,7 @@ const recipeMapping = {
         'Mango cheese cake HC',
         'Mango cheese cake MC'
     ],
-    'Tapioca Pearls': [
-        'Milk Tea Regular HC',
-        'Milk Tea Regular MC',
-        'Matcha Green Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake'
-    ],
+
     'Steamed milk': [
         'Cafe Latte',
         'Cafe Latte Tall',
@@ -1373,7 +1418,13 @@ const recipeMapping = {
         'Matcha Green Tea (L)',
         'Matcha Regular HC',
         'Matcha',
-        'Matcha Green Tea (HC)'
+        'Matcha Green Tea (HC)',
+        'White Chocolate Hot',
+        'Green Tea Latte Hot',
+        'Green Tea Matcha Hot',
+        'Hot Ceylon Tea Black',
+        'Hot Ceylon Tea Lemon',
+        'Hot Ceylon Tea Peppermint'
     ],
     'Ice': [
         'Iced Café Latte',
@@ -1431,11 +1482,14 @@ const recipeMapping = {
         'Coffee Crumble Frappe',
         'Vanilla Cream Frappe'
     ],
-    'Carbonated soft drink': [
+    'Carbonated water': [
         'Soda (Glass)',
         'Soda (Mismo)',
         'Soda (L)',
-        'Soda 1.5L'
+        'Soda 1.5L Coke',
+        'Soda 1.5L Sprite',
+        'Soda 1.5L Royal',
+        'Soda 1.5L Coke Zero'
     ],
     'Coke syrup': [
         'Soda (Mismo) Coke',
@@ -1469,13 +1523,9 @@ const recipeMapping = {
         'Nachos Supreme'
     ],
     'Lumpia wrapper': [
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Cheesy Dynamite Lumpia',
         'Pork Shanghai'
-    ],
-    'Lumpiang wrapper': [
-        'Lumpiang Shanghai',
-        'Cheesy Dynamite Lumpia'
     ],
     'French fries': [
         'French Fries',
@@ -1557,72 +1607,6 @@ const recipeMapping = {
     ],
 
     // ================ PACKAGING ================
-    'Paper cups': [
-        'Cucumber Lemonade',
-        'Cucumber Lemonade (Glass)',
-        'Blue Lemonade',
-        'Blue Lemonade (Glass)',
-        'Red Tea',
-        'Red Tea (Glass)',
-        'Red Tea Tall',
-        'Red Tea (Tall)',
-        'Red Tea Glass',
-        'Red Tea (L)',
-        'Calamansi Juice (Glass)',
-        'Cafe Americano',
-        'Cafe Americano Tall',
-        'Cafe Americano Grande',
-        'Cafe Americano (Glass)',
-        'Cafe Americano (L)',
-        'Cafe Latte',
-        'Cafe Latte Tall',
-        'Cafe Latte Grande',
-        'Cafe Latte (Glass)',
-        'Cafe Latte (L)',
-        'Caramel Macchiato',
-        'Caramel Macchiato Tall',
-        'Caramel Macchiato Grande',
-        'Caramel Macchiato (Glass)',
-        'Caramel Macchiato (L)',
-        'Milk Tea Regular HC',
-        'Milk Tea Regular MC',
-        'Milk Tea Regular HC (Glass)',
-        'Milk Tea Regular HC (Large)',
-        'Matcha Green Tea',
-        'Matcha Green Tea Tall',
-        'Matcha Green Tea HC',
-        'Matcha Green Tea MC',
-        'Matcha Green Tea (Glass)',
-        'Matcha Green Tea (L)',
-        'Matcha Regular HC',
-        'Cookies & Cream HC',
-        'Cookies & Cream MC',
-        'Cookies & Cream (Glass)',
-        'Cookies & Cream (L)',
-        'Strawberry & Cream HC',
-        'Strawberry & Cream (Glass)',
-        'Strawberry & Cream (L)',
-        'Mango cheese cake HC',
-        'Mango cheese cake MC',
-        'Soda (Glass)',
-        'Soda (L)',
-        'Espresso Hot',
-        'Cappuccino Hot',
-        'Mocha Latte Hot',
-        'Vanilla Latte Hot',
-        'Green Tea Latte Hot',
-        'White Chocolate Hot',
-        'Green Tea Matcha Hot',
-        'Hot Ceylon Tea Black',
-        'Hot Ceylon Tea Lemon',
-        'Hot Ceylon Tea Peppermint',
-        'Iced Café Latte',
-        'Iced Mocha Latte',
-        'Iced Vanilla Latte',
-        'Iced Caramel Macchiato',
-        'Iced White Chocolate Latte',
-        'Iced Dark Chocolate'
-    ],
     'Paper Cups': [
         'Cucumber Lemonade',
         'Blue Lemonade',
@@ -1801,7 +1785,7 @@ const recipeMapping = {
         'Clubhouse Sandwich',
         'Fish and Fries',
         'Cheesy Dynamite Lumpia',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Tinapa Rice',
         'Tinapa Rice (Small)',
         'Tinapa Rice (Medium)',
@@ -1880,7 +1864,7 @@ const recipeMapping = {
         'Clubhouse Sandwich',
         'Fish and Fries',
         'Cheesy Dynamite Lumpia',
-        'Lumpiang Shanghai',
+        'Lumpia Shanghai',
         'Fried Rice',
         'Fried Rice (Small)',
         'Fried Rice (Medium)',
@@ -1922,49 +1906,40 @@ const recipeMapping = {
         'Soda 1.5L Sprite',
         'Soda 1.5L Royal'
     ],
-    'Bottle': [
-        'Soda (Mismo) Coke',
-        'Soda (Mismo) Sprite',
-        'Soda (Mismo) Royal',
-        'Soda 1.5L Coke',
-        'Soda 1.5L Coke Zero',
-        'Soda 1.5L Sprite',
-        'Soda 1.5L Royal'
-    ],
 
     // ================ MENU ITEM ALIASES ================
     'Cafe Americano': [
         'Espresso',
         'Hot water',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano Tall': [
         'Espresso',
         'Hot water',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano Grande': [
         'Espresso',
         'Hot water',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano (Glass)': [
         'Espresso',
         'Hot water',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano (L)': [
         'Espresso',
         'Hot water',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1972,7 +1947,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1980,7 +1955,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1988,7 +1963,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1996,7 +1971,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2004,7 +1979,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2013,7 +1988,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2022,7 +1997,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2031,7 +2006,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2040,7 +2015,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2049,7 +2024,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper cups',
+        'Paper Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2058,7 +2033,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Red Tea Tall': [
@@ -2066,7 +2041,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Red Tea (Tall)': [
@@ -2074,7 +2049,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Red Tea Glass': [
@@ -2082,7 +2057,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Red Tea (Glass)': [
@@ -2090,7 +2065,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Red Tea (L)': [
@@ -2098,7 +2073,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Milk Tea Regular HC': [
@@ -2106,7 +2081,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2115,7 +2090,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2124,7 +2099,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2133,7 +2108,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2142,7 +2117,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2151,7 +2126,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2160,7 +2135,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2169,7 +2144,7 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper cups',
+        'Paper Cups',
         'Straws',
         'Ice'
     ],
@@ -2236,7 +2211,7 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Cookies & Cream MC': [
@@ -2248,7 +2223,7 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Cookies and Cream MC': [
@@ -2260,7 +2235,7 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Cookies & Cream (Glass)': [
@@ -2269,7 +2244,7 @@ const recipeMapping = {
         'Cookie crumbs',
         'Tapioca pearls',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Cookies & Cream (L)': [
@@ -2278,7 +2253,7 @@ const recipeMapping = {
         'Cookie crumbs',
         'Tapioca pearls',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Strawberry & Cream HC': [
@@ -2289,7 +2264,7 @@ const recipeMapping = {
         'Sugar',
         'Frappe base',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Strawberry and Cream MC': [
@@ -2300,7 +2275,7 @@ const recipeMapping = {
         'Sugar',
         'Frappe base',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Strawberry & Cream (Glass)': [
@@ -2309,7 +2284,7 @@ const recipeMapping = {
         'Strawberry syrup',
         'Tapioca pearls',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Strawberry & Cream (L)': [
@@ -2318,7 +2293,7 @@ const recipeMapping = {
         'Strawberry syrup',
         'Tapioca pearls',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Mango cheese cake HC': [
@@ -2331,7 +2306,7 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Tapioca pearls',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Mango cheese cake MC': [
         'Milk',
@@ -2343,18 +2318,18 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Tapioca pearls',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Blue Lemonade (Glass)': [
         'Lemon juice',
         'Blue syrup',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Blue Lemonade (L)': [
         'Lemon juice',
         'Blue syrup',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Blue Lemonade (Pitcher)': [
@@ -2369,7 +2344,7 @@ const recipeMapping = {
         'Cucumber',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Cucumber Lemonade (L)': [
@@ -2377,7 +2352,7 @@ const recipeMapping = {
         'Cucumber',
         'Honey',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Cucumber Lemonade (Pitcher)': [
@@ -2390,22 +2365,22 @@ const recipeMapping = {
         'Straws'
     ],
     'Soda (Glass)': [
-        'Carbonated soft drink',
+        'Carbonated water',
         'Ice',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Soda (Mismo)': [
-        'Carbonated soft drink',
+        'Carbonated water',
         'Ice',
         'Plastic bottle'
     ],
     'Soda (L)': [
-        'Carbonated soft drink',
+        'Carbonated water',
         'Ice',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Soda 1.5L': [
-        'Carbonated soft drink',
+        'Carbonated water',
         'Plastic bottle'
     ],
 
@@ -2785,14 +2760,20 @@ const recipeMapping = {
     ],
     'Kare-Kare': [
         'Oxtail',
-        'Tripe',
+        'Banana flower bud',
+        'Pechay or bok choy',
+        'String beans',
+        'Chinese eggplant',
+        'Ground peanuts',
         'Peanut butter',
-        'Onion',
+        'Shrimp paste',
+        'Water',
+        'Annatto seeds',
+        'Toasted ground rice',
         'Garlic',
-        'Pork hocks',
-        'Bagoong',
-        'Cooking oil',
-        'Rice'
+        'Onion',
+        'Salt',
+        'Pepper'
     ],
     'Chicken Buffalo Wings': [
         'Chicken Wings',
@@ -2812,7 +2793,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Cookies & Cream Milk Tea': [
@@ -2822,7 +2803,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Dark Choco Milk Tea': [
@@ -2832,7 +2813,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Okinawa Milk Tea': [
@@ -2842,7 +2823,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Wintermelon Milk Tea': [
@@ -2851,7 +2832,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Matcha Green Tea Milk Tea': [
@@ -2860,75 +2841,75 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Espresso Hot': [
         'Coffee beans',
         'Water',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Cappuccino Hot': [
         'Espresso',
         'Steamed milk',
         'Milk foam',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Mocha Latte Hot': [
         'Espresso',
         'Chocolate syrup',
         'Steamed milk',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Vanilla Latte Hot': [
         'Espresso',
         'Vanilla syrup',
         'Steamed milk',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Green Tea Latte Hot': [
         'Matcha powder',
         'Steamed milk',
         'Sugar',
-        'Paper cups'
+        'Paper Cups'
     ],
     'White Chocolate Hot': [
         'White chocolate syrup',
         'Steamed milk',
         'Cream',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Green Tea Matcha Hot': [
         'Matcha powder',
         'Steamed milk',
         'Sugar',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Hot Ceylon Tea Black': [
         'Black tea',
         'Hot water',
         'Sugar',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Hot Ceylon Tea Lemon': [
         'Black tea',
         'Lemon',
         'Hot water',
         'Sugar',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Hot Ceylon Tea Peppermint': [
         'Peppermint tea',
         'Hot water',
         'Honey',
-        'Paper cups'
+        'Paper Cups'
     ],
     'Iced Café Latte': [
         'Espresso',
         'Milk',
         'Ice',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Iced Mocha Latte': [
@@ -2937,7 +2918,7 @@ const recipeMapping = {
         'Milk',
         'Ice',
         'Sugar',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Iced Vanilla Latte': [
@@ -2945,7 +2926,7 @@ const recipeMapping = {
         'Vanilla syrup',
         'Milk',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Iced Caramel Macchiato': [
@@ -2954,21 +2935,21 @@ const recipeMapping = {
         'Caramel syrup',
         'Milk',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Iced White Chocolate Latte': [
         'White chocolate syrup',
         'Milk',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Iced Dark Chocolate': [
         'Dark chocolate syrup',
         'Milk',
         'Ice',
-        'Paper cups',
+        'Paper Cups',
         'Straws'
     ],
     'Matcha Green Tea Frappe': [
@@ -2978,7 +2959,7 @@ const recipeMapping = {
         'Ice',
         'Sugar',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Salted Caramel Frappe': [
@@ -2989,7 +2970,7 @@ const recipeMapping = {
         'Ice',
         'Salt',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Strawberry Cheesecake Frappe': [
@@ -3001,7 +2982,7 @@ const recipeMapping = {
         'Sugar',
         'Whipped cream',
         'Graham crumbs',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Mango Cheesecake Frappe': [
@@ -3013,7 +2994,7 @@ const recipeMapping = {
         'Sugar',
         'Whipped cream',
         'Graham crumbs',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Strawberry Cream Frappe': [
@@ -3023,7 +3004,7 @@ const recipeMapping = {
         'Ice',
         'Sugar',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Cookies & Cream Frappe': [
@@ -3035,7 +3016,7 @@ const recipeMapping = {
         'Sugar',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Rocky Road Frappe': [
@@ -3046,7 +3027,7 @@ const recipeMapping = {
         'Marshmallows',
         'Nuts',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Choco Fudge Frappe': [
@@ -3056,7 +3037,7 @@ const recipeMapping = {
         'Ice',
         'Whipped cream',
         'Chocolate sauce',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Choco Mousse Frappe': [
@@ -3065,7 +3046,7 @@ const recipeMapping = {
         'Milk',
         'Ice',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Coffee Crumble Frappe': [
@@ -3075,7 +3056,7 @@ const recipeMapping = {
         'Ice',
         'Cookie crumbs',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
     'Vanilla Cream Frappe': [
@@ -3084,7 +3065,7 @@ const recipeMapping = {
         'Ice cream',
         'Ice',
         'Whipped cream',
-        'Paper cups',
+        'Paper Cups',
         'Boba straws'
     ],
 
@@ -3103,6 +3084,82 @@ const recipeMapping = {
     'Bagoong': [
         'Kare-Kare'
     ],
+
+    'Banana flower bud': [
+        'Kare-Kare'
+    ],
+
+    'Pechay or bok choy': [
+        'Kare-Kare'
+    ],
+
+    'String beans': [
+        'Kare-Kare'
+    ],
+
+    'Chinese eggplant': [
+        'Kare-Kare'
+    ],
+
+    'Ground peanuts': [
+        'Kare-Kare'
+    ],
+
+    'Shrimp paste': [
+        'Kare-Kare',
+        'Sinigang (Shrimp)',
+        'Paknet (Pakbet w/ Bagnet)'
+    ],
+
+    'Annatto seeds': [
+        'Kare-Kare'
+    ],
+
+    'Toasted ground rice': [
+        'Kare-Kare'
+    ],
+
+    'Pepper': [
+        'Kare-Kare'
+    ],
+
+    'Water': [
+        'Kare-Kare',
+        'Special Bulalo',
+        'Special Bulalo (good for 2-3 Persons)',
+        'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)',
+        'Sinigang (Pork)',
+        'Sinigang (Shrimp)',
+        'Paknet (Pakbet w/ Bagnet)',
+        'Fried Rice',
+        'Fried Rice (Small)',
+        'Fried Rice (Medium)',
+        'Fried Rice (Large)',
+        'Plain Rice',
+        'Plain Rice (Small)',
+        'Plain Rice (Medium)',
+        'Plain Rice (Large)',
+        'Cucumber Lemonade',
+        'Cucumber Lemonade (Glass)',
+        'Cucumber Lemonade (Pitcher)',
+        'Blue Lemonade',
+        'Blue Lemonade (Glass)',
+        'Blue Lemonade (Pitcher)',
+        'Red Tea',
+        'Red Tea (Glass)',
+        'Red Tea Tall',
+        'Red Tea (Tall)',
+        'Red Tea Glass',
+        'Red Tea (L)',
+        'Calamansi Juice (Glass)',
+        'Calamansi Juice (Pitcher)',
+        'Cafe Americano',
+        'Cafe Americano Tall',
+        'Cafe Americano (Glass)',
+        'Cafe Americano (L)'
+    ],
+
+  
 
 };
 
@@ -6694,28 +6751,77 @@ app.post("/login", async (req, res) => {
     try {
         const { user, pass } = req.body;
 
+        // ==================== 🔒 CHECK IF ACCOUNT IS LOCKED ====================
+        if (isAccountLocked(user)) {
+            const remainingSeconds = getRemainingLockoutTime(user);
+            const minutes = Math.ceil(remainingSeconds / 60);
+            console.log(`🔒 Login attempt blocked for ${user}. Remaining lockout: ${minutes} minutes`);
+            
+            return res.render("login", {
+                error: `Too many failed login attempts. Please try again in ${minutes} minute(s).`,
+                businessInfo: BUSINESS_INFO,
+                isLocked: true,
+                remainingSeconds: remainingSeconds
+            });
+        }
+
         const existingUser = await User.findOne({ username: user });
         if (!existingUser) {
+            recordFailedAttempt(user);
+            const attempts = getLoginAttempts(user).attempts;
+            
+            console.log(`❌ Failed login attempt for ${user} (${attempts}/${CONFIG.MAX_LOGIN_ATTEMPTS})`);
+            
             return res.render("login", {
-                error: "User not found",
-                businessInfo: BUSINESS_INFO
+                error: null,
+                businessInfo: BUSINESS_INFO,
+                isLocked: false,
+                remainingSeconds: 0
             });
         }
 
         if (existingUser.status === "inactive") {
+            recordFailedAttempt(user);
+            console.log(`❌ Inactive account login attempt for ${user}`);
+            
             return res.render("login", {
-                error: "Account is deactivated",
-                businessInfo: BUSINESS_INFO
+                error: null,
+                businessInfo: BUSINESS_INFO,
+                isLocked: false,
+                remainingSeconds: 0
             });
         }
 
         const isMatch = bcrypt.compareSync(pass, existingUser.password);
         if (!isMatch) {
+            recordFailedAttempt(user);
+            const attempts = getLoginAttempts(user).attempts;
+            const remaining = CONFIG.MAX_LOGIN_ATTEMPTS - attempts;
+            
+            console.log(`❌ Invalid password for ${user} (${attempts}/${CONFIG.MAX_LOGIN_ATTEMPTS})`);
+            
+            if (attempts >= CONFIG.MAX_LOGIN_ATTEMPTS) {
+                return res.render("login", {
+                    error: "Too many failed login attempts. Please try again in 5 minutes.",
+                    businessInfo: BUSINESS_INFO,
+                    isLocked: true,
+                    remainingSeconds: CONFIG.LOCKOUT_TIME / 1000
+                });
+            }
+            
             return res.render("login", {
-                error: "Invalid password",
-                businessInfo: BUSINESS_INFO
+                error: `Invalid password. (${remaining} attempts remaining)`,
+                businessInfo: BUSINESS_INFO,
+                isLocked: false,
+                remainingSeconds: 0
             });
         }
+
+        // ==================== ✅ SUCCESSFUL LOGIN ====================
+        console.log(`✅ Successful login for ${user} (Role: ${existingUser.role})`);
+        
+        // Clear failed login attempts
+        resetLoginAttempts(user);
 
         const token = jwt.sign(
             { 
@@ -6734,17 +6840,25 @@ app.post("/login", async (req, res) => {
             maxAge: 1000 * 60 * 60 * 24 * 365
         });
 
+        // ==================== 🎯 REDIRECT TO DESIGNATED ROLE ====================
         if (existingUser.role === "admin") {
+            console.log(`🔐 Redirecting ${user} to admin dashboard`);
             return res.redirect("/admindashboard/dashboard");
-        } else {
+        } else if (existingUser.role === "staff") {
+            console.log(`🔐 Redirecting ${user} to staff dashboard`);
             return res.redirect("/staffdashboard");
+        } else {
+            console.log(`⚠️ Unknown role for ${user}: ${existingUser.role}`);
+            return res.redirect("/staffdashboard"); // Default to staff dashboard
         }
 
     } catch (err) {
         console.error('Login error:', err);
         res.render("login", {
-            error: "Login error",
-            businessInfo: BUSINESS_INFO
+            error: "Login error. Please try again.",
+            businessInfo: BUSINESS_INFO,
+            isLocked: false,
+            remainingSeconds: 0
         });
     }
 });
@@ -7371,7 +7485,12 @@ app.get("/logout", (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login', { businessInfo: BUSINESS_INFO });
+    res.render('login', { 
+        businessInfo: BUSINESS_INFO,
+        error: null,
+        isLocked: false,
+        remainingSeconds: 0
+    });
 });
 
 app.get('/', (req, res) => {

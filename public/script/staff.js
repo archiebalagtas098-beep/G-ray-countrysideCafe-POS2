@@ -307,17 +307,21 @@ const productIngredientMap = {
     },
     'Kare-Kare': {
         ingredients: { 
-            'oxtail': 0.5,
-            'tripe': 0.3,
-            'peanut_butter': 0.15,
-            'rice_flour': 0.05,
-            'onion': 0.1,
-            'garlic': 0.05,
-            'eggplant': 0.15,
-            'string_beans': 0.15,
-            'banana_blossom': 0.1,
-            'bagoong': 0.05,
-            'cooking_oil': 0.08
+            'oxtail': 0.4,
+            'banana_flower_bud': 0.15,
+            'pechay': 0.15,
+            'string_beans': 0.1,
+            'chinese_eggplant': 0.1,
+            'ground_peanuts': 0.1,
+            'peanut_butter': 0.1,
+            'shrimp_paste': 0.02,
+            'water': 0.5,
+            'annatto_seeds': 0.005,
+            'toasted_ground_rice': 0.05,
+            'garlic': 0.03,
+            'onion': 0.08,
+            'salt': 0.01,
+            'black_pepper': 0.005
         },
         servingware: 'pot'
     },
@@ -1210,44 +1214,184 @@ async function getCurrentUser() {
 function handleLogout() {
     console.log('🚪 Logging out staff user...');
     
-    try {
-        currentOrder = [];
-        pendingStockRequests = [];
-        currentUser = null;
-        
-        const itemsToClear = [
-            'pendingStockRequests',
-            'localStockRequests',
-            'servingwareInventory',
-            'stockRequestTimestamps',
-            'offlineMode',
-            'lastSyncTime'
-        ];
-        
-        itemsToClear.forEach(item => {
-            localStorage.removeItem(item);
-        });
-        
-        showToast('Logging out... Please wait', 'info', 2000);
-        
-        setTimeout(() => {
-            fetch('/logout', {
-                method: 'GET',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(() => {
-                window.location.href = '/login?logout=true';
-            })
-            .catch(() => {
-                window.location.href = '/login?logout=true';
+    // Show logout confirmation modal
+    showLogoutConfirmation(() => {
+        // On confirm
+        try {
+            currentOrder = [];
+            pendingStockRequests = [];
+            currentUser = null;
+            
+            const itemsToClear = [
+                'pendingStockRequests',
+                'localStockRequests',
+                'servingwareInventory',
+                'stockRequestTimestamps',
+                'offlineMode',
+                'lastSyncTime'
+            ];
+            
+            itemsToClear.forEach(item => {
+                localStorage.removeItem(item);
             });
-        }, 500);
-        
-    } catch (error) {
-        console.error('❌ Error during logout:', error);
-        window.location.href = '/login?logout=true';
+            
+            showToast('Logging out... Please wait', 'info', 2000);
+            
+            setTimeout(() => {
+                fetch('/api/auth/logout', {  // Fixed endpoint
+                    method: 'POST',  // Changed from GET to POST
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(() => {
+                    window.location.href = '/login?logout=true';
+                })
+                .catch(() => {
+                    window.location.href = '/login?logout=true';
+                });
+            }, 500);
+            
+        } catch (error) {
+            console.error('❌ Error during logout:', error);
+            window.location.href = '/login?logout=true';
+        }
+    }, () => {
+        // On cancel
+        console.log('🔙 Logout cancelled');
+    });
+}
+
+// Logout confirmation modal function
+function showLogoutConfirmation(onConfirm, onCancel) {
+    // Check if modal already exists
+    if (document.getElementById('logoutModal')) {
+        return;
     }
+
+    // Create modal container
+    const modal = document.createElement('div');
+    modal.id = 'logoutModal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    `;
+
+    // Add animation styles if they don't exist
+    if (!document.getElementById('logoutModalStyles')) {
+        const style = document.createElement('style');
+        style.id = 'logoutModalStyles';
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideIn {
+                from { transform: translateY(-20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease;
+        text-align: center;
+    `;
+
+    modalContent.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <h3 style="margin: 0 0 10px 0; color: #333; font-size: 24px;">Confirm Logout</h3>
+            <p style="color: #666; margin: 0; font-size: 16px;">Are you sure you want to logout?</p>
+        </div>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button id="cancelLogoutBtn" style="
+                padding: 12px 30px;
+                background: #f0f0f0;
+                color: #666;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex: 1;
+                max-width: 130px;
+            " onmouseover="this.style.background='#e4e4e4'" 
+               onmouseout="this.style.background='#f0f0f0'">
+                Cancel
+            </button>
+            <button id="confirmLogoutBtn" style="
+                padding: 12px 30px;
+                background: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex: 1;
+                max-width: 130px;
+            " onmouseover="this.style.background='#c82333'" 
+               onmouseout="this.style.background='#dc3545'">
+                Logout
+            </button>
+        </div>
+    `;
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // Handle cancel button
+    const cancelBtn = document.getElementById('cancelLogoutBtn');
+    const confirmBtn = document.getElementById('confirmLogoutBtn');
+
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        if (onCancel) onCancel();
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        if (onConfirm) onConfirm();
+    });
+
+    // Handle clicking outside the modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+            if (onCancel) onCancel();
+        }
+    });
+
+    // Handle escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.removeEventListener('keydown', handleEscape);
+            if (document.getElementById('logoutModal')) {
+                document.body.removeChild(modal);
+                if (onCancel) onCancel();
+            }
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
 }
 
 // ==================== 📋 LOAD ALL MENU ITEMS FROM MONGODB ====================

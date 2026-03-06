@@ -368,22 +368,21 @@ class StaffStockSystem {
         }
     }
 
-    handleLogout() {
-        if (confirm('Are you sure you want to logout?')) {
-            fetch('/api/auth/logout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            })
-            .then(() => {
-                window.location.href = '/login';
-            })
-            .catch(error => {
-                console.error('Logout error:', error);
-                window.location.href = '/login';
-            });
-        }
+  handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        })
+        .then(() => {
+            window.location.href = '/login';
+        })
+        .catch(() => {
+            window.location.href = '/login';
+        });
     }
+}
 }
 
 // Initialize staff system
@@ -393,5 +392,44 @@ document.addEventListener('DOMContentLoaded', () => {
     staffStockSystem.initialize();
 });
 
+
+// Logout confirmation helper
+function showLogoutConfirmation(onConfirm, onCancel) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.5); display: flex; justify-content: center; 
+        align-items: center; z-index: 10001;
+    `;
+
+    modal.innerHTML = `
+        <div style="background: white; padding: 30px; border-radius: 8px; max-width: 400px; width: 90%;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 10px 0;">Confirm Logout</h3>
+                <p style="color: #666; margin: 0;">Are you sure you want to logout?</p>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="this.closest('.modal').remove(); ${onCancel.toString()}" 
+                        style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Cancel
+                </button>
+                <button onclick="this.closest('.modal').remove(); ${onConfirm.toString()}" 
+                        style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+            onCancel();
+        }
+    });
+}
 // Global exports
 window.staffStockSystem = staffStockSystem;
