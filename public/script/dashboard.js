@@ -869,7 +869,7 @@ function updateTopSellingTable() {
     if (topSellingData.length === 0) {
         topItemsTableBody.innerHTML = `
             <tr>
-                <td colspan="3" class="no-data">No sales data available - Check console for API errors</td>
+                <td colspan="3" class="no-data">No Top Selling Items Today</td>
             </tr>
         `;
         console.warn('⚠️ No top selling data to display. dashboardData:', dashboardData);
