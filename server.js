@@ -1368,7 +1368,8 @@ const recipeMapping = {
         'Cookies & Cream (Glass)',
         'Cookies & Cream (L)',
         'Cookies & Cream Frappe',
-        'Coffee Crumble Frappe'
+        'Coffee Crumble Frappe',
+        'Cookie & Cream Milk Tea'
     ],
     'Tapioca pearls': [
         'Milk Tea Regular HC',
