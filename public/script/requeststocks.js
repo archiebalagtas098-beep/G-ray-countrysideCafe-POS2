@@ -1,6 +1,6 @@
 // ==================== REQUEST STOCKS SCRIPT ====================
 
-const BACKEND_URL = 'http://localhost:5050';
+const BACKEND_URL = window.location.origin;
 
 let allProducts = [];
 let selectedRequests = {};

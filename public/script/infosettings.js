@@ -783,9 +783,13 @@ function showToast(message, type = 'info') {
 
 // Logout handler
 function handleLogout() {
-    if (confirm('Are you sure you want to logout?')) {
+    showLogoutConfirmation(() => {
+        // On confirm - proceed with logout
         window.location.href = '/logout';
-    }
+    }, () => {
+        // On cancel - do nothing
+        console.log('🔙 Logout cancelled');
+    });
 }
 
 // Before unload warning

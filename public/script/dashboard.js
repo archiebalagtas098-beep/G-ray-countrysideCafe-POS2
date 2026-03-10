@@ -98,77 +98,84 @@ function initializeBackButtonPrevention() {
 
 // ==================== 🚪 LOGOUT HANDLER ====================
 async function handleLogout() {
-    try {
-        console.log('🚪 Logging out...');
-        
-        // Disable back button prevention first (new method)
-        if (typeof backButtonPrevention !== 'undefined') {
-            backButtonPrevention.disable();
-        } else {
-            disableBackButtonPrevention(); // Fallback to old method
+    // Show confirmation modal first
+    showLogoutConfirmation(async () => {
+        // On confirm - proceed with logout
+        try {
+            console.log('🚪 Logging out...');
+            
+            // Disable back button prevention first (new method)
+            if (typeof backButtonPrevention !== 'undefined') {
+                backButtonPrevention.disable();
+            } else {
+                disableBackButtonPrevention(); // Fallback to old method
+            }
+            
+            // Clear session
+            if (typeof sessionManager !== 'undefined') {
+                sessionManager.clearSession();
+            }
+            
+            // Close real-time connections
+            if (adminEventSource) {
+                adminEventSource.close();
+                adminEventSource = null;
+                console.log('✅ Real-time connection closed');
+            }
+            
+            if (window.dashboardEventSource) {
+                window.dashboardEventSource.close();
+                window.dashboardEventSource = null;
+                console.log('✅ Dashboard event source closed');
+            }
+            
+            // Clear all intervals
+            const intervals = window._adminIntervals || [];
+            intervals.forEach(clearInterval);
+            window._adminIntervals = [];
+            
+            // Clear all timeouts
+            const timeouts = window._adminTimeouts || [];
+            timeouts.forEach(clearTimeout);
+            window._adminTimeouts = [];
+            
+            // Clear all application state
+            dashboardData = {
+                stats: {},
+                inventory: [],
+                orders: [],
+                topSelling: [],
+                salesChart: []
+            };
+            lastUpdateTimes = {
+                sales: null,
+                inventory: null,
+                orders: null
+            };
+            
+            // Clear all localStorage items except auth token
+            const authToken = localStorage.getItem('authToken');
+            const refreshToken = localStorage.getItem('refreshToken');
+            localStorage.clear();
+            if (authToken) localStorage.setItem('authToken', authToken);
+            if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+            
+            // Small delay to ensure everything is cleaned up
+            setTimeout(() => {
+                // Redirect to logout endpoint
+                window.location.replace('/logout');
+                console.log('✅ Redirected to logout');
+            }, 100);
+            
+        } catch (error) {
+            console.error('❌ Logout error:', error);
+            // Even if there's an error, still redirect
+            window.location.replace('/login.html');
         }
-        
-        // Clear session
-        if (typeof sessionManager !== 'undefined') {
-            sessionManager.clearSession();
-        }
-        
-        // Close real-time connections
-        if (adminEventSource) {
-            adminEventSource.close();
-            adminEventSource = null;
-            console.log('✅ Real-time connection closed');
-        }
-        
-        if (window.dashboardEventSource) {
-            window.dashboardEventSource.close();
-            window.dashboardEventSource = null;
-            console.log('✅ Dashboard event source closed');
-        }
-        
-        // Clear all intervals
-        const intervals = window._adminIntervals || [];
-        intervals.forEach(clearInterval);
-        window._adminIntervals = [];
-        
-        // Clear all timeouts
-        const timeouts = window._adminTimeouts || [];
-        timeouts.forEach(clearTimeout);
-        window._adminTimeouts = [];
-        
-        // Clear all application state
-        dashboardData = {
-            stats: {},
-            inventory: [],
-            orders: [],
-            topSelling: [],
-            salesChart: []
-        };
-        lastUpdateTimes = {
-            sales: null,
-            inventory: null,
-            orders: null
-        };
-        
-        // Clear all localStorage items except auth token
-        const authToken = localStorage.getItem('authToken');
-        const refreshToken = localStorage.getItem('refreshToken');
-        localStorage.clear();
-        if (authToken) localStorage.setItem('authToken', authToken);
-        if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
-        
-        // Small delay to ensure everything is cleaned up
-        setTimeout(() => {
-            // Redirect to logout endpoint
-            window.location.replace('/logout');
-            console.log('✅ Redirected to logout');
-        }, 100);
-        
-    } catch (error) {
-        console.error('❌ Logout error:', error);
-        // Even if there's an error, still redirect
-        window.location.replace('/login.html');
-    }
+    }, () => {
+        // On cancel - do nothing
+        console.log('🔙 Logout cancelled');
+    });
 }
 
 // Initialize Dashboard

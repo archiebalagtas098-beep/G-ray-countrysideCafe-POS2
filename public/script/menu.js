@@ -13,6 +13,7 @@ let isModalOpen = false;
 let retryCount = 0;
 let currentInventoryCache = [];
 let lastInventoryCacheTime = 0;
+let missingIngredientsData = {}; // Store missing ingredients by product name
 
 // DEBOUNCE & THROTTLE VARIABLES
 let dashboardRenderTimeout = null;
@@ -29,7 +30,7 @@ let filteredMenuItems = [];
 let notificationEventSource = null;
 
 const MAX_RETRIES = 3;
-const BACKEND_URL = 'http://localhost:5050';
+const BACKEND_URL = window.location.origin;
 const INVENTORY_CACHE_DURATION = 5000;
 
 // ==================== INGREDIENT INVENTORY ====================
@@ -334,6 +335,13 @@ const productIngredientMap = {
 
     // ==================== COFFEE & TEA ====================
     'Cafe Americano': {
+        ingredients: { 
+            'espresso': 0.03, 
+            'hot_water': 0.2 
+        },
+        servingware: 'cup'
+    },
+    'Cafe Americano Hot': {
         ingredients: { 
             'espresso': 0.03, 
             'hot_water': 0.2 
@@ -734,6 +742,139 @@ function loadNotificationsFromLocalStorage() {
     } catch (error) {
         console.error('❌ Error loading notifications:', error);
     }
+}
+
+// ==================== LOGOUT CONFIRMATION MODAL ====================
+function showLogoutConfirmation(onConfirm, onCancel) {
+    // Check if modal already exists
+    if (document.getElementById('logoutModal')) {
+        return;
+    }
+
+    // Create modal container
+    const modal = document.createElement('div');
+    modal.id = 'logoutModal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    `;
+
+    // Add animation styles if they don't exist
+    if (!document.getElementById('logoutModalStyles')) {
+        const style = document.createElement('style');
+        style.id = 'logoutModalStyles';
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideIn {
+                from { transform: translateY(-20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease;
+        text-align: center;
+    `;
+
+    modalContent.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <h3 style="margin: 0 0 10px 0; color: #333; font-size: 24px;">Confirm Logout</h3>
+            <p style="color: #666; margin: 0; font-size: 16px;">Are you sure you want to logout?</p>
+        </div>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button id="cancelLogoutBtn" style="
+                padding: 12px 30px;
+                background: #f0f0f0;
+                color: #666;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex: 1;
+                max-width: 130px;
+            " onmouseover="this.style.background='#e4e4e4'" 
+               onmouseout="this.style.background='#f0f0f0'">
+                Cancel
+            </button>
+            <button id="confirmLogoutBtn" style="
+                padding: 12px 30px;
+                background: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex: 1;
+                max-width: 130px;
+            " onmouseover="this.style.background='#c82333'" 
+               onmouseout="this.style.background='#dc3545'">
+                Logout
+            </button>
+        </div>
+    `;
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // Handle cancel button
+    const cancelBtn = document.getElementById('cancelLogoutBtn');
+    const confirmBtn = document.getElementById('confirmLogoutBtn');
+
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        if (onCancel) onCancel();
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        if (onConfirm) onConfirm();
+    });
+
+    // Handle clicking outside the modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+            if (onCancel) onCancel();
+        }
+    });
+
+    // Handle escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.removeEventListener('keydown', handleEscape);
+            if (document.getElementById('logoutModal')) {
+                document.body.removeChild(modal);
+                if (onCancel) onCancel();
+            }
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
 }
 
 // ==================== CATEGORY DISPLAY NAMES ====================
@@ -2880,6 +3021,107 @@ function closeMissingIngredientsModal() {
     }
 }
 
+// ==================== SHOW MISSING INGREDIENTS MODAL (From Error) ====================
+function showMissingIngredientsModal(productName) {
+    const data = missingIngredientsData[productName];
+    
+    if (!data || !data.missing) {
+        alert(`Unable to retrieve missing ingredients for ${productName}`);
+        return;
+    }
+    
+    // Create modal
+    const modalOverlay = document.createElement('div');
+    modalOverlay.id = 'missingIngredientsOverlay_' + Date.now();
+    modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-height: 80vh;
+        overflow-y: auto;
+    `;
+    
+    let missingHTML = '';
+    if (data.missing.length > 0) {
+        missingHTML = `
+            <div style="margin: 20px 0;">
+                <h4 style="color: #dc3545; margin-bottom: 12px;">❌ Missing/Out of Stock:</h4>
+                <ul style="list-style: none; padding: 0;">
+                    ${data.missing.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
+    let availableHTML = '';
+    if (data.available.length > 0) {
+        availableHTML = `
+            <div style="margin: 20px 0;">
+                <h4 style="color: #28a745; margin-bottom: 12px;">✅ Available Ingredients:</h4>
+                <ul style="list-style: none; padding: 0;">
+                    ${data.available.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
+    const overlayId = modalOverlay.id;
+    modal.innerHTML = `
+        <div>
+            <h3 style="margin: 0 0 10px 0; color: #333;">📦 Ingredient Status: ${productName}</h3>
+            <p style="color: #999; margin: 0 0 20px 0; font-size: 14px;">Check missing ingredients and restock if needed</p>
+            ${missingHTML}
+            ${availableHTML}
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button id="closeModalBtn_${overlayId}" style="
+                    flex: 1;
+                    padding: 10px;
+                    background: #28a745;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">Close</button>
+            </div>
+        </div>
+    `;
+    
+    modalOverlay.appendChild(modal);
+    document.body.appendChild(modalOverlay);
+    
+    // Close on button click
+    const closeBtn = document.getElementById(`closeModalBtn_${overlayId}`);
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modalOverlay.remove();
+        });
+    }
+    
+    // Close on backdrop click
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.remove();
+        }
+    });
+}
 // ==================== INITIALIZE EVENT LISTENERS ====================
 function initializeEventListeners() {
     console.log('🔌 Initializing event listeners...');
@@ -3018,6 +3260,18 @@ async function updateFromItemNameSelect() {
     if (!elements.itemId || !elements.itemId.value) {
         console.log(`\n🧮 Auto-calculating max stock for "${itemName}" based on ingredients...\n`);
         
+        // First, get detailed ingredient availability
+        const availabilityCheck = await checkIngredientAvailability(itemName);
+        
+        // Store the availability data for the modal
+        if (availabilityCheck) {
+            missingIngredientsData[itemName] = {
+                productName: itemName,
+                missing: availabilityCheck.missingIngredients || [],
+                available: availabilityCheck.availableIngredients || []
+            };
+        }
+        
         const maxStock = await calculateMaxStockBasedOnIngredients(itemName);
         
         if (elements.maximumStock) {
@@ -3100,10 +3354,11 @@ async function updateFromItemNameSelect() {
                     font-size: 12px;
                     color: #c62828;
                 `;
-                helper.innerHTML = `<strong>❌ Cannot create "${itemName}"</strong><br><small>One or more required ingredients are missing or out of stock</small>`;
+                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}')">❌ Cannot create "${itemName}"</strong><br><small>Click product name to see missing ingredients</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
                 
-                showToast(`❌ Cannot create "${itemName}" - insufficient ingredients`, 'error');
+                showToast(`❌ Cannot create "${itemName}" - Click on product name to see which ingredients are missing`, 'error');
+                
                 
             } else {
                 // No recipe or no ingredients, allow manual entry
@@ -4520,6 +4775,171 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// ==================== ADD STOCK CONFIRMATION MODAL ====================
+function showAddStockConfirmModal(itemName, currentStock, newStock, unit, quantity, onConfirm) {
+    // Remove any existing modal
+    const existingModal = document.getElementById('addStockConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.id = 'addStockConfirmModal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: slideUp 0.3s ease;
+    `;
+    
+    // Add animation styles
+    if (!document.getElementById('addStockModalStyles')) {
+        const style = document.createElement('style');
+        style.id = 'addStockModalStyles';
+        style.textContent = `
+            @keyframes slideUp {
+                from { transform: translateY(20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Close button (X)
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕';
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 28px;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    `;
+    closeBtn.onmouseover = () => closeBtn.style.color = '#333';
+    closeBtn.onmouseout = () => closeBtn.style.color = '#999';
+    modalContent.appendChild(closeBtn);
+    
+    modalContent.innerHTML += `
+        <div style="text-align: center; margin-top: 10px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
+            <h2 style="color: #333; margin: 0 0 15px 0; font-size: 22px;">Add Stock</h2>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: left;">
+                <p style="color: #666; margin: 8px 0; font-size: 14px;">
+                    <strong>Product:</strong> ${escapeHtml(itemName)}
+                </p>
+                <p style="color: #666; margin: 8px 0; font-size: 14px;">
+                    <strong>Quantity to Add:</strong> ${quantity} ${unit}
+                </p>
+                <p style="color: #666; margin: 8px 0; font-size: 14px;">
+                    <strong>Current Stock:</strong> ${currentStock} ${unit}
+                </p>
+                <p style="color: #27ae60; margin: 8px 0; font-size: 14px; font-weight: 600;">
+                    <strong>New Stock:</strong> ${newStock} ${unit}
+                </p>
+            </div>
+            
+            <p style="color: #666; margin-bottom: 30px; font-size: 14px;">
+                Are you sure you want to add this stock?
+            </p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button id="rejectStockBtn" style="
+                    flex: 1;
+                    padding: 12px 20px;
+                    background: #f0f0f0;
+                    color: #666;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
+                    Reject
+                </button>
+                <button id="confirmStockBtn" style="
+                    flex: 1;
+                    padding: 12px 20px;
+                    background: #27ae60;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.background='#229954'" onmouseout="this.style.background='#27ae60'">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    `;
+    
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Event listeners
+    const confirmBtn = document.getElementById('confirmStockBtn');
+    const rejectBtn = document.getElementById('rejectStockBtn');
+    
+    const closeModal = () => {
+        modal.remove();
+    };
+    
+    confirmBtn.addEventListener('click', () => {
+        closeModal();
+        onConfirm();
+    });
+    
+    rejectBtn.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Close on Escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.removeEventListener('keydown', handleEscape);
+            closeModal();
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
 // ==================== QUICK ADD STOCK FUNCTION (FIXED VERSION) ====================
 async function quickAddStock(itemId, itemName) {
     console.log(`🚀 quickAddStock called for: ${itemName} (${itemId})`);
@@ -4637,8 +5057,8 @@ async function quickAddStock(itemId, itemName) {
         // BLOCK only if there are OUT OF STOCK ingredients
         if (outOfStockIngredients.length > 0) {
             const ingredientList = outOfStockIngredients.join(', ');
-            console.warn(`🚫 BLOCKING: Out of stock ingredients: ${ingredientList}`);
-            showToast(`🚫 Cannot add stock - Required ingredients OUT OF STOCK: ${ingredientList}`, 'error', 8000);
+            console.warn(`🚫 BLOCKING: Insufficient ingredients: ${ingredientList}`);
+            showToast(`❌ Cannot add stock - Insufficient ingredients: ${ingredientList}`, 'error', 8000);
             return; // STOP HERE - DO NOT ADD STOCK
         }
         
@@ -4659,70 +5079,65 @@ async function quickAddStock(itemId, itemName) {
     }
     // ============= END OF INGREDIENT CHECK =============
     
-    // ✅ PROCEED WITH STOCK ADDITION
-    const confirmMsg = `Add ${quantityToAdd} ${unit} to "${itemName}"?\n\nCurrent: ${currentStock} ${unit}\nAfter add: ${newStock} ${unit}`;
-    
-    if (!confirm(confirmMsg)) {
-        return;
-    }
-    
-    try {
-        console.log(`📦 ADDING STOCK: ${quantityToAdd} ${unit} to "${itemName}"`);
-        
-        const response = await fetch(`/api/menu/${itemId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                name: product.name || product.itemName,
-                itemName: product.name || product.itemName,
-                category: product.category,
-                price: product.price,
-                unit: product.unit,
-                currentStock: newStock,
-                minStock: product.minStock,
-                maxStock: product.maxStock,
-                image: product.image || 'default_food.jpg'
-            })
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `Server error ${response.status}`);
+    // ✅ PROCEED WITH STOCK ADDITION - Show modal confirmation
+    showAddStockConfirmModal(itemName, currentStock, newStock, unit, quantityToAdd, async () => {
+        // On confirm callback
+        try {
+            console.log(`📦 ADDING STOCK: ${quantityToAdd} ${unit} to "${itemName}"`);
+            
+            const response = await fetch(`/api/menu/${itemId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    name: product.name || product.itemName,
+                    itemName: product.name || product.itemName,
+                    category: product.category,
+                    price: product.price,
+                    unit: product.unit,
+                    currentStock: newStock,
+                    minStock: product.minStock,
+                    maxStock: product.maxStock,
+                    image: product.image || 'default_food.jpg'
+                })
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `Server error ${response.status}`);
+            }
+            
+            const responseData = await response.json();
+            console.log(`✅ MongoDB UPDATED: ${itemName} stock is now ${newStock}`);
+            
+            // Update local product
+            product.currentStock = newStock;
+            
+            // Reset input
+            inputElement.value = '1';
+            inputElement.max = maxStock - newStock;
+            
+            // Show notification (only once - no duplicate)
+            addNotification(
+                `Added ${quantityToAdd} ${unit} to "${itemName}" (New: ${newStock} ${unit})`,
+                'success',
+                itemName
+            );
+            
+            // Refresh UI
+            renderMenuGrid();
+            updateDashboardStats();
+            await fetchMenuItems();
+            
+            console.log(`✅ Stock added and saved to MongoDB`);
+            
+        } catch (error) {
+            console.error('❌ Error adding stock:', error);
+            showToast(`❌ Error: ${error.message}`, 'error');
         }
-        
-        const responseData = await response.json();
-        console.log(`✅ MongoDB UPDATED: ${itemName} stock is now ${newStock}`);
-        
-        // Update local product
-        product.currentStock = newStock;
-        
-        // Reset input
-        inputElement.value = '1';
-        inputElement.max = maxStock - newStock;
-        
-        showToast(`✅ Added ${quantityToAdd} ${unit} to "${itemName}" (New: ${newStock} ${unit})`, 'success');
-        
-        // Add notification
-        addNotification(
-            `Added ${quantityToAdd} ${unit} to "${itemName}"`,
-            'success',
-            itemName
-        );
-        
-        // Refresh UI
-        renderMenuGrid();
-        updateDashboardStats();
-        await fetchMenuItems();
-        
-        console.log(`✅ Stock added and saved to MongoDB`);
-        
-    } catch (error) {
-        console.error('❌ Error adding stock:', error);
-        showToast(`❌ Error: ${error.message}`, 'error');
-    }
+    })
 }
 
 // ==================== QUICK ADD STOCK FOR REQUEST ====================
@@ -4754,15 +5169,6 @@ function quickAddStockForRequest(productName, quantity, unit) {
             inputElement.value = quantity;
             inputElement.focus();
             inputElement.style.borderColor = '#28a745';
-            inputElement.style.boxShadow = '0 0 0 2px rgba(40, 167, 69, 0.25)';
-            
-            // Auto-click the add button after a brief pause
-            setTimeout(() => {
-                const addButton = inputElement.nextElementSibling;
-                if (addButton && !addButton.disabled) {
-                    addButton.click();
-                }
-            }, 500);
         }
     }, 300);
 }

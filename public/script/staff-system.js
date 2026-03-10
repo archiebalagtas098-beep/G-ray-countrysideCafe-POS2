@@ -369,7 +369,8 @@ class StaffStockSystem {
     }
 
   handleLogout() {
-    if (confirm('Are you sure you want to logout?')) {
+    showLogoutConfirmation(() => {
+        // On confirm
         fetch('/api/auth/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -381,7 +382,10 @@ class StaffStockSystem {
         .catch(() => {
             window.location.href = '/login';
         });
-    }
+    }, () => {
+        // On cancel
+        console.log('🔙 Logout cancelled');
+    });
 }
 }
 

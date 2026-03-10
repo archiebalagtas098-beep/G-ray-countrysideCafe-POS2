@@ -600,7 +600,11 @@ const recipeMapping = {
         'Strawberry & Cream (L)',
         'Mango cheese cake HC',
         'Mango cheese cake MC',
-        'Steamed milk'
+        'Steamed milk',
+        'Vanilla Latte Hot',
+        'Iced Vanilla Latte',
+        'Caramel Macchiato Hot'
+
     ],
     'Cheese': [
         'Cheesy Nachos',
@@ -1224,6 +1228,7 @@ const recipeMapping = {
         'Cafe Americano',
         'Cafe Americano Tall',
         'Cafe Americano Grande',
+        'Cafe Americano Hot',
         'Cafe Americano (Glass)',
         'Cafe Americano (L)',
         'Cafe Latte',
@@ -1242,6 +1247,7 @@ const recipeMapping = {
         'Cafe Americano',
         'Cafe Americano Tall',
         'Cafe Americano Grande',
+        'Cafe Americano Hot',
         'Cafe Americano (Glass)',
         'Cafe Americano (L)',
         'Cafe Latte',
@@ -1254,7 +1260,8 @@ const recipeMapping = {
         'Caramel Macchiato Grande',
         'Caramel Macchiato (Glass)',
         'Caramel Macchiato (L)',
-        'Espresso Hot'
+        'Espresso Hot',
+        'Caramel Macchiato Hot'
     ],
     'Matcha powder': [
         'Matcha Green Tea',
@@ -1265,7 +1272,9 @@ const recipeMapping = {
         'Matcha Green Tea (L)',
         'Matcha Regular HC',
         'Green Tea Latte Hot',
-        'Green Tea Matcha Hot'
+        'Green Tea Matcha Hot',
+        'Green Tea Matcha Iced',
+        'Matcha Green Tea Frappe'
     ],
     'Matcha Green Tea Powder': [
         'Matcha Green Tea',
@@ -1287,7 +1296,13 @@ const recipeMapping = {
     ],
     'Caramel Sauce': [
         'Caramel Macchiato Grande',
-        'Caramel Macchiato Tall'
+        'Caramel Macchiato Tall',
+        'Caramel Macchiato (Glass)',
+        'Caramel Macchiato (L)',
+        'Salted Caramel Frappe',
+        'Caramel Macchiato Hot',
+
+    
     ],
     'Vanilla syrup': [
         'Cafe Latte',
@@ -1299,7 +1314,10 @@ const recipeMapping = {
         'Caramel Macchiato Tall',
         'Caramel Macchiato Grande',
         'Caramel Macchiato (Glass)',
-        'Caramel Macchiato (L)'
+        'Caramel Macchiato (L)',
+        'Vanilla Latte Hot',
+        'Iced Vanilla Latte',
+        'Caramel Macchiato Hot'
     ],
     'White chocolate syrup': [
         'White Chocolate Hot',
@@ -1392,7 +1410,6 @@ const recipeMapping = {
     'Milk Foam': [
         'Cafe Latte',
         'Cappuccino Hot',
-        'Caramel Macchiato Hot'
     ],
     'Hot water': [
         'Cafe Americano',
@@ -1424,10 +1441,14 @@ const recipeMapping = {
         'Green Tea Matcha Hot',
         'Hot Ceylon Tea Black',
         'Hot Ceylon Tea Lemon',
-        'Hot Ceylon Tea Peppermint'
+        'Hot Ceylon Tea Peppermint',
+        'Cafe Americano Hot',
+        'Caramel Macchiato Hot',
+        'Vanilla Latte Hot'
+
     ],
     'Ice': [
-        'Iced Café Latte',
+        'Iced Cafe Latte',
         'Iced Mocha Latte',
         'Iced Vanilla Latte',
         'Iced Caramel Macchiato',
@@ -1714,7 +1735,7 @@ const recipeMapping = {
         'Soda (Glass)',
         'Soda (Mismo)',
         'Soda (L)',
-        'Iced Café Latte',
+        'Iced Cafe Latte',
         'Iced Mocha Latte',
         'Iced Vanilla Latte',
         'Iced Caramel Macchiato',
@@ -2761,7 +2782,7 @@ const recipeMapping = {
     'Kare-Kare': [
         'Oxtail',
         'Banana flower bud',
-        'Pechay or bok choy',
+        'Pechay',
         'String beans',
         'Chinese eggplant',
         'Ground peanuts',
@@ -2867,6 +2888,13 @@ const recipeMapping = {
         'Steamed milk',
         'Paper Cups'
     ],
+    'Caramel Macchiato Hot': [
+        'Espresso',
+        'Milk',
+        'Vanilla syrup',
+        'Caramel sauce',
+        'Hot water'
+    ],
     'Green Tea Latte Hot': [
         'Matcha powder',
         'Steamed milk',
@@ -2904,7 +2932,7 @@ const recipeMapping = {
         'Honey',
         'Paper Cups'
     ],
-    'Iced Café Latte': [
+    'Iced Cafe Latte': [
         'Espresso',
         'Milk',
         'Ice',
@@ -3089,7 +3117,7 @@ const recipeMapping = {
         'Kare-Kare'
     ],
 
-    'Pechay or bok choy': [
+    'Pechay': [
         'Kare-Kare'
     ],
 
@@ -3159,7 +3187,15 @@ const recipeMapping = {
         'Cafe Americano (L)'
     ],
 
-  
+    'Caramel syrup': [
+        'Caramel Macchiato',
+        'Caramel Macchiato Tall',
+        'Caramel Macchiato Grande',
+        'Caramel Macchiato (Glass)',
+        'Caramel Macchiato (L)',
+        'Caramel Milk Tea',
+        'Iced Caramel Macchiato'
+    ],
 
 };
 
@@ -7482,6 +7518,15 @@ app.get('/images/default_food.jpg', (req, res) => {
 app.get("/logout", (req, res) => {
     res.clearCookie("token");
     res.redirect("/login?logout=true");
+});
+
+// API endpoint for logout (used by frontend)
+app.post("/api/auth/logout", (req, res) => {
+    res.clearCookie("token");
+    res.json({ 
+        success: true, 
+        message: "Logged out successfully" 
+    });
 });
 
 app.get('/login', (req, res) => {

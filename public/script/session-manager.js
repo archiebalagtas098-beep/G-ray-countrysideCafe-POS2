@@ -153,22 +153,38 @@ class SessionManager {
             // Clear session storage
             this.clearSession();
             
-            // Make logout API call to clear server session
-            fetch('/logout', {
-                method: 'GET',
+            // Try to call the API logout endpoint first
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include'
-            }).then(response => {
-                console.log('✅ Logout request sent to server');
+            })
+            .then(response => {
+                console.log('✅ Logout request sent to server via API');
                 // Redirect to login page
-                window.location.href = '/login';
-            }).catch(error => {
-                console.error('❌ Logout error:', error);
+                window.location.href = '/login?logout=true';
+            })
+            .catch(error => {
+                console.error('❌ Logout API error, trying GET endpoint:', error);
+                // Fallback to GET endpoint
+                return fetch('/logout', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+            })
+            .then(response => {
+                if (response && response.ok) {
+                    console.log('✅ Logged out via fallback endpoint');
+                }
+            })
+            .catch(error => {
+                console.error('❌ All logout attempts failed:', error);
                 // Still redirect even if API call fails
-                window.location.href = '/login';
+                window.location.href = '/login?logout=true';
             });
         } catch (error) {
             console.error('❌ Error during logout:', error);
-            window.location.href = '/login';
+            window.location.href = '/login?logout=true';
         }
     }
 }
@@ -178,10 +194,135 @@ const sessionManager = new SessionManager();
 
 console.log('🔐 Session Manager initialized');
 
+// ==================== LOGOUT CONFIRMATION MODAL ====================
+function showLogoutConfirmation(onConfirm, onCancel) {
+    // Remove any existing modal
+    const existingModal = document.getElementById('logoutConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.id = 'logoutConfirmModal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        animation: slideUp 0.3s ease;
+    `;
+    
+    // Add animation styles
+    if (!document.getElementById('logoutModalStyles')) {
+        const style = document.createElement('style');
+        style.id = 'logoutModalStyles';
+        style.textContent = `
+            @keyframes slideUp {
+                from { transform: translateY(20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    modalContent.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <div style="font-size: 48px; margin-bottom: 15px;">👋</div>
+            <h2 style="color: #333; margin: 0 0 10px 0; font-size: 22px;">Confirm Logout</h2>
+            <p style="color: #666; margin: 0; font-size: 14px;">Are you sure you want to logout?</p>
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 30px;">
+            <button id="cancelLogoutBtn" style="
+                flex: 1;
+                padding: 12px 20px;
+                background: #f0f0f0;
+                color: #666;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.2s ease;
+            " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
+                Cancel
+            </button>
+            <button id="confirmLogoutBtn" style="
+                flex: 1;
+                padding: 12px 20px;
+                background: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.2s ease;
+            " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                Proceed
+            </button>
+        </div>
+    `;
+    
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    document.getElementById('cancelLogoutBtn').addEventListener('click', () => {
+        modal.remove();
+        if (onCancel) onCancel();
+    });
+    
+    document.getElementById('confirmLogoutBtn').addEventListener('click', () => {
+        modal.remove();
+        if (onConfirm) onConfirm();
+    });
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+            if (onCancel) onCancel();
+        }
+    });
+    
+    // Close on Escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.removeEventListener('keydown', handleEscape);
+            modal.remove();
+            if (onCancel) onCancel();
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
 // ==================== GLOBAL LOGOUT HANDLER ====================
 // Called from onclick="handleLogout()" in navbar buttons
 function handleLogout() {
-    sessionManager.logout();
+    showLogoutConfirmation(() => {
+        // On confirm
+        sessionManager.logout();
+    }, () => {
+        // On cancel
+        console.log('🔙 Logout cancelled');
+    });
 }
 
 // Initialize user profile when DOM is ready

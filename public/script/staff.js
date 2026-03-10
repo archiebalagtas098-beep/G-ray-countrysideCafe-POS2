@@ -2820,7 +2820,29 @@ function showStockRequestModal(productName) {
                 width: 90%;
                 max-width: 400px;
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                position: relative;
             ">
+                <!-- Close Button -->
+                <button onclick="closeStockRequestModal()" style="
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    color: #999;
+                    cursor: pointer;
+                    padding: 0;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.color='#333'" onmouseout="this.style.color='#999'">
+                    ✕
+                </button>
+                
                 <h2 style="margin: 0 0 20px; color: #333; font-size: 20px;">📦 Stock Request</h2>
                 
                 <p style="margin: 0 0 15px; color: #666; font-size: 14px;">
@@ -2854,7 +2876,22 @@ function showStockRequestModal(productName) {
                 />
                 
                 <div style="display: flex; gap: 10px;">
-                    <button onclick="submitStockRequest('${productName}')" style="
+                    <button onclick="closeStockRequestModal()" style="
+                        flex: 1;
+                        background: #f0f0f0;
+                        color: #666;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
+                        Cancel
+                    </button>
+                    
+                    <button onclick="submitStockRequestWithConfirm('${productName}')" style="
                         flex: 1;
                         background: #28a745;
                         color: white;
@@ -2864,22 +2901,9 @@ function showStockRequestModal(productName) {
                         font-size: 16px;
                         cursor: pointer;
                         font-weight: bold;
-                    ">
-                        ✓ Send Request
-                    </button>
-                    
-                    <button onclick="closeStockRequestModal()" style="
-                        flex: 1;
-                        background: #6c757d;
-                        color: white;
-                        border: none;
-                        padding: 12px;
-                        border-radius: 8px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        font-weight: bold;
-                    ">
-                        ✕ Cancel
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.background='#218838'" onmouseout="this.style.background='#28a745'">
+                        ✓ Submit
                     </button>
                 </div>
             </div>
@@ -2896,11 +2920,26 @@ function showStockRequestModal(productName) {
         input.select();
     }, 100);
     
-    // Allow Enter key to submit
-    document.getElementById('quantityInput').addEventListener('keypress', (e) => {
+    // Auto-submit on Enter key or when user finishes input
+    const input = document.getElementById('quantityInput');
+    input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            submitStockRequest(productName);
+            submitStockRequestWithConfirm(productName);
         }
+    });
+    
+    // Auto-submit after user stops typing (auto-confirm behavior)
+    let autoSubmitTimeout;
+    input.addEventListener('input', () => {
+        clearTimeout(autoSubmitTimeout);
+        autoSubmitTimeout = setTimeout(() => {
+            // Auto-submit only if value is valid
+            const quantity = input.value.trim();
+            const quantityNum = parseInt(quantity);
+            if (!isNaN(quantityNum) && quantityNum > 0 && quantityNum <= 1000) {
+                submitStockRequestWithConfirm(productName);
+            }
+        }, 1500); // Auto-submit after 1.5 seconds of no typing
     });
 }
 
@@ -2909,7 +2948,8 @@ function closeStockRequestModal() {
     if (modal) modal.remove();
 }
 
-function submitStockRequest(productName) {
+// ==================== AUTO-SUBMIT STOCK REQUEST ====================
+function submitStockRequestWithConfirm(productName) {
     const input = document.getElementById('quantityInput');
     const quantity = input ? input.value.trim() : '';
     
@@ -2923,6 +2963,15 @@ function submitStockRequest(productName) {
         showToast('❌ Please enter a valid quantity', 'error', 2000);
         return;
     }
+    
+    // Close the input modal and auto-submit
+    closeStockRequestModal();
+    
+    // Directly submit without confirmation
+    submitStockRequest(productName, quantityNum);
+}
+
+function submitStockRequest(productName, quantityNum) {
     
     // Double-check if request is still not pending (in case of rapid clicks)
     if (hasPendingRequest(productName)) {

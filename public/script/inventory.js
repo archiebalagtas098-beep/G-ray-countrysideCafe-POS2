@@ -171,6 +171,7 @@ const validRawIngredients = {
     
     // ==================== RICE & GRAINS ====================
     'Rice': 'dry',
+    'Toasted ground rice': 'dry',
     
     // ==================== BEVERAGES ====================
     'Lemon juice': 'beverage',
