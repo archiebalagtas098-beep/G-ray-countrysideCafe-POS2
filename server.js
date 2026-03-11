@@ -18,6 +18,10 @@ import Order from "./models/Order.js";
 import MenuItem from "./models/Menuitem.js";
 import Customer from "./models/Customer.js";
 import StockRequest from "./models/StockRequest.js";
+import Stats from "./models/Stats.js";
+import StockDeduction from "./models/StockDeduction.js";
+import StaffAssignment from "./models/staffassignModel.js";
+import StockTransfer from "./models/StocktransferModel.js";
 
 import stockTransferRoute from "./routes/stockTransferroute.js";
 import staffRoutes from "./routes/staffroute.js";

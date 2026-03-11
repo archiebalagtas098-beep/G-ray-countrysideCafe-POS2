@@ -2032,7 +2032,7 @@ function initializeNotificationSystem() {
         emptyState.id = 'notificationEmptyState';
         emptyState.style.cssText = 'padding: 40px 20px; text-align: center; color: #666;';
         emptyState.innerHTML = `
-            <div style="font-size: 64px; margin-bottom: 20px;">📭</div>
+            <div style="font-size: 64px; margin-bottom: 20px;"></div>
             <h3 style="margin-bottom: 10px; color: #333; font-size: 18px;">No notifications</h3>
             <p style="margin: 0; color: #999; font-size: 14px;">When alerts or stock requests occur, they will appear here</p>
         `;
@@ -4086,7 +4086,7 @@ function renderMenuGrid() {
     if (filteredItems.length === 0) {
         elements.menuGrid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-icon"></div>
                 <h3>No products in this category</h3>
                 <p>Add products to this category using the "Add New Product" button</p>
                 <button class="btn btn-primary" onclick="openAddModal()">Add New Product</button>
