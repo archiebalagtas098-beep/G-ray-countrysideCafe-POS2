@@ -22,6 +22,7 @@ import Stats from "./models/Stats.js";
 import StockDeduction from "./models/StockDeduction.js";
 import StaffAssignment from "./models/staffassignModel.js";
 import StockTransfer from "./models/StocktransferModel.js";
+import Settings from "./models/SettingsModel.js";
 
 import stockTransferRoute from "./routes/stockTransferroute.js";
 import staffRoutes from "./routes/staffroute.js";
@@ -192,8 +193,9 @@ const recipeMapping = {
         'Fried Chicken',
         'Sizzling Fried Chicken',
         'Clubhouse Sandwich',
-        'Pancit Bihon',
-        'Pancit Canton + Bihon (Mixed)',
+        'Pancit Bihon (S)',
+        'Pancit Bihon (M)',
+        'Pancit Bihon (L)',
         'Pancit Canton (S)',
         'Pancit Canton (M)',
         'Pancit Canton (L)'
@@ -607,7 +609,12 @@ const recipeMapping = {
         'Steamed milk',
         'Vanilla Latte Hot',
         'Iced Vanilla Latte',
-        'Caramel Macchiato Hot'
+        'Caramel Macchiato Hot',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Milk Tea (Glass)',
+        'Matcha Green Tea Milk Tea (L)',
+        'Matcha Green Tea Milk Tea HC',
+        'Matcha Green Tea Milk Tea MC'
 
     ],
     'Cheese': [
@@ -943,6 +950,18 @@ const recipeMapping = {
         'Strawberry & Cream (L)',
         'Mango cheese cake HC',
         'Mango cheese cake MC',
+        'Cookies & Cream Frappe',
+        'Strawberry & Cream Frappe',
+        'Strawberry Cheesecake Frappe',
+        'Mango Cheesecake Frappe',
+        'Strawberry Cream Frappe',
+        'Matcha Green Tea Frappe',
+        'Salted Caramel Frappe',
+        'Rocky Road Frappe',
+        'Choco Fudge Frappe',
+        'Choco Mousse Frappe',
+        'Coffee Crumble Frappe',
+        'Vanilla Cream Frappe',
         'Fried Rice',
         'Fried Rice (Small)',
         'Fried Rice (Medium)',
@@ -954,7 +973,12 @@ const recipeMapping = {
         'Spaghetti (Filipino Style)',
         'Spaghetti (Filipino Style) (S)',
         'Spaghetti (Filipino Style) (M)',
-        'Spaghetti (Filipino Style) (L)'
+        'Spaghetti (Filipino Style) (L)',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Milk Tea (Glass)',
+        'Matcha Green Tea Milk Tea (L)',
+        'Matcha Green Tea Milk Tea HC',
+        'Matcha Green Tea Milk Tea MC'
     ],
     'Breadcrumbs': [
         'Pork Shanghai',
@@ -1278,7 +1302,12 @@ const recipeMapping = {
         'Green Tea Latte Hot',
         'Green Tea Matcha Hot',
         'Green Tea Matcha Iced',
-        'Matcha Green Tea Frappe'
+        'Matcha Green Tea Frappe',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Milk Tea HC',
+        'Matcha Green Tea Milk Tea MC',
+        'Matcha Green Tea Milk Tea (Glass)',
+        'Matcha Green Tea Milk Tea (L)'
     ],
     'Matcha Green Tea Powder': [
         'Matcha Green Tea',
@@ -1449,7 +1478,12 @@ const recipeMapping = {
         'Hot Ceylon Tea Peppermint',
         'Cafe Americano Hot',
         'Caramel Macchiato Hot',
-        'Vanilla Latte Hot'
+        'Vanilla Latte Hot',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Milk Tea (Glass)',
+        'Matcha Green Tea Milk Tea (L)',
+        'Matcha Green Tea Milk Tea HC',
+        'Matcha Green Tea Milk Tea MC'
 
     ],
     'Ice': [
@@ -1506,7 +1540,12 @@ const recipeMapping = {
         'Choco Fudge Frappe',
         'Choco Mousse Frappe',
         'Coffee Crumble Frappe',
-        'Vanilla Cream Frappe'
+        'Vanilla Cream Frappe',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Milk Tea (Glass)',
+        'Matcha Green Tea Milk Tea (L)',
+        'Matcha Green Tea Milk Tea HC',
+        'Matcha Green Tea Milk Tea MC'
     ],
     'Carbonated water': [
         'Soda (Glass)',
@@ -1633,20 +1672,114 @@ const recipeMapping = {
     ],
 
     // ================ PACKAGING ================
-    'Paper Cups': [
-        'Cucumber Lemonade',
-        'Blue Lemonade',
-        'Red Tea',
+    'Plastic Cups': [
+        // ========== COFFEE ==========
         'Cafe Americano',
+        'Cafe Americano Tall',
+        'Cafe Americano Grande',
+        'Cafe Americano (Glass)',
+        'Cafe Americano (L)',
+        'Cafe Americano Hot',
         'Cafe Latte',
+        'Cafe Latte Tall',
+        'Cafe Latte Grande',
+        'Cafe Latte (Glass)',
+        'Cafe Latte (L)',
         'Caramel Macchiato',
+        'Caramel Macchiato Tall',
+        'Caramel Macchiato Grande',
+        'Caramel Macchiato (Glass)',
+        'Caramel Macchiato (L)',
+        'Caramel Macchiato Hot',
+        'Espresso Hot',
+        'Cappuccino Hot',
+        'Mocha Latte Hot',
+        'Vanilla Latte Hot',
+        'Iced Cafe Latte',
+        'Iced Mocha Latte',
+        'Iced Vanilla Latte',
+        'Iced Caramel Macchiato',
+        // ========== MILK TEA ==========
         'Milk Tea Regular HC',
         'Milk Tea Regular MC',
+        'Milk Tea Regular HC (Glass)',
+        'Milk Tea Regular HC (Large)',
+        'Milk Tea Regular HC Regular MC',
+        'Caramel Milk Tea',
+        'Cookies & Cream Milk Tea',
+        'Dark Choco Milk Tea',
+        'Okinawa Milk Tea',
+        'Wintermelon Milk Tea',
+        'Matcha Green Tea Milk Tea',
+        // ========== MATCHA & TEA ==========
         'Matcha Green Tea',
-        'Cookies & Cream',
-        'Strawberry & Cream',
-        'Mango Cheesecake',
-        'Soda'
+        'Matcha Green Tea Tall',
+        'Matcha Green Tea HC',
+        'Matcha Green Tea MC',
+        'Matcha Green Tea (Glass)',
+        'Matcha Green Tea (L)',
+        'Matcha Green Tea (HC)',
+        'Matcha Regular HC',
+        'Green Tea Latte Hot',
+        'Green Tea Matcha Hot',
+        'Green Tea Matcha Iced',
+        'Red Tea',
+        'Red Tea (Glass)',
+        'Red Tea Tall',
+        'Red Tea (Tall)',
+        'Red Tea Glass',
+        'Red Tea (L)',
+        'Hot Ceylon Tea Black',
+        'Hot Ceylon Tea Lemon',
+        'Hot Ceylon Tea Peppermint',
+        // ========== CREAMS & DRINKS ==========
+        'Cookies & Cream HC',
+        'Cookies & Cream MC',
+        'Cookies & Cream (Glass)',
+        'Cookies & Cream (L)',
+        'Cookies and Cream MC',
+        'Strawberry & Cream HC',
+        'Strawberry and Cream MC',
+        'Strawberry & Cream (Glass)',
+        'Strawberry & Cream (L)',
+        'Mango cheese cake HC',
+        'Mango cheese cake MC',
+        'White Chocolate Hot',
+        'Iced White Chocolate Latte',
+        'Iced Dark Chocolate',
+        // ========== FRAPPES ==========
+        'Cookies & Cream Frappe',
+        'Strawberry & Cream Frappe',
+        'Strawberry Cheesecake Frappe',
+        'Mango Cheesecake Frappe',
+        'Strawberry Cream Frappe',
+        'Rocky Road Frappe',
+        'Choco Fudge Frappe',
+        'Choco Mousse Frappe',
+        'Coffee Crumble Frappe',
+        'Vanilla Cream Frappe',
+        'Matcha Green Tea Frappe',
+        'Salted Caramel Frappe',
+        // ========== BEVERAGES & JUICES ==========
+        'Cucumber Lemonade',
+        'Cucumber Lemonade (Glass)',
+        'Cucumber Lemonade (Pitcher)',
+        'Blue Lemonade',
+        'Blue Lemonade (Glass)',
+        'Blue Lemonade (Pitcher)',
+        'Calamansi Juice (Glass)',
+        'Calamansi Juice (Pitcher)',
+        'Soda',
+        'Soda (Glass)',
+        'Soda (Mismo)',
+        'Soda (L)',
+        'Soda 1.5L Coke',
+        'Soda 1.5L Sprite',
+        'Soda 1.5L Royal',
+        'Soda 1.5L Coke Zero',
+        'Soda (Mismo) Coke',
+        'Soda (Mismo) Sprite',
+        'Soda (Mismo) Royal'
     ],
     'Lid': [
         'Cafe Americano',
@@ -1675,34 +1808,37 @@ const recipeMapping = {
         'Hot Ceylon Tea Lemon',
         'Hot Ceylon Tea Peppermint'
     ],
-    'Sleeve': [
-        'Cafe Americano',
-        'Cafe Americano Tall',
-        'Cafe Americano Grande',
-        'Cafe Americano (Glass)',
-        'Cafe Americano (L)',
-        'Cafe Latte',
-        'Cafe Latte Tall',
-        'Cafe Latte Grande',
-        'Cafe Latte (Glass)',
-        'Cafe Latte (L)',
-        'Caramel Macchiato',
-        'Caramel Macchiato Tall',
-        'Caramel Macchiato Grande',
-        'Caramel Macchiato (Glass)',
-        'Caramel Macchiato (L)',
-        'Espresso Hot',
-        'Cappuccino Hot',
-        'Mocha Latte Hot',
-        'Vanilla Latte Hot',
-        'Green Tea Latte Hot',
-        'White Chocolate Hot',
-        'Green Tea Matcha Hot',
-        'Hot Ceylon Tea Black',
-        'Hot Ceylon Tea Lemon',
-        'Hot Ceylon Tea Peppermint'
+
+    'Rounded Lid': [
+        'Milk Tea Regular HC',
+        'Milk Tea Regular MC',
+        'Caramel Milk Tea',
+        'Cookies & Cream Milk Tea',
+        'Dark Choco Milk Tea'
     ],
-    'Straws': [
+
+    'Boba straws': [
+        'Milk Tea Regular HC',
+        'Milk Tea Regular MC',
+        'Milk Tea Regular HC (Glass)',
+        'Milk Tea Regular HC (Large)',
+        'Caramel Milk Tea',
+        'Cookies & Cream Milk Tea',
+        'Dark Choco Milk Tea',
+        'Okinawa Milk Tea',
+        'Wintermelon Milk Tea',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Frappe',
+        'Salted Caramel Frappe',
+        'Strawberry Cheesecake Frappe',
+        'Mango Cheesecake Frappe',
+        'Strawberry Cream Frappe',
+        'Cookies & Cream Frappe',
+        'Rocky Road Frappe',
+        'Choco Fudge Frappe',
+        'Choco Mousse Frappe',
+        'Coffee Crumble Frappe',
+        'Vanilla Cream Frappe',
         'Cucumber Lemonade',
         'Cucumber Lemonade (Glass)',
         'Cucumber Lemonade (Pitcher)',
@@ -1758,29 +1894,7 @@ const recipeMapping = {
         'Coffee Crumble Frappe',
         'Vanilla Cream Frappe'
     ],
-    'Boba straws': [
-        'Milk Tea Regular HC',
-        'Milk Tea Regular MC',
-        'Milk Tea Regular HC (Glass)',
-        'Milk Tea Regular HC (Large)',
-        'Caramel Milk Tea',
-        'Cookies & Cream Milk Tea',
-        'Dark Choco Milk Tea',
-        'Okinawa Milk Tea',
-        'Wintermelon Milk Tea',
-        'Matcha Green Tea Milk Tea',
-        'Matcha Green Tea Frappe',
-        'Salted Caramel Frappe',
-        'Strawberry Cheesecake Frappe',
-        'Mango Cheesecake Frappe',
-        'Strawberry Cream Frappe',
-        'Cookies & Cream Frappe',
-        'Rocky Road Frappe',
-        'Choco Fudge Frappe',
-        'Choco Mousse Frappe',
-        'Coffee Crumble Frappe',
-        'Vanilla Cream Frappe'
-    ],
+
     'Napkins': [
         'Korean Spicy Bulgogi (Pork)',
         'Korean Salt and Pepper (Pork)',
@@ -1848,6 +1962,7 @@ const recipeMapping = {
         'Plain Rice (Medium)',
         'Plain Rice (Large)'
     ],
+
     'Food containers': [
         'Korean Spicy Bulgogi (Pork)',
         'Korean Salt and Pepper (Pork)',
@@ -1864,17 +1979,7 @@ const recipeMapping = {
         'Fried Chicken',
         'Budget Fried Chicken',
         'Pancit Bihon',
-        'Pancit Bihon (S)',
-        'Pancit Bihon (M)',
-        'Pancit Bihon (L)',
         'Pancit Canton + Bihon (Mixed)',
-        'Pancit Canton (S)',
-        'Pancit Canton (M)',
-        'Pancit Canton (L)',
-        'Spaghetti',
-        'Spaghetti (S)',
-        'Spaghetti (M)',
-        'Spaghetti (L)',
         'Cheesy Nachos',
         'Cheesy Nachos (Small)',
         'Cheesy Nachos (Medium)',
@@ -1915,6 +2020,7 @@ const recipeMapping = {
         'Special Bulalo (good for 2-3 Persons)',
         'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)'
     ],
+
     'Pitcher': [
         'Cucumber Lemonade (Pitcher)',
         'Blue Lemonade (Pitcher)',
@@ -1937,35 +2043,35 @@ const recipeMapping = {
     'Cafe Americano': [
         'Espresso',
         'Hot water',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano Tall': [
         'Espresso',
         'Hot water',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano Grande': [
         'Espresso',
         'Hot water',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano (Glass)': [
         'Espresso',
         'Hot water',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
     'Cafe Americano (L)': [
         'Espresso',
         'Hot water',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1973,7 +2079,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1981,7 +2087,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1989,7 +2095,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -1997,7 +2103,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2005,7 +2111,7 @@ const recipeMapping = {
         'Espresso',
         'Steamed milk',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2014,7 +2120,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2023,7 +2129,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2032,7 +2138,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2041,7 +2147,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2050,7 +2156,7 @@ const recipeMapping = {
         'Steamed milk',
         'Caramel syrup',
         'Vanilla syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Lid',
         'Sleeve'
     ],
@@ -2059,7 +2165,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Red Tea Tall': [
@@ -2067,7 +2173,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Red Tea (Tall)': [
@@ -2075,7 +2181,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Red Tea Glass': [
@@ -2083,7 +2189,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Red Tea (Glass)': [
@@ -2091,7 +2197,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Red Tea (L)': [
@@ -2099,7 +2205,7 @@ const recipeMapping = {
         'Hot water',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Milk Tea Regular HC': [
@@ -2107,8 +2213,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular HC Tall': [
@@ -2116,8 +2222,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular HC Regular': [
@@ -2125,8 +2231,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular HC Large': [
@@ -2134,8 +2240,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular HC (Glass)': [
@@ -2143,8 +2249,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular HC (Large)': [
@@ -2152,8 +2258,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular HC Regular MC': [
@@ -2161,8 +2267,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Milk Tea Regular MC': [
@@ -2170,8 +2276,8 @@ const recipeMapping = {
         'Milk',
         'Sugar',
         'Tapioca pearls',
-        'Paper Cups',
-        'Straws',
+        'Plastic Cups',
+        'Boba straws',
         'Ice'
     ],
     'Matcha': [
@@ -2237,8 +2343,8 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Cookies & Cream MC': [
         'Milk',
@@ -2249,8 +2355,8 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Cookies and Cream MC': [
         'Milk',
@@ -2261,8 +2367,8 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Cookies & Cream (Glass)': [
         'Milk',
@@ -2270,8 +2376,8 @@ const recipeMapping = {
         'Cookie crumbs',
         'Tapioca pearls',
         'Sugar',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Cookies & Cream (L)': [
         'Milk',
@@ -2279,8 +2385,8 @@ const recipeMapping = {
         'Cookie crumbs',
         'Tapioca pearls',
         'Sugar',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Strawberry & Cream HC': [
         'Milk',
@@ -2290,8 +2396,8 @@ const recipeMapping = {
         'Sugar',
         'Frappe base',
         'Whipped cream',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Strawberry and Cream MC': [
         'Milk',
@@ -2301,8 +2407,8 @@ const recipeMapping = {
         'Sugar',
         'Frappe base',
         'Whipped cream',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Strawberry & Cream (Glass)': [
         'Milk',
@@ -2310,8 +2416,8 @@ const recipeMapping = {
         'Strawberry syrup',
         'Tapioca pearls',
         'Sugar',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Strawberry & Cream (L)': [
         'Milk',
@@ -2319,8 +2425,8 @@ const recipeMapping = {
         'Strawberry syrup',
         'Tapioca pearls',
         'Sugar',
-        'Paper Cups',
-        'Straws'
+        'Plastic Cups',
+        'Boba straws'
     ],
     'Mango cheese cake HC': [
         'Milk',
@@ -2332,7 +2438,7 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Tapioca pearls',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Mango cheese cake MC': [
         'Milk',
@@ -2344,18 +2450,18 @@ const recipeMapping = {
         'Frappe base',
         'Whipped cream',
         'Tapioca pearls',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Blue Lemonade (Glass)': [
         'Lemon juice',
         'Blue syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Blue Lemonade (L)': [
         'Lemon juice',
         'Blue syrup',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Blue Lemonade (Pitcher)': [
@@ -2370,7 +2476,7 @@ const recipeMapping = {
         'Cucumber',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Cucumber Lemonade (L)': [
@@ -2378,7 +2484,7 @@ const recipeMapping = {
         'Cucumber',
         'Honey',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Cucumber Lemonade (Pitcher)': [
@@ -2393,7 +2499,7 @@ const recipeMapping = {
     'Soda (Glass)': [
         'Carbonated water',
         'Ice',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Soda (Mismo)': [
         'Carbonated water',
@@ -2403,7 +2509,7 @@ const recipeMapping = {
     'Soda (L)': [
         'Carbonated water',
         'Ice',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Soda 1.5L': [
         'Carbonated water',
@@ -2789,12 +2895,12 @@ const recipeMapping = {
         'Banana flower bud',
         'Pechay',
         'String beans',
-        'Chinese eggplant',
+        'Eggplant',
         'Ground peanuts',
         'Peanut butter',
         'Shrimp paste',
         'Water',
-        'Annatto seeds',
+        'Annatto oil',
         'Toasted ground rice',
         'Garlic',
         'Onion',
@@ -2819,7 +2925,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Cookies & Cream Milk Tea': [
@@ -2829,7 +2935,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Dark Choco Milk Tea': [
@@ -2839,7 +2945,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Okinawa Milk Tea': [
@@ -2849,7 +2955,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Wintermelon Milk Tea': [
@@ -2858,7 +2964,7 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Matcha Green Tea Milk Tea': [
@@ -2867,31 +2973,31 @@ const recipeMapping = {
         'Sugar',
         'Tapioca pearls',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Espresso Hot': [
         'Coffee beans',
         'Water',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Cappuccino Hot': [
         'Espresso',
         'Steamed milk',
         'Milk foam',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Mocha Latte Hot': [
         'Espresso',
         'Chocolate syrup',
         'Steamed milk',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Vanilla Latte Hot': [
         'Espresso',
         'Vanilla syrup',
         'Steamed milk',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Caramel Macchiato Hot': [
         'Espresso',
@@ -2904,45 +3010,45 @@ const recipeMapping = {
         'Matcha powder',
         'Steamed milk',
         'Sugar',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'White Chocolate Hot': [
         'White chocolate syrup',
         'Steamed milk',
         'Cream',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Green Tea Matcha Hot': [
         'Matcha powder',
         'Steamed milk',
         'Sugar',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Hot Ceylon Tea Black': [
         'Black tea',
         'Hot water',
         'Sugar',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Hot Ceylon Tea Lemon': [
         'Black tea',
         'Lemon',
         'Hot water',
         'Sugar',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Hot Ceylon Tea Peppermint': [
         'Peppermint tea',
         'Hot water',
         'Honey',
-        'Paper Cups'
+        'Plastic Cups'
     ],
     'Iced Cafe Latte': [
         'Espresso',
         'Milk',
         'Ice',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Iced Mocha Latte': [
@@ -2951,7 +3057,7 @@ const recipeMapping = {
         'Milk',
         'Ice',
         'Sugar',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Iced Vanilla Latte': [
@@ -2959,7 +3065,7 @@ const recipeMapping = {
         'Vanilla syrup',
         'Milk',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Iced Caramel Macchiato': [
@@ -2968,21 +3074,21 @@ const recipeMapping = {
         'Caramel syrup',
         'Milk',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Iced White Chocolate Latte': [
         'White chocolate syrup',
         'Milk',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Iced Dark Chocolate': [
         'Dark chocolate syrup',
         'Milk',
         'Ice',
-        'Paper Cups',
+        'Plastic Cups',
         'Straws'
     ],
     'Matcha Green Tea Frappe': [
@@ -2992,7 +3098,7 @@ const recipeMapping = {
         'Ice',
         'Sugar',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Salted Caramel Frappe': [
@@ -3001,9 +3107,10 @@ const recipeMapping = {
         'Milk',
         'Ice cream',
         'Ice',
+        'Sugar',
         'Salt',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Strawberry Cheesecake Frappe': [
@@ -3015,7 +3122,7 @@ const recipeMapping = {
         'Sugar',
         'Whipped cream',
         'Graham crumbs',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Mango Cheesecake Frappe': [
@@ -3027,7 +3134,7 @@ const recipeMapping = {
         'Sugar',
         'Whipped cream',
         'Graham crumbs',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Strawberry Cream Frappe': [
@@ -3037,7 +3144,7 @@ const recipeMapping = {
         'Ice',
         'Sugar',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Cookies & Cream Frappe': [
@@ -3049,18 +3156,19 @@ const recipeMapping = {
         'Sugar',
         'Whipped cream',
         'Chocolate syrup',
-        'Paper Cups',
-        'Boba straws'
+        'Plastic Cups',
+        'Boba straws',
     ],
     'Rocky Road Frappe': [
         'Chocolate syrup',
         'Milk',
         'Ice cream',
         'Ice',
+        'Sugar',
         'Marshmallows',
         'Nuts',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Choco Fudge Frappe': [
@@ -3068,9 +3176,10 @@ const recipeMapping = {
         'Milk',
         'Ice cream',
         'Ice',
+        'Sugar',
         'Whipped cream',
         'Chocolate sauce',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Choco Mousse Frappe': [
@@ -3078,8 +3187,9 @@ const recipeMapping = {
         'Chocolate mousse',
         'Milk',
         'Ice',
+        'Sugar',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Coffee Crumble Frappe': [
@@ -3088,8 +3198,9 @@ const recipeMapping = {
         'Ice cream',
         'Ice',
         'Cookie crumbs',
+        'Sugar',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
     'Vanilla Cream Frappe': [
@@ -3098,7 +3209,7 @@ const recipeMapping = {
         'Ice cream',
         'Ice',
         'Whipped cream',
-        'Paper Cups',
+        'Plastic Cups',
         'Boba straws'
     ],
 
@@ -3130,7 +3241,7 @@ const recipeMapping = {
         'Kare-Kare'
     ],
 
-    'Chinese eggplant': [
+    'Eggplant': [
         'Kare-Kare'
     ],
 
@@ -3144,7 +3255,7 @@ const recipeMapping = {
         'Paknet (Pakbet w/ Bagnet)'
     ],
 
-    'Annatto seeds': [
+    'Annatto oil': [
         'Kare-Kare'
     ],
 
@@ -3189,7 +3300,15 @@ const recipeMapping = {
         'Cafe Americano',
         'Cafe Americano Tall',
         'Cafe Americano (Glass)',
-        'Cafe Americano (L)'
+        'Cafe Americano (L)',
+        'Matcha Green Tea Milk Tea',
+        'Matcha Green Tea Milk Tea (Glass)',
+        'Matcha Green Tea Milk Tea (L)',
+        'Matcha Green Tea Milk Tea HC',
+        'Matcha Green Tea Milk Tea MC',
+        'Spaghetti (S)',
+        'Spaghetti (M)',
+        'Spaghetti (L)',
     ],
 
     'Caramel syrup': [
@@ -3201,6 +3320,23 @@ const recipeMapping = {
         'Caramel Milk Tea',
         'Iced Caramel Macchiato'
     ],
+
+    'Collins Glass': [
+        'Blue Lemonade (Glass)',
+        'Cucumber Lemonade (Glass)',
+        'Soda (Glass)',
+        'Red Tea (Glass)',
+        'Cafe Americano (Glass)',
+        'Cafe Latte (Glass)',
+        'Caramel Macchiato (Glass)',
+        'Caramel Macchiato Glass',
+        'Matcha Green Tea (Glass)',
+        'Matcha Green Tea (Glass)',
+        'Cookies & Cream (Glass)',
+        'Strawberry & Cream (Glass)',
+        'Blue Lemonade (Glass)',
+        'Cucumber Lemonade (Glass)'
+    ]
 
 };
 
@@ -3804,6 +3940,35 @@ const initializeDatabase = async () => {
             ]
         });
 
+        // ==================== INITIALIZE MISSING INVENTORY ITEMS ====================
+        const missingItems = [
+            { itemName: 'Banana Flower Bud', category: 'produce' },
+            { itemName: 'Ground Peanuts', category: 'dry' },
+            { itemName: 'Annatto oil', category: 'dry' },
+            { itemName: 'Toasted Ground Rice', category: 'dry' }
+        ];
+
+        for (const item of missingItems) {
+            const exists = await InventoryItem.findOne({
+                itemName: { $regex: `^${item.itemName.trim()}$`, $options: 'i' }
+            });
+
+            if (!exists) {
+                await InventoryItem.create({
+                    itemName: item.itemName,
+                    category: item.category,
+                    currentStock: 0,
+                    minStock: 10,
+                    maxStock: 50,
+                    unit: item.category === 'produce' ? 'kg' : 'pieces',
+                    itemType: 'raw',
+                    isActive: true,
+                    status: 'out_of_stock'
+                });
+                console.log(`✅ Created missing inventory item: ${item.itemName}`);
+            }
+        }
+
     } catch (error) {
         console.error('Database initialization error:', error);
     }
@@ -3833,8 +3998,36 @@ app.get('/favicon.ico', (req, res) => {
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
 
+// Routes that DON'T need auth
 app.use('/api/stock-transfers', stockTransferRoute);
 app.use('/api/staff', staffRoutes);
+
+// PDF routes can be used without token for listing, but need token for upload/delete
+app.get('/api/list-pdfs', async (req, res) => {
+    // Public access to list PDFs
+    try {
+        const pdfs = await PDF.find({ isActive: true })
+            .select('_id name filename size pages uploadDate url category')
+            .sort({ uploadDate: -1 })
+            .limit(50);
+
+        const formattedPdfs = pdfs.map(pdf => ({
+            id: pdf._id,
+            name: pdf.name,
+            filename: pdf.filename,
+            url: pdf.url,
+            size: pdf.size,
+            pages: pdf.pages,
+            uploadDate: pdf.uploadDate,
+            category: pdf.category
+        }));
+
+        res.json(formattedPdfs);
+    } catch (error) {
+        console.error('Error listing PDFs:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.use('/api/stock-transfers', verifyToken);
 app.use('/api/staff', verifyToken);
@@ -4274,12 +4467,13 @@ app.put('/api/menu/:itemId', verifyToken, verifyAdmin, async (req, res) => {
             });
         }
         
-        // Check if any required ingredients are out of stock
+        // Check if any required ingredients are out of stock or missing
         const requiredIngredients = existingMenuItem.requiredIngredients || [];
         if (requiredIngredients.length > 0) {
             console.log(`🔍 Checking ingredient inventory for "${existingMenuItem.itemName}"...`);
             
             const outOfStockIngredients = [];
+            const missingIngredients = [];
             
             for (const ingredientName of requiredIngredients) {
                 const ingredient = await InventoryItem.findOne({
@@ -4287,25 +4481,34 @@ app.put('/api/menu/:itemId', verifyToken, verifyAdmin, async (req, res) => {
                     isActive: true
                 });
                 
-                if (ingredient && ingredient.currentStock === 0) {
+                if (!ingredient) {
+                    // Ingredient not found in inventory
+                    missingIngredients.push(ingredientName);
+                    console.warn(`   ❌ Required ingredient "${ingredientName}" NOT FOUND in inventory`);
+                } else if (ingredient.currentStock === 0) {
+                    // Ingredient found but out of stock
                     outOfStockIngredients.push(ingredient.itemName);
                     console.warn(`   ⚠️ Required ingredient "${ingredient.itemName}" is OUT OF STOCK`);
+                } else {
+                    console.log(`   ✅ Required ingredient "${ingredient.itemName}" has stock: ${ingredient.currentStock}`);
                 }
             }
             
-            // If any required ingredient is out of stock, block the stock addition
-            if (outOfStockIngredients.length > 0) {
-                const ingredientList = outOfStockIngredients.join(', ');
-                console.warn(`🚫 BLOCKED: Cannot add stock to "${existingMenuItem.itemName}" - Required ingredients are out of stock: ${ingredientList}`);
+            // If any required ingredient is out of stock or missing, block the stock addition
+            const allBlockingIssues = [...outOfStockIngredients, ...missingIngredients];
+            if (allBlockingIssues.length > 0) {
+                const ingredientList = allBlockingIssues.join(', ');
+                console.warn(`🚫 BLOCKED: Cannot add stock to "${existingMenuItem.itemName}" - Required ingredients are out of stock or missing: ${ingredientList}`);
                 return res.status(403).json({
                     success: false,
-                    message: `🚫 Cannot add stock to "${existingMenuItem.itemName}" - Required ingredient(s) are Out of Stock: ${ingredientList}. Please restock these items first.`,
+                    message: `🚫 Cannot add stock to "${existingMenuItem.itemName}" - Required ingredient(s) are Out of Stock or Missing: ${ingredientList}. Please create/restock these items first in Inventory.`,
                     error: 'REQUIRED_INGREDIENTS_OUT_OF_STOCK',
-                    outOfStockIngredients: outOfStockIngredients
+                    outOfStockIngredients: outOfStockIngredients,
+                    missingIngredients: missingIngredients
                 });
             }
             
-            console.log(`✅ All required ingredients are in stock or low stock - Can proceed`);
+            console.log(`✅ All required ingredients are in stock - Can proceed`);
         }
         
         const menuItem = await MenuItem.findByIdAndUpdate(
@@ -6333,14 +6536,30 @@ app.get('/api/infosettings/user', verifyToken, async (req, res) => {
             });
         }
         
+        // Get user basic info
         const user = await User.findById(userId).select('-password');
-        
         if (!user) {
             console.warn(`⚠️ User not found with ID: ${userId}`);
             return res.status(404).json({
                 success: false,
                 message: 'User not found'
             });
+        }
+        
+        // Get user settings (email, phone, names, etc.)
+        let settings = await Settings.findOne({ userId });
+        
+        if (!settings) {
+            console.log(`ℹ️ No settings found for user, creating default settings...`);
+            // Create default settings if they don't exist
+            settings = new Settings({
+                userId: userId,
+                fullName: user.username,
+                firstName: user.firstName || user.username,
+                lastName: user.lastName || '',
+                isActive: true
+            });
+            await settings.save();
         }
         
         console.log(`✅ User found: ${user.username}`);
@@ -6350,10 +6569,13 @@ app.get('/api/infosettings/user', verifyToken, async (req, res) => {
             data: {
                 _id: user._id,
                 username: user.username,
-                email: user.email,
-                fullName: user.fullName || user.name || user.username,
-                phone: user.phone || '',
-                name: user.name || user.username,
+                email: settings.email || '',
+                fullName: settings.fullName || user.username,
+                firstName: settings.firstName || '',
+                lastName: settings.lastName || '',
+                phoneNumber: settings.phone || '',
+                phone: settings.phone || '',
+                name: settings.fullName || user.username,
                 role: user.role,
                 createdAt: user.createdAt
             }
@@ -6381,14 +6603,28 @@ app.get('/api/user/profile', verifyToken, async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
         
+        // Get user settings
+        let settings = await Settings.findOne({ userId });
+        if (!settings) {
+            settings = new Settings({
+                userId: userId,
+                fullName: user.username,
+                firstName: user.firstName || user.username,
+                lastName: user.lastName || ''
+            });
+            await settings.save();
+        }
+        
         res.json({
             success: true,
             data: {
                 _id: user._id,
                 username: user.username,
-                email: user.email,
-                fullName: user.fullName || user.name || user.username,
-                phone: user.phone || '',
+                email: settings.email || '',
+                fullName: settings.fullName || user.username,
+                firstName: settings.firstName || '',
+                lastName: settings.lastName || '',
+                phoneNumber: settings.phone || '',
                 role: user.role
             }
         });
@@ -6406,61 +6642,81 @@ app.post('/api/infosettings/update', verifyToken, async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid token' });
         }
         
-        const { fullName, email, phoneNumber } = req.body;
+        const { fullName, email, phoneNumber, firstName, lastName } = req.body;
         
-        if (!fullName || !email) {
+        console.log('📝 Updating settings:', { userId, fullName, email, phoneNumber, firstName, lastName });
+        
+        if (!fullName && !firstName && !lastName) {
             return res.status(400).json({
                 success: false,
-                message: 'Full name and email are required'
+                message: 'At least name information is required'
             });
         }
         
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid email format'
+        // Get or create settings for this user
+        let settings = await Settings.findOne({ userId });
+        
+        if (!settings) {
+            // Create new settings if it doesn't exist
+            console.log('📝 Creating new settings for user:', userId);
+            settings = new Settings({
+                userId: userId,
+                fullName: fullName || '',
+                firstName: firstName || '',
+                lastName: lastName || '',
+                email: email || '',
+                phone: phoneNumber || '',
+                businessName: "G'RAY COUNTRYSIDE CAFÉ"
             });
+        } else {
+            // Update existing settings
+            console.log('📝 Updating existing settings for user:', userId);
+            if (fullName) settings.fullName = fullName;
+            if (firstName) settings.firstName = firstName;
+            if (lastName) settings.lastName = lastName;
+            if (email) {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (email && !emailRegex.test(email)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Invalid email format'
+                    });
+                }
+                settings.email = email;
+            }
+            if (phoneNumber) settings.phone = phoneNumber;
         }
         
-        const user = await User.findByIdAndUpdate(
-            userId,
-            {
-                fullName: fullName,
-                name: fullName,
-                email: email,
-                phone: phoneNumber || user.phone
-            },
-            { new: true, runValidators: false }
-        ).select('-password');
+        // Track who modified and when
+        settings.lastModifiedBy = userId;
+        settings.lastModified = new Date();
         
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
-        }
+        // Save settings
+        await settings.save();
         
-        console.log(`✅ User profile updated: ${user.username}`);
+        console.log(`✅ User settings saved successfully`);
         
         res.json({
             success: true,
-            message: 'Profile updated successfully',
+            message: 'Settings updated successfully',
             data: {
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-                fullName: user.fullName || user.name,
-                phoneNumber: user.phone,
-                updatedAt: user.updatedAt
+                _id: settings._id,
+                userId: settings.userId,
+                fullName: settings.fullName,
+                firstName: settings.firstName,
+                lastName: settings.lastName,
+                email: settings.email || '',
+                phoneNumber: settings.phone || '',
+                phone: settings.phone || '',
+                updatedAt: settings.lastModified
             }
         });
     } catch (error) {
-        console.error('Error updating user profile:', error);
+        console.error('Error updating user settings:', error);
         res.status(500).json({
             success: false,
-            message: 'Error updating profile',
+            message: 'Error updating settings',
             error: error.message
         });
     }
@@ -6598,6 +6854,12 @@ app.get("/admindashboard/infosettings", verifyToken, verifyAdmin, (req, res) => 
 
 app.get("/admindashboard/settings", verifyToken, verifyAdmin, (req, res) => {
     res.redirect("/admindashboard/infosettings");
+});
+
+app.get("/admindashboard/pdfviewer", verifyToken, (req, res) => {
+    res.render("pdfviewer", {
+        user: req.user
+    });
 });
 
 app.get("/admindashboard/stock", verifyToken, verifyAdmin, async (req, res) => {

@@ -363,7 +363,6 @@ async function loadUserData() {
   }
 }
 
-// Update handlePersonalInfoChange function:
 async function handlePersonalInfoChange() {
   if (!currentUser || !originalUserData) {
     showToast('Cannot save: User data not loaded', 'error');
@@ -375,13 +374,8 @@ async function handlePersonalInfoChange() {
   const phone = elements.phoneDisplay ? elements.phoneDisplay.value.trim() : '';
   
   // Basic validation
-  if (!fullName || !email) {
-    updateAutoSaveStatus('error', 'Full name and email are required');
-    return;
-  }
-  
-  if (!email.includes('@')) {
-    updateAutoSaveStatus('error', 'Please enter a valid email address');
+  if (!fullName) {
+    updateAutoSaveStatus('error', 'Full name is required');
     return;
   }
   
@@ -421,11 +415,16 @@ async function handlePersonalInfoChange() {
           body: JSON.stringify({
             fullName,
             email,
-            phoneNumber: phone
+            phoneNumber: phone,
+            firstName: fullName.split(' ')[0] || fullName,
+            lastName: fullName.split(' ').slice(1).join(' ') || ''
           })
         });
         
-        if (response.ok) break;
+        if (response.ok) {
+          console.log(`✅ Successfully saved via ${endpoint}`);
+          break;
+        }
       } catch (error) {
         console.warn(`Endpoint ${endpoint} failed:`, error.message);
         continue;
@@ -439,6 +438,7 @@ async function handlePersonalInfoChange() {
 
     // Get updated user data
     const result = await response.json();
+    console.log('API Response:', result);
     
     // Handle different response structures
     let updatedUser;
@@ -456,8 +456,10 @@ async function handlePersonalInfoChange() {
     currentUser.phoneNumber = updatedUser.phoneNumber || updatedUser.phone || phone;
     currentUser.updatedAt = updatedUser.updatedAt || new Date().toISOString();
     
-    // Update originalUserData
+    // Update originalUserData to reflect saved state
     originalUserData = JSON.parse(JSON.stringify(currentUser));
+    
+    console.log('✅ Data saved successfully!', currentUser);
     
     // Update success status
     updateAutoSaveStatus('success', 'Changes saved successfully!');

@@ -14,13 +14,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  email: {
-    type: String,
-    lowercase: true,
-    trim: true,
-    sparse: true,
-    unique: true
-  },
   role: {
     type: String,
     enum: ['admin', 'staff', 'manager'],
@@ -33,9 +26,6 @@ const userSchema = new mongoose.Schema({
     enum: ['active', 'inactive', 'suspended'],
     default: 'active'
   },
-  phone: String,
-  firstName: String,
-  lastName: String,
   isActive: {
     type: Boolean,
     default: true

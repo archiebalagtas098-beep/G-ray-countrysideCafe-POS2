@@ -143,7 +143,7 @@ function exportSalesReport(format = 'pdf') {
             day: 'numeric' 
         })}`,
         generated: today.toISOString(),
-        cafeName: "Gray Countryside Cafe",
+        cafeName: "G'RAY COUNTRYSIDE CAFÉ",
         summary: {
             totalRevenue: salesData.totalRevenue,
             totalOrders: salesData.totalOrders,
@@ -339,9 +339,7 @@ function printReport(reportData, dateStr, timeStr) {
 
 function exportToPDF(reportData, dateStr, timeStr) {
     try {
-        console.log('Generating PDF report...', reportData);
-        
-        const printWindow = window.open('', '_blank');
+        console.log('📄 Generating PDF report...', reportData);
         
         const formatCurrency = (amount) => {
             return '₱' + parseFloat(amount || 0).toFixed(2);
@@ -351,119 +349,271 @@ function exportToPDF(reportData, dateStr, timeStr) {
             return parseFloat(value || 0).toFixed(1) + '%';
         };
         
-        printWindow.document.write(`
+        // Create comprehensive HTML content for PDF
+        const htmlContent = `
             <!DOCTYPE html>
             <html>
             <head>
+                <meta charset="UTF-8">
                 <title>${reportData.title}</title>
                 <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: 'Segoe UI', Arial, sans-serif; 
+                        line-height: 1.6;
+                        color: #333;
+                    }
                     @media print {
-                        @page { margin: 15mm; }
-                        body { 
-                            font-family: Arial, sans-serif; 
-                            font-size: 12px;
-                            color: #000000 !important;
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                            text-align: center;
-                        }
-                        h1, h2, h3, p, div, td, th { color: #000000 !important; }
+                        @page { margin: 20mm; size: A4; }
+                        body { background: white; }
                         .no-print { display: none !important; }
+                        a { color: #0066cc; }
                     }
                     @media screen {
-                        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; text-align: center; }
-                        .no-print { text-align: center; margin-top: 30px; }
-                        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+                        body { max-width: 900px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+                        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                        .no-print { text-align: center; margin-top: 30px; display: flex; gap: 10px; justify-content: center; }
+                        button { padding: 12px 24px; margin: 5px; cursor: pointer; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; }
+                        .btn-print { background: #2196F3; color: white; }
+                        .btn-print:hover { background: #0b7dda; }
+                        .btn-view-pdf { background: #4CAF50; color: white; }
+                        .btn-view-pdf:hover { background: #45a049; }
+                        .btn-close { background: #f44336; color: white; }
+                        .btn-close:hover { background: #da190b; }
                     }
-                    .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
-                    .header h1 { margin: 0; font-size: 22px; }
-                    .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px auto; max-width: 600px; }
-                    .summary-card { border: 1px solid #000; padding: 10px; border-radius: 3px; }
-                    .summary-card h3 { margin: 0 0 8px 0; font-size: 12px; }
-                    .summary-card .value { font-size: 18px; font-weight: bold; margin-bottom: 3px; }
-                    table { width: 100%; border-collapse: collapse; margin: 15px auto; border: 1px solid #000; max-width: 600px; }
-                    th { background: #f0f0f0; padding: 8px; border: 1px solid #000; text-align: center; }
-                    td { padding: 6px; border: 1px solid #000; text-align: center; }
-                    .footer { margin-top: 30px; text-align: center; font-size: 10px; border-top: 1px solid #000; padding-top: 15px; }
-                    button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+                    .header { 
+                        text-align: center; 
+                        border-bottom: 3px solid #667eea; 
+                        padding-bottom: 20px; 
+                        margin-bottom: 30px;
+                    }
+                    .header h1 { 
+                        font-size: 28px; 
+                        color: #667eea;
+                        margin-bottom: 8px;
+                    }
+                    .header .subtitle { 
+                        font-size: 14px; 
+                        color: #666; 
+                        margin: 5px 0;
+                    }
+                    .cafe-name { 
+                        font-size: 18px; 
+                        font-weight: bold; 
+                        color: #333;
+                        margin: 10px 0;
+                    }
+                    h2 { 
+                        font-size: 18px; 
+                        color: #667eea;
+                        margin-top: 25px; 
+                        margin-bottom: 15px;
+                        border-left: 4px solid #667eea;
+                        padding-left: 10px;
+                    }
+                    .summary-grid { 
+                        display: grid; 
+                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+                        gap: 15px; 
+                        margin: 20px 0;
+                    }
+                    .summary-card { 
+                        border: 2px solid #e0e0e0;
+                        padding: 15px;
+                        border-radius: 8px;
+                        background: #f9f9f9;
+                        transition: all 0.3s ease;
+                    }
+                    .summary-card h3 { 
+                        margin: 0 0 10px 0; 
+                        font-size: 13px; 
+                        color: #666;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    .summary-card .value { 
+                        font-size: 24px; 
+                        font-weight: bold; 
+                        color: #667eea;
+                        margin-bottom: 5px; 
+                    }
+                    .summary-card .change { 
+                        font-size: 12px; 
+                        color: #999;
+                    }
+                    table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        margin: 20px 0;
+                    }
+                    th { 
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px;
+                        text-align: left;
+                        font-weight: 600;
+                        border: none;
+                    }
+                    td { 
+                        padding: 10px 12px; 
+                        border-bottom: 1px solid #e0e0e0;
+                        text-align: left;
+                    }
+                    tr:nth-child(even) { background-color: #f9f9f9; }
+                    tr:hover { background-color: #f0f7ff; }
+                    .total-row { 
+                        background: #f0f0ff !important; 
+                        font-weight: bold;
+                        border-top: 2px solid #667eea;
+                    }
+                    .footer { 
+                        margin-top: 40px; 
+                        text-align: center; 
+                        font-size: 12px; 
+                        border-top: 2px dashed #ddd; 
+                        padding-top: 20px;
+                        color: #999;
+                    }
+                    .footer p { margin: 5px 0; }
+                    .report-id { 
+                        background: #f0f0f0; 
+                        padding: 8px 12px; 
+                        border-radius: 4px;
+                        font-family: monospace;
+                        margin: 5px 0;
+                    }
+                    .container { padding: 20px; }
+                    @media print {
+                        .container { padding: 0; box-shadow: none; }
+                    }
                 </style>
             </head>
             <body>
-                <div class="header">
-                    <h1>${reportData.title}</h1>
-                    <div>${reportData.cafeName}</div>
-                    <div>Generated on ${new Date(reportData.generated).toLocaleString()}</div>
-                </div>
-                
-                <h2>Performance Summary</h2>
-                <div class="summary-grid">
-                    <div class="summary-card">
-                        <h3>Total Revenue</h3>
-                        <div class="value">${formatCurrency(reportData.summary.totalRevenue)}</div>
+                <div class="container">
+                    <div class="header">
+                        <h1>📊 ${reportData.title}</h1>
+                        <div class="cafe-name">${reportData.cafeName}</div>
+                        <div class="subtitle">Generated on ${new Date(reportData.generated).toLocaleString()}</div>
+                        <div class="subtitle">Report Period: Today</div>
                     </div>
-                    <div class="summary-card">
-                        <h3>Total Orders</h3>
-                        <div class="value">${reportData.summary.totalOrders}</div>
+                    
+                    <h2>💰 Performance Summary</h2>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h3>Total Revenue</h3>
+                            <div class="value">${formatCurrency(reportData.summary.totalRevenue)}</div>
+                            <div class="change">Primary Income</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Orders</h3>
+                            <div class="value">${reportData.summary.totalOrders}</div>
+                            <div class="change">Transactions Today</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Customers</h3>
+                            <div class="value">${reportData.summary.totalCustomers}</div>
+                            <div class="change">Unique Visitors</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Average Order Value</h3>
+                            <div class="value">${formatCurrency(reportData.summary.averageOrderValue)}</div>
+                            <div class="change">Per Transaction</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Gross Profit</h3>
+                            <div class="value">${formatCurrency(reportData.summary.grossProfit)}</div>
+                            <div class="change">Total Profit</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Profit Margin</h3>
+                            <div class="value">${formatPercent(reportData.summary.profitMargin)}</div>
+                            <div class="change">Profit %</div>
+                        </div>
                     </div>
-                    <div class="summary-card">
-                        <h3>Total Customers</h3>
-                        <div class="value">${reportData.summary.totalCustomers}</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Avg Order Value</h3>
-                        <div class="value">${formatCurrency(reportData.summary.averageOrderValue)}</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Gross Profit</h3>
-                        <div class="value">${formatCurrency(reportData.summary.grossProfit)}</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Profit Margin</h3>
-                        <div class="value">${formatPercent(reportData.summary.profitMargin)}</div>
-                    </div>
-                </div>
-                
-                <h2>Financial Summary</h2>
-                <table>
-                    <tr><th>Description</th><th>Amount</th></tr>
-                    <tr><td>Total Revenue</td><td>${formatCurrency(reportData.summary.totalRevenue)}</td></tr>
-                    <tr><td>Cost of Goods (70%)</td><td>${formatCurrency(reportData.summary.totalRevenue * 0.7)}</td></tr>
-                    <tr style="background-color: #f9f9f9;"><td><strong>Gross Profit (30%)</strong></td><td><strong>${formatCurrency(reportData.summary.grossProfit)}</strong></td></tr>
-                </table>
-                
-                ${reportData.recentOrders.length > 0 ? `
-                    <h2>Recent Orders</h2>
+                    
+                    <h2>📈 Financial Summary</h2>
                     <table>
-                        <thead><tr><th>Order #</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            ${reportData.recentOrders.slice(0, 5).map(order => `
-                                <tr>
-                                    <td>#${order.orderNumber || 'N/A'}</td>
-                                    <td>${new Date(order.createdAt || new Date()).toLocaleDateString()}</td>
-                                    <td>${order.customerName || 'Walk-in'}</td>
-                                    <td>${order.itemCount || order.items?.length || 0}</td>
-                                    <td>${formatCurrency(order.total || 0)}</td>
-                                </tr>
-                            `).join('')}
+                            <tr>
+                                <td>Total Revenue</td>
+                                <td style="text-align: right;">${formatCurrency(reportData.summary.totalRevenue)}</td>
+                            </tr>
+                            <tr>
+                                <td>Cost of Goods (35%)</td>
+                                <td style="text-align: right;">${formatCurrency(reportData.summary.totalRevenue * 0.35)}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Gross Profit (65%)</td>
+                                <td style="text-align: right;">${formatCurrency(reportData.summary.grossProfit)}</td>
+                            </tr>
                         </tbody>
                     </table>
-                ` : ''}
-                
-                <div class="footer">
-                    <p>Generated by Gray Countryside Cafe POS System</p>
-                    <p>Report ID: ${dateStr}-${timeStr}</p>
-                    <p>© ${new Date().getFullYear()}</p>
-                </div>           
-                <script>setTimeout(() => window.print(), 500);</script>
+                    
+                    ${reportData.recentOrders && reportData.recentOrders.length > 0 ? `
+                        <h2>📋 Recent Orders (Last 5)</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Items</th>
+                                    <th style="text-align: right;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${reportData.recentOrders.slice(0, 5).map(order => `
+                                    <tr>
+                                        <td><strong>#${order.orderNumber || 'N/A'}</strong></td>
+                                        <td>${new Date(order.createdAt || new Date()).toLocaleDateString()}</td>
+                                        <td>${order.customerName || 'Walk-in'}</td>
+                                        <td>${order.itemCount || order.items?.length || 0}</td>
+                                        <td style="text-align: right;">${formatCurrency(order.total || 0)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    ` : ''}
+                    
+                    <div class="footer">
+                        <p><strong>Generated by Gray Countryside Café POS System</strong></p>
+                        <div class="report-id">Report ID: ${dateStr}-${timeStr}</div>
+                        <p>© ${new Date().getFullYear()} Gray Countryside Café | For Business Purposes</p>
+                        <p>⚠️ This is a confidential business document</p>
+                    </div>
+                    
+                    <div class="no-print">
+                        <button class="btn-print" onclick="window.print()">🖨️ Print Report</button>
+                        <button class="btn-view-pdf" onclick="viewPDFInViewer('${dateStr}-${timeStr}')">📄 View in PDF Viewer</button>
+                        <button class="btn-close" onclick="window.close()">❌ Close</button>
+                    </div>
+                </div>
             </body>
             </html>
-        `);
+        `;
         
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(htmlContent);
         printWindow.document.close();
-        showNotification('Opening print dialog for PDF...', 'info');
+        
+        // Store report data for PDF viewer access
+        window.lastExportedReport = {
+            html: htmlContent,
+            data: reportData,
+            dateStr: dateStr,
+            timeStr: timeStr
+        };
+        
+        showNotification('📄 PDF report generated! Click "View in PDF Viewer" to open it.', 'info');
         
     } catch (error) {
-        console.error('Error exporting to PDF:', error);
+        console.error('❌ Error exporting to PDF:', error);
         showNotification('Failed to export PDF. Please try again.', 'error');
     }
 }
@@ -776,7 +926,7 @@ function updateRevenueBreakdown() {
     const categories = [
         { name: 'Rice', label: 'Rice Bowl Meals', percentage: 0, amount: 0, color: categoryColors['Rice'] },
         { name: 'Sizzling', label: 'Hot Sizzlers', percentage: 0, amount: 0, color: categoryColors['Sizzling'] },
-        { name: 'Party', label: 'Party Platters', percentage: 0, amount: 0, color: categoryColors['Party'] },
+        { name: 'Party Trays', label: 'Party Trays', percentage: 0, amount: 0, color: categoryColors['Party Trays'] },
         { name: 'Drink', label: 'Beverages', percentage: 0, amount: 0, color: categoryColors['Drink'] },
         { name: 'Cafe', label: 'Cafe Specials', percentage: 0, amount: 0, color: categoryColors['Cafe'] },
         { name: 'Milk', label: 'Milk Drinks', percentage: 0, amount: 0, color: categoryColors['Milk'] },
@@ -832,16 +982,16 @@ function updateRevenueBreakdown() {
                     
                     if (itemCategory) {
                         const catLower = itemCategory.toLowerCase();
-                        if (catLower.includes('rice')) mappedCategory = 'Rice';
+                        if (catLower.includes('rice') || catLower.includes('bowl')) mappedCategory = 'Rice';
                         else if (catLower.includes('sizzl')) mappedCategory = 'Sizzling';
-                        else if (catLower.includes('party')) mappedCategory = 'Party';
+                        else if (catLower.includes('party') || catLower.includes('tray')) mappedCategory = 'Party';
                         else if (catLower.includes('drink') || catLower.includes('beverage')) mappedCategory = 'Drink';
                         else if (catLower.includes('cafe')) mappedCategory = 'Cafe';
-                        else if (catLower.includes('milk')) mappedCategory = 'Milk';
+                        else if (catLower.includes('milk') || catLower.includes('milk tea')) mappedCategory = 'Milk';
                         else if (catLower.includes('frappe')) mappedCategory = 'Frappe';
-                        else if (catLower.includes('snack')) mappedCategory = 'Snack';
+                        else if (catLower.includes('snack') || catLower.includes('appetizer')) mappedCategory = 'Snack';
                         else if (catLower.includes('budget')) mappedCategory = 'Budget';
-                        else if (catLower.includes('special')) mappedCategory = 'Specialty';
+                        else if (catLower.includes('special') || catLower.includes('specialty')) mappedCategory = 'Specialty';
                         else if (catLower.includes('coffee')) mappedCategory = 'Coffee';
                     }
                     
@@ -1514,11 +1664,11 @@ function getItemCategory(itemName) {
         return 'Hot Sizzlers';
     }
     
-    // PARTY PLATTERS
+    // PARTY Trays
     if (lowerName.includes('party') || lowerName.includes('platter') ||
         lowerName.includes('family') || lowerName.includes('sharing') ||
         lowerName.includes('catering') || lowerName.includes('bucket')) {
-        return 'Party Platters';
+        return 'Party Trays';
     }
     
     // BUDGET MEALS
@@ -1659,7 +1809,7 @@ function updateRevenueBreakdownDisplay(breakdown, totalRevenue, date = null) {
             'Snacks & Appetizers',
             'Rice Bowl Meals',
             'Hot Sizzlers',
-            'Party Platters',
+            'Party Trays',
             'Budget Meals',
             'Specialty Dishes',
             'Milk Tea',
@@ -1673,7 +1823,7 @@ function updateRevenueBreakdownDisplay(breakdown, totalRevenue, date = null) {
             'Snacks & Appetizers': '#FFA500',
             'Rice Bowl Meals': '#DAA520',
             'Hot Sizzlers': '#FF6347',
-            'Party Platters': '#FFD700',
+            'Party Trays': '#FFD700',
             'Budget Meals': '#90EE90',
             'Specialty Dishes': '#DDA0DD',
             'Milk Tea': '#D2691E',
@@ -1724,7 +1874,7 @@ function updateRevenueBreakdownDisplay(breakdown, totalRevenue, date = null) {
             } else if (keyLower.includes('sizzl') || keyLower.includes('sisig') || keyLower.includes('liempo')) {
                 matchedCategory = 'Hot Sizzlers';
             } else if (keyLower.includes('party') || keyLower.includes('platter')) {
-                matchedCategory = 'Party Platters';
+                matchedCategory = 'Party Trays';
             } else if (keyLower.includes('budget') || keyLower.includes('value')) {
                 matchedCategory = 'Budget Meals';
             } else if (keyLower.includes('specialty') || keyLower.includes('special') || keyLower.includes('bulalo') || keyLower.includes('sinigang')) {
@@ -1930,6 +2080,81 @@ function populateSingleDonut(donutNumber, categories, breakdown, categoryColors,
     }
 }
 
+// ==================== PDF VIEWER INTEGRATION ====================
+/**
+ * Opens the PDF Viewer with an exported report
+ * @param {string} reportId - Unique identifier for the report
+ */
+function viewPDFInViewer(reportId) {
+    try {
+        console.log('📄 Opening PDF Viewer for report:', reportId);
+        
+        // Store the report data in sessionStorage for the PDF Viewer to access
+        if (window.lastExportedReport) {
+            sessionStorage.setItem('exportedReportData', JSON.stringify({
+                html: window.lastExportedReport.html,
+                data: window.lastExportedReport.data,
+                reportId: reportId,
+                timestamp: new Date().toISOString()
+            }));
+        }
+        
+        // Open the PDF Viewer
+        window.open('/admindashboard/pdfviewer', 'PDF_Viewer', 'width=1200,height=700');
+        
+        showNotification('🔗 Opening PDF Viewer...', 'info');
+        
+    } catch (error) {
+        console.error('❌ Error opening PDF Viewer:', error);
+        showNotification('Failed to open PDF Viewer. Please try again.', 'error');
+    }
+}
+
+/**
+ * Automatically uploads and opens the report in PDF Viewer
+ * @param {Object} reportData - Report data to upload
+ */
+async function uploadReportToPDFViewer(reportData, dateStr, timeStr) {
+    try {
+        console.log('📤 Uploading report to PDF Viewer system...');
+        
+        // Convert HTML to Blob
+        const htmlBlob = new Blob([window.lastExportedReport?.html || ''], { type: 'text/html' });
+        
+        // Create FormData for upload
+        const formData = new FormData();
+        formData.append('pdf', htmlBlob, `Sales_Report_${dateStr}_${timeStr}.html`);
+        formData.append('name', reportData.title);
+        formData.append('uploadedBy', 'Sales System');
+        formData.append('description', `Auto-generated sales report for ${dateStr}`);
+        formData.append('category', 'report');
+        formData.append('tags', 'sales,report,automated');
+        
+        const response = await fetch('/api/upload-pdf', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const uploadedData = await response.json();
+            console.log('✅ Report uploaded to PDF Viewer:', uploadedData);
+            
+            // Open in PDF Viewer
+            window.lastExportedReport.url = uploadedData.url;
+            viewPDFInViewer(uploadedData.id);
+            
+            showNotification('✅ Report uploaded and opened in PDF Viewer!', 'success');
+        } else {
+            console.warn('⚠️ Upload to PDF Viewer failed, opening in viewer anyway');
+            viewPDFInViewer(`${dateStr}-${timeStr}`);
+        }
+    } catch (error) {
+        console.error('❌ Error uploading to PDF Viewer:', error);
+        // Still open the viewer even if upload fails
+        viewPDFInViewer(`${dateStr}-${timeStr}`);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📊 Sales Report page loaded');
     
@@ -1979,3 +2204,5 @@ window.showNotification = showNotification;
 window.calculateRevenueBreakdown = calculateRevenueBreakdown;
 window.updateRevenueBreakdownDisplay = updateRevenueBreakdownDisplay;
 window.getItemCategory = getItemCategory;
+window.viewPDFInViewer = viewPDFInViewer;
+window.uploadReportToPDFViewer = uploadReportToPDFViewer;

@@ -244,7 +244,7 @@ function showLogoutConfirmation(onConfirm, onCancel) {
     
     modalContent.innerHTML = `
         <div style="margin-bottom: 20px;">
-            <div style="font-size: 48px; margin-bottom: 15px;">👋</div>
+            <div style="font-size: 48px; margin-bottom: 15px;"></div>
             <h2 style="color: #333; margin: 0 0 10px 0; font-size: 22px;">Confirm Logout</h2>
             <p style="color: #666; margin: 0; font-size: 14px;">Are you sure you want to logout?</p>
         </div>

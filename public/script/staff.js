@@ -262,7 +262,8 @@ const productIngredientMap = {
             'hotdog': 0.15,
             'cheese': 0.1,
             'sugar': 0.05,
-            'cooking_oil': 0.08
+            'cooking_oil': 0.08,
+            'Tray': 0.05
         },
         servingware: 'tray'
     },
@@ -1524,11 +1525,33 @@ function createProductCard(product) {
     const hasPendingRequest = activeStockRequests.has(product.name);
     const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">⏳ Request Pending (Waiting for Admin)</span>' : '';
     
+    // Construct proper image path based on category
+    const categoryFolderMap = {
+        'Coffee': 'coffee',
+        'Milk Tea': 'milktea',
+        'Frappe': 'frappe',
+        'Drinks': 'drinks',
+        'Rice': 'rice',
+        'Sizzling': 'sizzling',
+        'Snacks': 'snacks',
+        'Party': 'party',
+        'Budget': 'budget',
+        'Specialties': 'specialties'
+    };
+    
+    const categoryFolder = categoryFolderMap[product.category] || 'images';
+    let imagePath = `/images/${product.image}`;
+    
+    // If product.image doesn't already include the category path, construct it
+    if (product.image && !product.image.includes('/')) {
+        imagePath = `/images/${categoryFolder}/${product.image}`;
+    }
+    
     card.innerHTML = `
-        <img src="/images/${product.image}" 
-             onerror="this.onerror=null; this.src='/images/default_food.jpg';" 
+        <img src="${imagePath}" 
+             onerror="this.onerror=null; this.src='/images/default_food.png';" 
              alt="${product.name}"
-             style="opacity: ${product.stock > 0 ? '1' : '0.7'};" />
+             style="opacity: ${product.stock > 0 ? '1' : '0.7'}; width: 100%; height: 100%; object-fit: cover;" />
         <div class="compact-product-name">${product.name}</div>
         <div class="compact-product-category">${product.category}</div>
         <div class="compact-product-price">₱${product.price}</div>
@@ -2715,60 +2738,98 @@ function requestStock(productId) {
         { id: 6, name: "Buttered Spicy Chicken" },
         { id: 7, name: "Chicken Adobo" },
         { id: 8, name: "Pork Shanghai" },
+        
+        // Hot Sizzlers
         { id: 9, name: "Sizzling Pork Sisig" },
         { id: 10, name: "Sizzling Liempo" },
         { id: 11, name: "Sizzling Porkchop" },
         { id: 12, name: "Sizzling Fried Chicken" },
-        { id: 13, name: "Pancit Bihon (L)" },
-        { id: 14, name: "Pancit Canton (L)" },
-        { id: 15, name: "Spaghetti (L)" },
-        { id: 16, name: "Tinapa Rice" },
-        { id: 17, name: "Tuyo Pesto" },
-        { id: 18, name: "Fried Rice" },
-        { id: 19, name: "Plain Rice" },
-        { id: 20, name: "Budget Fried Chicken" },
-        { id: 21, name: "Cheesy Nachos" },
-        { id: 22, name: "Nachos Supreme" },
-        { id: 23, name: "French Fries" },
-        { id: 24, name: "Cheesy Dynamite Lumpia" },
-        { id: 25, name: "Lumpiang Shanghai" },
-        { id: 26, name: "Clubhouse Sandwich" },
-        { id: 27, name: "Fish and Fries" },
-        { id: 28, name: "Cucumber Lemonade (Glass)" },
-        { id: 29, name: "Cucumber Lemonade (Pitcher)" },
-        { id: 30, name: "Blue Lemonade (Glass)" },
-        { id: 31, name: "Blue Lemonade (Pitcher)" },
-        { id: 32, name: "Red Tea (Glass)" },
-        { id: 33, name: "Soda (Mismo)" },
-        { id: 34, name: "Soda 1.5L" },
-        { id: 35, name: "Cafe Americano Tall" },
-        { id: 36, name: "Cafe Americano Grande" },
-        { id: 37, name: "Cafe Latte Tall" },
-        { id: 38, name: "Cafe Latte Grande" },
-        { id: 39, name: "Caramel Macchiato Tall" },
-        { id: 40, name: "Caramel Macchiato Grande" },
-        { id: 41, name: "Milk Tea Regular HC" },
-        { id: 42, name: "Milk Tea Regular MC" },
-        { id: 43, name: "Matcha Green Tea HC" },
-        { id: 44, name: "Matcha Green Tea MC" },
-        { id: 45, name: "Cookies & Cream HC" },
-        { id: 46, name: "Cookies & Cream MC" },
-        { id: 47, name: "Strawberry & Cream HC" },
-        { id: 48, name: "Strawberry & Cream MC" },
-        { id: 49, name: "Mango cheese cake HC" },
-        { id: 50, name: "Special Bulalo" },
-        { id: 51, name: "Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)" },
-        { id: 52, name: "Paknet (Pakbet w/ Bagnet)" },
-        { id: 53, name: "Sinigang (Pork)" },
-        { id: 54, name: "Sinigang (Shrimp)" },
-        { id: 55, name: "Buttered Shrimp" },
-        { id: 56, name: "Kare kare" },
-        { id: 57, name: "Rocky Road" },
-        { id: 58, name: "Choco Fudge" },
-        { id: 59, name: "Choco Mousese" },
-        { id: 60, name: "Coffe Crumble" },
-        { id: 61, name: "Vanilla Cream" },
-
+        
+        // Party Trays
+        { id: 13, name: "Pansit Bihon (S)" },
+        { id: 14, name: "Pansit Bihon (M)" },
+        { id: 15, name: "Pansit Bihon (L)" },
+        { id: 16, name: "Spaghetti (S)" },
+        { id: 17, name: "Spaghetti (M)" },
+        { id: 18, name: "Spaghetti (L)" },
+        { id: 19, name: "Creamy Carbonara" },
+        { id: 20, name: "Lumpia Shanghai" },
+        { id: 21, name: "Chicken Buffalo Wings" },
+        
+        // Budget Meals
+        { id: 22, name: "Budget Fried Chicken" },
+        { id: 23, name: "Tinapa Rice" },
+        { id: 24, name: "Tuyo Pesto" },
+        { id: 25, name: "Fried Rice" },
+        { id: 26, name: "Plain Rice" },
+        
+        // Snacks & Appetizers
+        { id: 27, name: "Cheesy Nachos" },
+        { id: 28, name: "Nachos Supreme" },
+        { id: 29, name: "French Fries" },
+        { id: 30, name: "Cheesy Dynamite Lumpia" },
+        { id: 31, name: "Clubhouse Sandwich" },
+        { id: 32, name: "Fish and Fries" },
+        
+        // Drinks
+        { id: 33, name: "Cucumber Lemonade (Glass)" },
+        { id: 34, name: "Cucumber Lemonade (Pitcher)" },
+        { id: 35, name: "Blue Lemonade (Glass)" },
+        { id: 36, name: "Blue Lemonade (Pitcher)" },
+        { id: 37, name: "Red Tea (Glass)" },
+        { id: 38, name: "Calamansi Juice (Glass)" },
+        { id: 39, name: "Calamansi Juice (Pitcher)" },
+        { id: 40, name: "Soda (Mismo)" },
+        { id: 41, name: "Soda 1.5L Coke" },
+        { id: 42, name: "Soda 1.5L Sprite" },
+        { id: 43, name: "Soda 1.5L Royal" },
+        
+        // Coffee
+        { id: 44, name: "Cafe Americano" },
+        { id: 45, name: "Cafe Americano Tall" },
+        { id: 46, name: "Cafe Americano Grande" },
+        { id: 47, name: "Cafe Latte" },
+        { id: 48, name: "Cafe Latte Tall" },
+        { id: 49, name: "Cafe Latte Grande" },
+        { id: 50, name: "Caramel Macchiato" },
+        { id: 51, name: "Caramel Macchiato Tall" },
+        { id: 52, name: "Caramel Macchiato Grande" },
+        { id: 53, name: "Espresso Hot" },
+        { id: 54, name: "Cappuccino Hot" },
+        { id: 55, name: "Mocha Latte Hot" },
+        
+        // Milk Tea
+        { id: 56, name: "Milk Tea Regular HC" },
+        { id: 57, name: "Milk Tea Regular MC" },
+        { id: 58, name: "Caramel Milk Tea" },
+        { id: 59, name: "Cookies & Cream Milk Tea" },
+        { id: 60, name: "Dark Choco Milk Tea" },
+        { id: 61, name: "Okinawa Milk Tea" },
+        { id: 62, name: "Wintermelon Milk Tea" },
+        { id: 63, name: "Matcha Green Tea HC" },
+        { id: 64, name: "Matcha Green Tea MC" },
+        
+        // Frappe
+        { id: 65, name: "Matcha Green Tea Frappe" },
+        { id: 66, name: "Salted Caramel Frappe" },
+        { id: 67, name: "Strawberry Cheesecake Frappe" },
+        { id: 68, name: "Mango Cheesecake Frappe" },
+        { id: 69, name: "Strawberry Cream Frappe" },
+        { id: 70, name: "Cookies & Cream Frappe" },
+        { id: 71, name: "Rocky Road Frappe" },
+        { id: 72, name: "Choco Fudge Frappe" },
+        { id: 73, name: "Choco Mousse Frappe" },
+        { id: 74, name: "Coffee Crumble Frappe" },
+        { id: 75, name: "Vanilla Cream Frappe" },
+        
+        // Specialties
+        { id: 76, name: "Special Bulalo" },
+        { id: 77, name: "Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)" },
+        { id: 78, name: "Paknet (Pakbet w/ Bagnet)" },
+        { id: 79, name: "Sinigang (Pork)" },
+        { id: 80, name: "Sinigang (Shrimp)" },
+        { id: 81, name: "Buttered Shrimp" },
+        { id: 82, name: "Kare-Kare" }
     ];
     
     // Find product name by ID

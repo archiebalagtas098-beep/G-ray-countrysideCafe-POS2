@@ -8,6 +8,7 @@ import StockTransfer from "./models/StocktransferModel.js";
 import InventoryItem from "./models/InventoryItem.js";
 import User from "./models/User.js";
 import MenuItem from "./models/Menuitem.js";
+import Settings from "./models/SettingsModel.js";
 
 dotenv.config();
 
@@ -246,6 +247,65 @@ async function seedAllCollections() {
             console.log(`⏭️  StockTransfers already exist (${existingTransfers} records)`);
         }
 
+        // ==================== SEED SETTINGS ====================
+        console.log('\n🔄 Seeding Settings collection...');
+        const admin = await User.findOne({ role: 'admin' });
+        const existingSettings = await Settings.countDocuments();
+        if (existingSettings === 0 && admin) {
+            const settings = new Settings({
+                userId: admin._id,
+                fullName: admin.firstName && admin.lastName ? `${admin.firstName} ${admin.lastName}` : 'Administrator',
+                firstName: admin.firstName || 'Admin',
+                lastName: admin.lastName || 'User',
+                businessName: "G'RAY COUNTRYSIDE CAFÉ",
+                businessAddress: "IPO Road, Barangay Minuyan Proper",
+                businessCity: "City of San Jose Del Monte, Bulacan",
+                businessPhone: "(+63) 123-456-7890",
+                vatRegNo: "VAT-Reg-TIN: 123-456-789-000",
+                permitNo: "BTRCP-2024-00123",
+                receiptHeader: "BESTLINK COLLEGE OF THE PHILIPPINES",
+                theme: 'light',
+                language: 'en',
+                dateFormat: 'MM/DD/YYYY',
+                timeFormat: '12h',
+                currency: 'PHP',
+                notifications: {
+                    emailNotifications: false,
+                    lowStockAlerts: true,
+                    orderNotifications: true,
+                    systemAlerts: true
+                },
+                twoFactorAuth: false,
+                sessionTimeout: 30,
+                timezone: 'Asia/Manila',
+                taxRate: 0.12,
+                discountPolicy: {
+                    allowManualDiscounts: true,
+                    maxDiscountPercentage: 50
+                },
+                lowStockThreshold: 5,
+                autoReorderEnabled: false,
+                receiptSettings: {
+                    includeCompanyLogo: true,
+                    includeQRCode: false,
+                    paperWidth: '80mm',
+                    printFooterMessage: 'Thank you for visiting G\'RAY COUNTRYSIDE CAFÉ!'
+                },
+                autoBackup: {
+                    enabled: true,
+                    frequency: 'daily'
+                },
+                isActive: true,
+                lastModifiedBy: admin._id
+            });
+            await settings.save();
+            console.log('✅ Seeded Settings record');
+        } else if (!admin) {
+            console.log('⏭️  Skipping Settings - need Admin user first');
+        } else {
+            console.log(`⏭️  Settings already exist (${existingSettings} records)`);
+        }
+
         console.log('\n✅✅✅ SEEDING COMPLETED SUCCESSFULLY! ✅✅✅\n');
         console.log('📊 Summary:');
         console.log(`   • Products: ${await Product.countDocuments()} records`);
@@ -253,6 +313,7 @@ async function seedAllCollections() {
         console.log(`   • StockDeductions: ${await StockDeduction.countDocuments()} records`);
         console.log(`   • StaffAssignments: ${await StaffAssignment.countDocuments()} records`);
         console.log(`   • StockTransfers: ${await StockTransfer.countDocuments()} records`);
+        console.log(`   • Settings: ${await Settings.countDocuments()} records`);
         
         process.exit(0);
     } catch (error) {

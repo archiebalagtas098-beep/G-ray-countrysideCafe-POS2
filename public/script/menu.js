@@ -42,31 +42,31 @@ const ingredientInventory = {
     'Cream Dory': { name: 'Cream Dory', current: 50, max: 150, unit: 'kg', minThreshold: 10 },
     'Pork Belly': { name: 'Pork Belly', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
     'Pork Chop': { name: 'Pork Chop', current: 50, max: 80, unit: 'kg', minThreshold: 8 },
-    'onion': { name: 'Onion', current: 30, max: 50, unit: 'kg', minThreshold: 5 },
-    'garlic': { name: 'Garlic', current: 20, max: 30, unit: 'kg', minThreshold: 3 },
-    'cabbage': { name: 'Cabbage', current: 30, max: 40, unit: 'kg', minThreshold: 5 },
-    'carrot': { name: 'Carrot', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Onion': { name: 'Onion', current: 30, max: 50, unit: 'kg', minThreshold: 5 },
+    'Garlic': { name: 'Garlic', current: 20, max: 30, unit: 'kg', minThreshold: 3 },
+    'Cabbage': { name: 'Cabbage', current: 30, max: 40, unit: 'kg', minThreshold: 5 },
+    'Carrot': { name: 'Carrot', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'bell_pepper': { name: 'Bell Pepper', current: 15, max: 20, unit: 'kg', minThreshold: 3 },
-    'calamansi': { name: 'Calamansi', current: 15, max: 20, unit: 'kg', minThreshold: 5 },
+    'Calamansi': { name: 'Calamansi', current: 15, max: 20, unit: 'kg', minThreshold: 5 },
     'tomato': { name: 'Tomato', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'potato': { name: 'Potato', current: 30, max: 100, unit: 'kg', minThreshold: 10 },
     'cucumber': { name: 'Cucumber', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'eggplant': { name: 'Eggplant', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Eggplant': { name: 'Eggplant', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'green_beans': { name: 'Green Beans', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'rice': { name: 'Rice', current: 100, max: 200, unit: 'kg', minThreshold: 30 },
     'pancit_bihon': { name: 'Pancit Bihon', current: 50, max: 100, unit: 'kg', minThreshold: 15 },
     'pancit_canton': { name: 'Pancit Canton', current: 50, max: 100, unit: 'kg', minThreshold: 15 },
-    'spaghetti_pasta': { name: 'Spaghetti Pasta', current: 50, max: 80, unit: 'kg', minThreshold: 10 },
-    'soy_sauce': { name: 'Soy Sauce', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
-    'vinegar': { name: 'Vinegar', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
+    'Spaghetti pasta': { name: 'Spaghetti Pasta', current: 50, max: 80, unit: 'kg', minThreshold: 10 },
+    'Soy sauce': { name: 'Soy Sauce', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
+    'Vinegar': { name: 'Vinegar', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
     'oyster_sauce': { name: 'Oyster Sauce', current: 30, max: 30, unit: 'liter', minThreshold: 5 },
     'fish_sauce': { name: 'Fish Sauce', current: 30, max: 30, unit: 'liter', minThreshold: 5 },
-    'butter': { name: 'Butter', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'honey': { name: 'Honey', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
-    'cooking_oil': { name: 'Cooking Oil', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
+    'Butter': { name: 'Butter', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Honey': { name: 'Honey', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
+    'Cooking oil': { name: 'Cooking Oil', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
     'milk': { name: 'Milk', current: 30, max: 50, unit: 'liter', minThreshold: 10 },
-    'cheese': { name: 'Cheese', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'cream': { name: 'Cream', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
+    'Cheese': { name: 'Cheese', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Cream': { name: 'Cream', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
     'coffee_beans': { name: 'Coffee Beans', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'milk_tea_base': { name: 'Milk Tea Base', current: 25, max: 40, unit: 'liter', minThreshold: 8 },
     'matcha': { name: 'Matcha Powder', current: 8, max: 10, unit: 'kg', minThreshold: 2 },
@@ -78,17 +78,17 @@ const ingredientInventory = {
     'bread': { name: 'Bread', current: 30, max: 50, unit: 'loaf', minThreshold: 10 },
     'lumpia_wrapper': { name: 'Lumpia Wrapper', current: 60, max: 100, unit: 'pack', minThreshold: 20 },
     'dynamite': { name: 'Dynamite', current: 30, max: 50, unit: 'kg', minThreshold: 8 },
-    'egg': { name: 'Egg', current: 300, max: 500, unit: 'piece', minThreshold: 50 },
+    'Egg': { name: 'Egg', current: 300, max: 500, unit: 'piece', minThreshold: 50 },
     'tuyo': { name: 'Tuyo', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'tinapa': { name: 'Tinapa', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'sugar': { name: 'Sugar', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
-    'salt': { name: 'Salt', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
-    'black_pepper': { name: 'Black Pepper', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Sugar': { name: 'Sugar', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
+    'Salt': { name: 'Salt', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
+    'Black pepper': { name: 'Black Pepper', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'water': { name: 'Water', current: 100, max: 100, unit: 'liter', minThreshold: 30 },
     'beef_shank': { name: 'Beef Shank', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
-    'bay_leaves': { name: 'Bay Leaves', current: 10, max: 20, unit: 'piece', minThreshold: 3 },
-    'peppercorn': { name: 'Peppercorn', current: 5, max: 10, unit: 'kg', minThreshold: 1 },
-    'chicken_broth': { name: 'Chicken Broth', current: 20, max: 30, unit: 'liter', minThreshold: 5 },
+    'Bay leaves': { name: 'Bay Leaves', current: 10, max: 20, unit: 'piece', minThreshold: 3 },
+    'Peppercorn': { name: 'Peppercorn', current: 5, max: 10, unit: 'kg', minThreshold: 1 },
+    'Chicken_broth': { name: 'Chicken Broth', current: 20, max: 30, unit: 'liter', minThreshold: 5 },
     'corn': { name: 'Corn', current: 30, max: 50, unit: 'kg', minThreshold: 10 }
 };
 
@@ -115,92 +115,92 @@ const productIngredientMap = {
         ingredients: { 
             'Pork': 0.25, 
             'gochujang': 0.03, 
-            'soy_sauce': 0.03, 
-            'garlic': 0.02, 
-            'onion': 0.05, 
-            'sugar': 0.01, 
-            'sesame_oil': 0.02, 
-            'chili flakes': 0.005, 
-            'black_pepper': 0.005 
+            'Soy sauce': 0.03, 
+            'Garlic': 0.02, 
+            'Onion': 0.05, 
+            'Sugar': 0.01, 
+            'Sesame oil': 0.02, 
+            'Chili flakes': 0.005, 
+            'Black pepper': 0.005 
         },
         servingware: 'plate'
     },
     'Korean Salt and Pepper (Pork)': {
         ingredients: { 
             'Pork': 0.25, 
-            'salt': 0.01, 
-            'black_pepper': 0.01, 
-            'garlic': 0.02, 
-            'chili flakes': 0.005, 
-            'cornstarch': 0.02 
+            'Salt': 0.01, 
+            'Black pepper': 0.01, 
+            'Garlic': 0.02, 
+            'Chili flakes': 0.005, 
+            'Cornstarch': 0.02 
         },
         servingware: 'plate'
     },
     'Crispy Pork Lechon Kawali': {
         ingredients: { 
             'Pork Belly': 0.35, 
-            'garlic': 0.03, 
-            'bay_leaves': 2, 
-            'peppercorn': 0.01, 
-            'salt': 0.01, 
-            'cooking_oil': 0.25 
+            'Garlic': 0.03, 
+            'Bay leaves': 2, 
+            'Peppercorn': 0.01, 
+            'Salt': 0.01, 
+            'Cooking oil': 0.25 
         },
         servingware: 'plate'
     },
     'Cream Dory Fish Fillet': {
         ingredients: { 
             'Cream Dory': 0.25, 
-            'flour': 0.05, 
-            'salt': 0.01, 
-            'black_pepper': 0.005, 
-            'butter': 0.05, 
-            'garlic': 0.02, 
-            'cream': 0.1 
+            'Flour': 0.05, 
+            'Salt': 0.01, 
+            'Black pepper': 0.005, 
+            'Butter': 0.05, 
+            'Garlic': 0.02, 
+            'Cream': 0.1 
         },
         servingware: 'plate'
     },
     'Buttered Honey Chicken': {
         ingredients: { 
-            'chicken': 0.25, 
-            'butter': 0.05, 
-            'honey': 0.07, 
-            'garlic': 0.02, 
-            'soy_sauce': 0.02, 
-            'black_pepper': 0.005 
+            'Chicken': 0.25, 
+            'Butter': 0.05, 
+            'Honey': 0.07, 
+            'Garlic': 0.02, 
+            'Soy sauce': 0.02, 
+            'Black pepper': 0.005 
         },
         servingware: 'plate'
     },
     'Buttered Spicy Chicken': {
         ingredients: { 
-            'chicken': 0.25, 
-            'butter': 0.05, 
-            'chili flakes': 0.01, 
-            'garlic': 0.02, 
-            'soy_sauce': 0.02 
+            'Chicken': 0.25, 
+            'Butter': 0.05, 
+            'Chili flakes': 0.01, 
+            'Garlic': 0.02, 
+            'Soy sauce': 0.02 
         },
         servingware: 'plate'
     },
     'Chicken Adobo': {
         ingredients: { 
-            'chicken': 0.3, 
-            'soy_sauce': 0.05, 
-            'vinegar': 0.04, 
-            'garlic': 0.03, 
-            'bay_leaves': 2, 
-            'peppercorn': 0.01 
+            'Chicken': 0.3, 
+            'Soy sauce': 0.05, 
+            'Vinegar': 0.04, 
+            'Garlic': 0.03, 
+            'Bay leaves': 2, 
+            'Peppercorn': 0.01 
         },
         servingware: 'plate'
     },
     'Pork Shanghai': {
         ingredients: { 
             'Ground Pork': 0.2, 
-            'carrot': 0.03, 
-            'onion': 0.03, 
-            'garlic': 0.02, 
-            'egg': 1, 
-            'breadcrumbs': 0.03, 
-            'lumpia_wrapper': 10, 
-            'cooking_oil': 0.1 
+            'Carrot': 0.03, 
+            'Onion': 0.03, 
+            'Garlic': 0.02, 
+            'Egg': 1, 
+            'Breadcrumbs': 0.03, 
+            'Lumpia wrapper': 10, 
+            'Cooking oil': 0.1 
         },
         servingware: 'plate'
     },
@@ -209,89 +209,218 @@ const productIngredientMap = {
     'Sizzling Pork Sisig': {
         ingredients: { 
             'Pork': 0.3, 
-            'onion': 0.08, 
-            'chili': 0.02, 
-            'calamansi': 0.03, 
-            'mayonnaise': 0.05, 
-            'soy_sauce': 0.02, 
-            'egg': 1, 
-            'cooking_oil': 0.1 
+            'Onion': 0.08, 
+            'Chili': 0.02, 
+            'Calamansi': 0.03, 
+            'Mayonnaise': 0.05, 
+            'Soy sauce': 0.02, 
+            'Egg': 1, 
+            'Cooking oil': 0.1,
+            'sizzling plate': 0.1
         },
         servingware: 'sizzling plate'
     },
     'Sizzling Liempo': {
         ingredients: { 
             'Pork Belly': 0.3, 
-            'garlic': 0.02, 
-            'soy_sauce': 0.03, 
-            'black_pepper': 0.01, 
-            'cooking_oil': 0.1 
+            'Garlic': 0.02, 
+            'Soy sauce': 0.03, 
+            'Black pepper': 0.01, 
+            'Cooking oil': 0.1,
+            'sizzling plate': 0.1
         },
         servingware: 'sizzling plate'
     },
     'Sizzling Porkchop': {
         ingredients: { 
             'Pork Chop': 0.35, 
-            'garlic': 0.02, 
-            'soy_sauce': 0.03, 
-            'black_pepper': 0.01, 
-            'cooking_oil': 0.1 
+            'Garlic': 0.02, 
+            'Soy sauce': 0.03, 
+            'Black pepper': 0.01, 
+            'Cooking oil': 0.1,
+            'sizzling plate': 0.1
         },
         servingware: 'sizzling plate'
     },
     'Sizzling Fried Chicken': {
         ingredients: { 
-            'fried_chicken': 0.35, 
-            'flour': 0.03, 
-            'garlic': 0.02, 
-            'black_pepper': 0.01, 
-            'gravy': 0.2, 
-            'cooking_oil': 0.1 
+            'Chicken': 0.35, 
+            'Flour': 0.03, 
+            'Garlic': 0.02, 
+            'Black pepper': 0.01, 
+            'Gravy': 0.2, 
+            'Cooking oil': 0.1,
+            'sizzling plate': 0.1
         },
         servingware: 'sizzling plate'
     },
 
     // ==================== PARTY TRAYS ====================
-    'Pancit Bihon': {
+    'Pancit Bihon (S)': {
         ingredients: { 
-            'rice_noodles': 0.5, 
-            'chicken': 0.1, 
-            'cabbage': 0.15, 
-            'carrot': 0.1, 
-            'garlic': 0.03, 
-            'onion': 0.05, 
-            'soy_sauce': 0.05, 
-            'oyster_sauce': 0.02, 
-            'cooking_oil': 0.05 
-        },
-        servingware: 'tray'
-    },
-    'Pancit Canton + Bihon (Mixed)': {
-        ingredients: { 
-            'Pancit Canton': 0.3, 
             'Bihon noodles': 0.3, 
-            'chicken': 0.15, 
-            'cabbage': 0.2, 
-            'carrot': 0.15, 
-            'garlic': 0.04, 
-            'onion': 0.08, 
-            'soy_sauce': 0.08, 
-            'oyster_sauce': 0.03, 
-            'chicken_broth': 0.2, 
-            'cooking_oil': 0.08 
+            'Chicken': 0.06, 
+            'Cabbage': 0.09, 
+            'Carrot': 0.06, 
+            'Garlic': 0.02, 
+            'Onion': 0.03, 
+            'Soy sauce': 0.03, 
+            'Oyster sauce': 0.01, 
+            'Cooking oil': 0.03,
+            'Calamansi': 0.02,
+            'Tray S': 0.05
         },
         servingware: 'tray'
     },
-    'Spaghetti': {
+    'Pancit Bihon (M)': {
         ingredients: { 
-            'spaghetti_pasta': 0.5, 
-            'sweet_tomato_sauce': 0.2, 
-            'ground_meat': 0.15, 
-            'hotdog': 0.1, 
-            'cheese': 0.08, 
-            'garlic': 0.02, 
-            'onion': 0.03, 
-            'cooking_oil': 0.05 
+            'Bihon noodles': 0.4, 
+            'Chicken': 0.08, 
+            'Cabbage': 0.12, 
+            'Carrot': 0.08, 
+            'Garlic': 0.025, 
+            'Onion': 0.04, 
+            'Soy sauce': 0.04, 
+            'Oyster sauce': 0.015, 
+            'Cooking oil': 0.04,
+            'Calamansi': 0.02,
+            'Tray M': 0.05
+        },
+        servingware: 'tray'
+    },
+    'Pancit Bihon (L)': {
+        ingredients: { 
+            'Bihon noodles': 0.6, 
+            'Chicken': 0.12, 
+            'Cabbage': 0.18, 
+            'Carrot': 0.12, 
+            'Garlic': 0.035, 
+            'Onion': 0.06, 
+            'Soy sauce': 0.06, 
+            'Oyster sauce': 0.025, 
+            'Cooking oil': 0.06,
+            'Calamansi': 0.02,
+            'Tray L': 0.05
+        },
+        servingware: 'tray'
+    },
+
+    'Pancit Canton (S)': {
+        ingredients: { 
+            'Canton noodles': 0.3,
+            'Bihon noodles': 0.1,
+            'Chicken': 0.06, 
+            'Cabbage': 0.09, 
+            'Carrot': 0.06, 
+            'Garlic': 0.02, 
+            'Onion': 0.03, 
+            'Soy sauce': 0.03, 
+            'Oyster sauce': 0.01, 
+            'Cooking oil': 0.03,
+            'Calamansi': 0.02,
+            'Tray S': 0.05
+        },
+        servingware: 'tray'
+    },
+
+    'Pancit Canton (M)': {
+        ingredients: { 
+            'Canton noodles': 0.4,
+            'Bihon noodles': 0.15,
+            'Chicken': 0.08, 
+            'Cabbage': 0.12, 
+            'Carrot': 0.08, 
+            'Garlic': 0.025,
+            'Onion': 0.04,
+            'Soy sauce': 0.04, 
+            'Oyster sauce': 0.015, 
+            'Cooking oil': 0.04,
+            'Calamansi': 0.02,
+            'Tray M': 0.05
+        },
+        servingware: 'tray'
+    },
+    
+    'Pancit Canton (L)': {
+        ingredients: { 
+            'Canton noodles': 0.6,
+            'Bihon noodles': 0.2,
+            'Chicken': 0.12, 
+            'Cabbage': 0.18,    
+            'Carrot': 0.12,
+            'Garlic': 0.035,
+            'Onion': 0.06,
+            'Soy sauce': 0.06, 
+            'Oyster sauce': 0.025, 
+            'Cooking oil': 0.06,
+            'Calamansi': 0.02,
+            'Tray L': 0.05
+        },
+        servingware: 'tray'
+    },  
+
+    'Spaghetti (S)': {
+        ingredients: { 
+            'Spaghetti pasta': 0.5, 
+            'Sweet tomato paste': 0.2, 
+            'Ground meat': 0.15, 
+            'Hotdog': 0.1, 
+            'Cheese': 0.08, 
+            'Garlic': 0.02, 
+            'Onion': 0.03, 
+            'Cooking oil': 0.05, 
+            'Tray S': 0.05,
+        },
+        servingware: 'tray'
+    },
+
+    'Spaghetti (M)': {
+        ingredients: { 
+            'Spaghetti pasta': 0.75, 
+            'Sweet tomato paste': 0.3, 
+            'Ground meat': 0.225, 
+            'Hotdog': 0.15, 
+            'Cheese': 0.12,
+            'Garlic': 0.03, 
+            'Onion': 0.045, 
+            'Cooking oil': 0.075,
+            'Tray M': 0.05
+        },
+        servingware: 'tray'
+    },
+
+    'Spaghetti (L)': {
+        ingredients: { 
+            'Spaghetti pasta': 1,
+            'Sweet tomato paste': 0.4, 
+            'Ground meat': 0.3, 
+            'Hotdog': 0.2, 
+            'Cheese': 0.16,
+            'Garlic': 0.04, 
+            'Onion': 0.06, 
+            'Cooking oil': 0.1,
+            'Tray L': 0.05
+        },
+        servingware: 'tray'
+    },
+
+    'Kare-Kare': {
+        ingredients: { 
+        'Oxtail': 0.3,
+        'Banana Flower Bud': 0.1,
+        'Pechay': 0.1,
+        'String Beans': 0.1,
+        'Eggplant': 0.1,
+        'Ground peanuts': 0.1,
+        'Peanut butter': 0.1,
+        'Shrimp paste': 0.1,
+        'Water': 1,
+        'Annatto oil': 0.05,
+        'Toasted ground rice': 0.1,
+        'Garlic': 0.02,
+        'Onion': 0.03,
+        'Salt': 0.01,
+        'Black Pepper': 0.01
         },
         servingware: 'tray'
     },
@@ -301,7 +430,7 @@ const productIngredientMap = {
         ingredients: { 
             'cucumber': 0.1, 
             'lemon': 0.1, 
-            'sugar': 0.05, 
+            'Sugar': 0.05, 
             'water': 0.3, 
             'ice': 0.1 
         },
@@ -311,7 +440,7 @@ const productIngredientMap = {
         ingredients: { 
             'lemon_juice': 0.15, 
             'blue_syrup': 0.05, 
-            'sugar': 0.05, 
+            'Sugar': 0.05, 
             'water': 0.3, 
             'ice': 0.1 
         },
@@ -320,7 +449,7 @@ const productIngredientMap = {
     'Red Tea': {
         ingredients: { 
             'tea': 0.02, 
-            'sugar': 0.05, 
+            'Sugar': 0.05, 
             'water': 0.3, 
             'ice': 0.1 
         },
@@ -337,21 +466,24 @@ const productIngredientMap = {
     'Cafe Americano': {
         ingredients: { 
             'espresso': 0.03, 
-            'hot_water': 0.2 
+            'hot_water': 0.2,
+            'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Cafe Americano Hot': {
         ingredients: { 
             'espresso': 0.03, 
-            'hot_water': 0.2 
+            'hot_water': 0.2,
+            'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Cafe Latte': {
         ingredients: { 
             'espresso': 0.03, 
-            'steamed_milk': 0.25 
+            'steamed_milk': 0.25,
+            'Sugar': 0.03
         },
         servingware: 'cup'
     },
@@ -360,7 +492,8 @@ const productIngredientMap = {
             'espresso': 0.03, 
             'milk': 0.2, 
             'caramel_syrup': 0.03, 
-            'vanilla_syrup': 0.01 
+            'vanilla_syrup': 0.01,
+            'Sugar': 0.03
         },
         servingware: 'cup'
     },
@@ -370,8 +503,9 @@ const productIngredientMap = {
         ingredients: { 
             'black_tea': 0.02, 
             'milk': 0.2, 
-            'sugar': 0.05, 
-            'tapioca_pearls': 0.03 
+            'Sugar': 0.05, 
+            'tapioca_pearls': 0.03,
+            'boba_straws': 1
         },
         servingware: 'cup'
     },
@@ -379,7 +513,8 @@ const productIngredientMap = {
         ingredients: { 
             'matcha_powder': 0.01, 
             'milk': 0.25, 
-            'sugar': 0.05 
+            'Sugar': 0.05,
+            'boba_straws': 1
         },
         servingware: 'cup'
     },
@@ -390,7 +525,9 @@ const productIngredientMap = {
             'ice': 0.2, 
             'milk': 0.2, 
             'cookie_crumbs': 0.03, 
-            'cream': 0.1 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'boba_straws': 1
         },
         servingware: 'cup'
     },
@@ -399,16 +536,20 @@ const productIngredientMap = {
             'Strawberry syrup': 0.05, 
             'milk': 0.2, 
             'ice': 0.2, 
-            'cream': 0.1 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'boba_straws': 1
         },
         servingware: 'cup'
     },
     'Mango Cheesecake Frappe': {
         ingredients: { 
             'Mango syrup': 0.05, 
-            'cream_cheese_flavor': 0.03, 
+            'Cream_Cheese_flavor': 0.03, 
             'milk': 0.2, 
-            'ice': 0.2 
+            'ice': 0.2,
+            'Sugar': 0.05,
+            'boba_straws': 1
         },
         servingware: 'cup'
     },
@@ -417,56 +558,56 @@ const productIngredientMap = {
     'Cheesy Nachos': {
         ingredients: { 
             'nacho_chips': 0.3, 
-            'cheese_sauce': 0.15 
+            'Cheese_sauce': 0.15 
         },
         servingware: 'serving'
     },
     'Nachos Supreme': {
         ingredients: { 
             'nacho_chips': 0.3, 
-            'cheese': 0.15, 
-            'ground_meat': 0.1, 
+            'Cheese': 0.15, 
+            'Ground meat': 0.1, 
             'tomato': 0.05, 
-            'onion': 0.03 
+            'Onion': 0.03 
         },
         servingware: 'serving'
     },
     'French Fries': {
         ingredients: { 
             'potato': 0.25, 
-            'cooking_oil': 0.1, 
-            'salt': 0.005 
+            'Cooking oil': 0.1, 
+            'Salt': 0.005 
         },
         servingware: 'serving'
     },
     'Clubhouse Sandwich': {
         ingredients: { 
             'bread': 0.1, 
-            'chicken': 0.1, 
+            'Chicken': 0.1, 
             'ham': 0.05, 
-            'egg': 1, 
+            'Egg': 1, 
             'lettuce': 0.03, 
             'tomato': 0.05, 
-            'mayonnaise': 0.02 
+            'Mayonnaise': 0.02 
         },
         servingware: 'sandwich'
     },
     'Fish and Fries': {
         ingredients: { 
             'fish_fillet': 0.15, 
-            'batter': 0.05, 
+            'Butter': 0.05, 
             'potato': 0.2, 
-            'cooking_oil': 0.15, 
-            'salt': 0.005 
+            'Cooking oil': 0.15, 
+            'Salt': 0.005 
         },
         servingware: 'serving'
     },
     'Cheesy Dynamite Lumpia': {
         ingredients: { 
             'Siling Green': 0.05, 
-            'cheese': 0.05, 
+            'Cheese': 0.05, 
             'lumpia_wrapper': 10, 
-            'cooking_oil': 0.1 
+            'Cooking oil': 0.1 
         },
         servingware: 'plate'
     },
@@ -475,18 +616,18 @@ const productIngredientMap = {
             'Ground Pork': 0.15, 
             'vegetables': 0.1, 
             'lumpia_wrapper': 15, 
-            'cooking_oil': 0.15 
+            'Cooking oil': 0.15 
         },
         servingware: 'plate'
     },
     'Fried Chicken': {
         ingredients: { 
-            'chicken': 0.25, 
-            'flour': 0.05, 
-            'garlic': 0.02, 
-            'black_pepper': 0.005, 
-            'cooking_oil': 0.2, 
-            'salt': 0.01 
+            'Chicken': 0.25, 
+            'Flour': 0.05, 
+            'Garlic': 0.02, 
+            'Black pepper': 0.005, 
+            'Cooking oil': 0.2, 
+            'Salt': 0.01 
         },
         servingware: 'plate'
     },
@@ -496,29 +637,42 @@ const productIngredientMap = {
         ingredients: { 
             'tinapa': 0.1, 
             'rice': 0.3, 
-            'garlic': 0.02, 
-            'egg': 1, 
-            'cooking_oil': 0.05 
+            'Garlic': 0.02, 
+            'Egg': 1, 
+            'Cooking oil': 0.05 
         },
         servingware: 'meal'
     },
     'Tuyo Pesto': {
         ingredients: { 
             'tuyo': 0.08, 
-            'pasta': 0.3, 
-            'garlic': 0.02, 
-            'cooking_oil': 0.05, 
-            'herbs': 0.01 
+            'Spaghetti pasta': 0.3, 
+            'Garlic': 0.02, 
+            'Cooking oil': 0.05, 
+            'Black pepper': 0.01 
         },
         servingware: 'meal'
     },
+
+    'Creamy Pesto': {
+        ingredients: { 
+            'Spaghetti pasta': 0.3, 
+            'Pesto sauce': 0.1, 
+            'Garlic': 0.02,
+            'Cream': 0.1,
+            'Cooking oil': 0.05, 
+            'Black pepper': 0.01
+        },
+        servingware: 'meal'
+    },
+
     'Fried Rice': {
         ingredients: { 
             'rice': 0.3, 
-            'garlic': 0.03, 
-            'egg': 1, 
-            'soy_sauce': 0.02, 
-            'cooking_oil': 0.05 
+            'Garlic': 0.03, 
+            'Egg': 1, 
+            'Soy sauce': 0.02, 
+            'Cooking oil': 0.05 
         },
         servingware: 'bowl'
     },
@@ -536,7 +690,7 @@ const productIngredientMap = {
             'Pork': 0.4, 
             'tamarind_mix': 0.05, 
             'tomato': 0.05, 
-            'onion': 0.05, 
+            'Onion': 0.05, 
             'radish': 0.1, 
             'kangkong': 0.1 
         },
@@ -547,7 +701,7 @@ const productIngredientMap = {
             'Shrimp': 0.35, 
             'tamarind_mix': 0.05, 
             'tomato': 0.05, 
-            'onion': 0.05, 
+            'Onion': 0.05, 
             'kangkong': 0.1 
         },
         servingware: 'pot'
@@ -555,22 +709,22 @@ const productIngredientMap = {
     'Paknet (Pakbet w/ Bagnet)': {
         ingredients: { 
             'bagnet': 0.2, 
-            'eggplant': 0.15, 
+            'Eggplant': 0.15, 
             'squash': 0.15, 
             'okra': 0.1, 
             'ampalaya': 0.1, 
             'shrimp_paste': 0.02, 
-            'cooking_oil': 0.05 
+            'Cooking oil': 0.05 
         },
         servingware: 'serving'
     },
     'Buttered Shrimp': {
         ingredients: { 
             'shrimp': 0.3, 
-            'butter': 0.1, 
-            'garlic': 0.03, 
-            'sugar': 0.01, 
-            'salt': 0.005 
+            'Butter': 0.1, 
+            'Garlic': 0.03, 
+            'Sugar': 0.01, 
+            'Salt': 0.005 
         },
         servingware: 'serving'
     },
@@ -578,10 +732,10 @@ const productIngredientMap = {
         ingredients: { 
             'Beef Shank': 0.8, 
             'corn': 0.1, 
-            'cabbage': 0.3, 
+            'Cabbage': 0.3, 
             'potato': 0.2, 
-            'onion': 0.1, 
-            'peppercorn': 0.01 
+            'Onion': 0.1, 
+            'Peppercorn': 0.01 
         },
         servingware: 'pot'
     },
@@ -590,11 +744,11 @@ const productIngredientMap = {
             'Beef Shank': 0.8, 
             'corn': 0.1, 
             'potato': 0.2, 
-            'cabbage': 0.3, 
-            'carrot': 0.15, 
-            'bay_leaves': 2, 
-            'peppercorn': 0.01, 
-            'salt': 0.01, 
+            'Cabbage': 0.3, 
+            'Carrot': 0.15, 
+            'Bay leaves': 2, 
+            'Peppercorn': 0.01, 
+            'Salt': 0.01, 
             'water': 1.5, 
             'beef_broth': 0.2 
         },
@@ -605,11 +759,11 @@ const productIngredientMap = {
             'Beef Shank': 1.6, 
             'corn': 0.2, 
             'potato': 0.4, 
-            'cabbage': 0.6, 
-            'carrot': 0.3, 
-            'bay_leaves': 4, 
-            'peppercorn': 0.02, 
-            'salt': 0.02, 
+            'Cabbage': 0.6, 
+            'Carrot': 0.3, 
+            'Bay leaves': 4, 
+            'Peppercorn': 0.02, 
+            'Salt': 0.02, 
             'water': 3.0, 
             'beef_broth': 0.4 
         },
@@ -617,11 +771,15 @@ const productIngredientMap = {
     },
 
     // ==================== PACKAGING SUPPLIES ====================
-    'Paper Cups (12oz)': {
+    'Plastic Cups (12oz)': {
         ingredients: {},
         servingware: 'pack'
     },
-    'Paper Cups (16oz)': {
+    'Plastic Cups (16oz)': {
+        ingredients: {},
+        servingware: 'pack'
+    },
+    'Plastic Cups (20oz)': {
         ingredients: {},
         servingware: 'pack'
     },
@@ -899,9 +1057,10 @@ const unitDisplayLabels = {
     'tray': 'Tray',
     'trays': 'Trays',
     'glass': 'Glass',
-    'glasses': 'Glasses',
+    'collins_glass': 'Collins Glass',
     'cup': 'Cup',
-    'cups': 'Cups',
+    'cups': 'Plastic Cups',
+    'plastic_cups': 'Plastic Cups',
     'pitcher': 'Pitcher',
     'pitchers': 'Pitchers',
     'plastic_bottle': 'Plastic Bottle',
@@ -933,10 +1092,10 @@ const categoryUnitsMapping = {
     'Rice': ['plate', 'serving'],
     'Sizzling': ['sizzling plate', 'plate'],
     'Party': ['tray'],
-    'Drink': ['glass', 'cup', 'pitcher', 'bottle'],
-    'Cafe': ['cup', 'glass'],
-    'Milk Tea': ['cup', 'glass'],
-    'Frappe': ['cup', 'glass'],
+    'Drink': ['collins_glass', 'cups', 'pitcher', 'plastic_bottle'],
+    'Cafe': ['cups', 'collins_glass'],
+    'Milk Tea': ['cups', 'collins_glass'],
+    'Frappe': ['cups', 'collins_glass', 'plastic_cups'],
     'Snack & Appetizer': ['serving', 'piece', 'sandwich'],
     'Budget Meals Served with Rice': ['meal', 'bowl'],
     'Specialties': ['serving', 'pot'],
@@ -961,9 +1120,15 @@ const menuDatabase = {
         { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', defaultPrice: 148 }
     ],
     'Party': [
-        { name: 'Pansit Bihon', unit: 'tray', defaultPrice: 300 },
-        { name: 'Pancit Canton', unit: 'tray', defaultPrice: 300 },
-        { name: 'Spaghetti', unit: 'tray', defaultPrice: 400 },
+        { name: 'Pancit Bihon (S)', unit: 'tray', defaultPrice: 250 },
+        { name: 'Pancit Bihon (M)', unit: 'tray', defaultPrice: 350 },
+        { name: 'Pancit Bihon (L)', unit: 'tray', defaultPrice: 400 },
+        { name: 'Pancit Canton (S)', unit: 'tray', defaultPrice: 250 },
+        { name: 'Pancit Canton (M)', unit: 'tray', defaultPrice: 350 },
+        { name: 'Pancit Canton (L)', unit: 'tray', defaultPrice: 400 },
+        { name: 'Spaghetti (S)', unit: 'tray', defaultPrice: 250 },
+        { name: 'Spaghetti (M)', unit: 'tray', defaultPrice: 350 },
+        { name: 'Spaghetti (L)', unit: 'tray', defaultPrice: 400 },
         { name: 'Creamy Carbonara', unit: 'tray', defaultPrice: 500 },
         { name: 'Creamy Pesto', unit: 'tray', defaultPrice: 500 },
         { name: 'Tuyo Pesto', unit: 'tray', defaultPrice: 600 },
@@ -1057,17 +1222,6 @@ const menuDatabase = {
         { name: 'Special Bulalo (good for 2-3 Persons)', unit: 'pot', defaultPrice: 450 },
         { name: 'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)', unit: 'pot', defaultPrice: 850 }
     ],
-    'Packaging Supplies': [
-        { name: 'Paper Cups (12oz)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Paper Cups (16oz)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Straws (Regular)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Straws (Boba)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Food Containers (Small)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Food Containers (Medium)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Food Containers (Large)', unit: 'pack', defaultPrice: 0 },
-        { name: 'Plastic Utensils Set', unit: 'set', defaultPrice: 0 },
-        { name: 'Napkins (Pack of 50)', unit: 'pack', defaultPrice: 0 }
-    ]
 };
 
 // ==================== DOM ELEMENTS CACHE ====================
@@ -3022,14 +3176,24 @@ function closeMissingIngredientsModal() {
 }
 
 // ==================== SHOW MISSING INGREDIENTS MODAL (From Error) ====================
-function showMissingIngredientsModal(productName) {
-    const data = missingIngredientsData[productName];
+function showMissingIngredientsModal(productName, missingIngredients) {
+    // If only one parameter, try to get from stored data
+    let ingredients = missingIngredients;
     
-    if (!data || !data.missing) {
-        alert(`Unable to retrieve missing ingredients for ${productName}`);
-        return;
+    if (!ingredients) {
+        const data = missingIngredientsData[productName];
+        if (!data) {
+            alert(`Unable to retrieve missing ingredients for ${productName}`);
+            return;
+        }
+        ingredients = data.missingIngredients || data.missing || [];
     }
     
+    if (!ingredients || ingredients.length === 0) {
+        alert(`No missing ingredients data for ${productName}`);
+        return;
+    }
+
     // Create modal
     const modalOverlay = document.createElement('div');
     modalOverlay.id = 'missingIngredientsOverlay_' + Date.now();
@@ -3059,36 +3223,23 @@ function showMissingIngredientsModal(productName) {
     `;
     
     let missingHTML = '';
-    if (data.missing.length > 0) {
+    if (ingredients.length > 0) {
         missingHTML = `
             <div style="margin: 20px 0;">
                 <h4 style="color: #dc3545; margin-bottom: 12px;">❌ Missing/Out of Stock:</h4>
                 <ul style="list-style: none; padding: 0;">
-                    ${data.missing.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
+                    ${ingredients.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
                 </ul>
             </div>
         `;
     }
-    
-    let availableHTML = '';
-    if (data.available.length > 0) {
-        availableHTML = `
-            <div style="margin: 20px 0;">
-                <h4 style="color: #28a745; margin-bottom: 12px;">✅ Available Ingredients:</h4>
-                <ul style="list-style: none; padding: 0;">
-                    ${data.available.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-    
+
     const overlayId = modalOverlay.id;
     modal.innerHTML = `
         <div>
             <h3 style="margin: 0 0 10px 0; color: #333;">📦 Ingredient Status: ${productName}</h3>
             <p style="color: #999; margin: 0 0 20px 0; font-size: 14px;">Check missing ingredients and restock if needed</p>
             ${missingHTML}
-            ${availableHTML}
             <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button id="closeModalBtn_${overlayId}" style="
                     flex: 1;
@@ -4985,97 +5136,42 @@ async function quickAddStock(itemId, itemName) {
         return;
     }
     
-    // ============= SIMPLIFIED INGREDIENT CHECK =============
+    // ============= MANDATORY GLOBAL INGREDIENT CHECK =============
+    // APPLY TO ALL PRODUCTS - Block if ANY ingredient is out of stock
     try {
-        console.log(`🔍 Checking if ingredients are available for "${itemName}"...`);
+        console.log(`🔍 Performing GLOBAL ingredient availability check for "${itemName}"...`);
         
-        // First, check if this product has a recipe
-        let hasRecipe = false;
-        let outOfStockIngredients = [];
-        let lowStockIngredients = [];
+        // Use the existing checkIngredientAvailability function which handles:
+        // 1. Local recipe mapping
+        // 2. Server-side recipe mapping
+        // 3. MongoDB inventory validation
+        const availabilityCheck = await checkIngredientAvailability(product.name || product.itemName);
         
-        // Get recipe for this product
-        const recipe = productIngredientMap[product.name || product.itemName];
+        console.log(`📊 Availability check result:`, availabilityCheck);
         
-        if (recipe && recipe.ingredients && Object.keys(recipe.ingredients).length > 0) {
-            hasRecipe = true;
-            console.log(`📋 Recipe found with ${Object.keys(recipe.ingredients).length} ingredients`);
+        if (!availabilityCheck.available) {
+            // BLOCK: Product has missing or out-of-stock ingredients
+            const missingList = availabilityCheck.missingIngredients;
+            console.warn(`🚫 BLOCKING stock addition - Missing/Out-of-stock ingredients:\n  • ${missingList.join('\n  • ')}`);
             
-            // Fetch current inventory
-            const inventoryResponse = await fetch('/api/inventory', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            });
-            
-            if (inventoryResponse.ok) {
-                const inventoryData = await inventoryResponse.json();
-                let inventoryItems = [];
-                
-                if (Array.isArray(inventoryData)) {
-                    inventoryItems = inventoryData;
-                } else if (inventoryData && inventoryData.success && Array.isArray(inventoryData.data)) {
-                    inventoryItems = inventoryData.data;
-                }
-                
-                console.log(`📦 Found ${inventoryItems.length} inventory items`);
-                
-                // Check each ingredient
-                for (const [ingredientName, requiredAmount] of Object.entries(recipe.ingredients)) {
-                    // Normalize ingredient name
-                    const normalizedName = ingredientName.toLowerCase().replace(/[_\s]+/g, ' ').trim();
-                    
-                    // Find in inventory
-                    const ingredient = inventoryItems.find(item => {
-                        const itemName = (item.itemName || item.name || '').toLowerCase().replace(/[_\s]+/g, ' ').trim();
-                        return itemName.includes(normalizedName) || normalizedName.includes(itemName);
-                    });
-                    
-                    if (ingredient) {
-                        const stock = parseFloat(ingredient.currentStock || 0);
-                        console.log(`   ${ingredientName}: ${stock} available`);
-                        
-                        if (stock === 0) {
-                            outOfStockIngredients.push(ingredientName);
-                            console.log(`   ❌ OUT OF STOCK: ${ingredientName}`);
-                        } else if (stock <= (ingredient.minThreshold || 5)) {
-                            lowStockIngredients.push(`${ingredientName} (${stock} left)`);
-                            console.log(`   ⚠️ LOW STOCK: ${ingredientName}`);
-                        }
-                    } else {
-                        console.log(`   ⚠️ Ingredient not found in inventory: ${ingredientName}`);
-                        // If ingredient not in inventory, treat as out of stock
-                        outOfStockIngredients.push(ingredientName);
-                    }
-                }
-            }
-        } else {
-            console.log(`ℹ️ No recipe found for "${itemName}" - no ingredient restrictions`);
-        }
-        
-        // DECISION TIME:
-        // BLOCK only if there are OUT OF STOCK ingredients
-        if (outOfStockIngredients.length > 0) {
-            const ingredientList = outOfStockIngredients.join(', ');
-            console.warn(`🚫 BLOCKING: Insufficient ingredients: ${ingredientList}`);
-            showToast(`❌ Cannot add stock - Insufficient ingredients: ${ingredientList}`, 'error', 8000);
+            // Show the missing ingredients modal with the missing list
+            showMissingIngredientsModal(itemName, missingList);
             return; // STOP HERE - DO NOT ADD STOCK
         }
         
-        // WARN but ALLOW for low stock
-        if (lowStockIngredients.length > 0) {
-            const ingredientList = lowStockIngredients.join(', ');
-            console.warn(`⚠️ WARNING: Low stock ingredients: ${ingredientList} but ALLOWING`);
-            showToast(`⚠️ Warning: Low stock ingredients: ${ingredientList}`, 'warning', 5000);
-            // CONTINUE - DO NOT BLOCK
+        // WARN if there are low stock ingredients
+        if (availabilityCheck.availableIngredients && availabilityCheck.availableIngredients.length > 0) {
+            console.log(`✅ All required ingredients are available`);
         }
         
-        console.log(`✅ Ingredient check passed - proceeding with stock addition`);
+        console.log(`✅ Global ingredient check PASSED - proceeding with stock addition`);
         
     } catch (error) {
-        console.error('⚠️ Error during ingredient check:', error);
-        // If there's an error checking, ALLOW the stock addition (don't block)
-        console.log(`⚠️ Error in ingredient check - allowing stock addition anyway`);
+        console.error('❌ Error during global ingredient check:', error);
+        // STRICT: If there's an error checking ingredients, BLOCK the addition for safety
+        console.warn(`🚫 BLOCKING: Error verifying ingredients: ${error.message}`);
+        showToast(`❌ Cannot verify ingredients. Stock addition blocked for safety. Error: ${error.message}`, 'error', 10000);
+        return; // BLOCK on error - don't risk it
     }
     // ============= END OF INGREDIENT CHECK =============
     
