@@ -632,10 +632,7 @@ if (window.location.pathname.includes('orderhistory')) {
                             <div style="margin-bottom: 10px;">
                                 <i class="fas fa-chart-bar" style="font-size: 24px; color: #ccc;"></i>
                             </div>
-                            No sales data available yet
-                            <div style="margin-top: 10px; font-size: 12px;">
-                                Sales data will appear here once you start making sales
-                            </div>
+                            No Top Sales For Today
                         </td>
                     </tr>
                 `;

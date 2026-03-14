@@ -106,7 +106,7 @@ class SessionManager {
     getUserProfileHTML() {
         let role = this.getRole();
         
-        // If no role in session, try to detect from current URL
+        // If no role found, try to detect from current URL
         if (!role) {
             if (window.location.pathname.includes('/admindashboard')) {
                 role = 'admin';
@@ -115,8 +115,9 @@ class SessionManager {
                 role = 'staff';
                 this.setRole('staff');
             } else {
-                // Don't default - let initializeUserProfile handle it
-                return null;
+                // Default to staff for other pages
+                role = 'staff';
+                this.setRole('staff');
             }
         }
 
@@ -139,20 +140,21 @@ class SessionManager {
     // Initialize user profile in navbar
     initializeUserProfile() {
         try {
-            // Silently check if logout container exists (not all pages have it)
             const logoutContainer = document.querySelector('.logout-container');
+            
+            // If no logout container exists, silently skip (page may not have navbar)
             if (!logoutContainer) {
-                // This is normal - login page, register page, etc. don't have navbar
-                return;
-            }
-
-            // Check if profile already exists to avoid duplicates
-            if (logoutContainer.querySelector('.user-profile-container')) {
+                // No retry - some pages genuinely don't have a logout container
                 return;
             }
 
             const profileHTML = this.getUserProfileHTML();
             if (!profileHTML) {
+                return;
+            }
+
+            // Check if profile already exists to avoid duplicates
+            if (logoutContainer.querySelector('.user-profile-container')) {
                 return;
             }
 
@@ -168,9 +170,9 @@ class SessionManager {
                 logoutContainer.appendChild(profileDiv.firstElementChild);
             }
 
-            console.log('✅ User profile initialized');
+            console.log('✅ User profile initialized in navbar');
         } catch (error) {
-            // Silently ignore errors - this is non-critical
+            console.error('❌ Error initializing user profile:', error);
         }
     }
 
