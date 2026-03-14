@@ -3793,16 +3793,29 @@ class RealTimeManager {
         if (this.adminClients.size === 0) return;
         
         const eventData = `data: ${JSON.stringify(data)}\n\n`;
+        const deadClients = [];
         
         this.adminClients.forEach(client => {
+            if (!client.isAlive || client.res.writableEnded) {
+                deadClients.push(client);
+                return;
+            }
+            
             try {
-                client.res.write(eventData);
-                if (client.res.flush) {
-                    client.res.flush();
+                const canContinue = client.res.write(eventData);
+                if (!canContinue) {
+                    // Backpressure - pause
+                    console.warn(`⚠️ Backpressure on admin client ${client.id}`);
                 }
             } catch (error) {
-                this.adminClients.delete(client);
+                console.warn(`⚠️ Error writing to admin client ${client.id}:`, error.message);
+                deadClients.push(client);
             }
+        });
+        
+        // Clean up dead clients
+        deadClients.forEach(client => {
+            this.adminClients.delete(client);
         });
     }
 
@@ -3810,16 +3823,29 @@ class RealTimeManager {
         if (this.staffClients.size === 0) return;
         
         const eventData = `data: ${JSON.stringify(data)}\n\n`;
+        const deadClients = [];
         
         this.staffClients.forEach(client => {
+            if (!client.isAlive || client.res.writableEnded) {
+                deadClients.push(client);
+                return;
+            }
+            
             try {
-                client.res.write(eventData);
-                if (client.res.flush) {
-                    client.res.flush();
+                const canContinue = client.res.write(eventData);
+                if (!canContinue) {
+                    // Backpressure - pause
+                    console.warn(`⚠️ Backpressure on staff client ${client.id}`);
                 }
             } catch (error) {
-                this.staffClients.delete(client);
+                console.warn(`⚠️ Error writing to staff client ${client.id}:`, error.message);
+                deadClients.push(client);
             }
+        });
+        
+        // Clean up dead clients
+        deadClients.forEach(client => {
+            this.staffClients.delete(client);
         });
     }
 
@@ -4876,48 +4902,158 @@ app.put('/api/menu/:itemId/stock', verifyToken, async (req, res) => {
 });
 
 app.get('/api/admin/events', verifyToken, verifyAdmin, (req, res) => {
+    // Set proper headers for Server-Sent Events
     res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
+        'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'X-Accel-Buffering': 'no'
+        'X-Accel-Buffering': 'no',
+        'Access-Control-Allow-Origin': '*'
     });
 
-    res.write('data: {"type": "connected", "message": "Connected to admin real-time updates"}\n\n');
+    // Send initial connection message
+    try {
+        res.write('data: {"type": "connected", "message": "Connected to admin real-time updates"}\n\n');
+    } catch (error) {
+        console.error('❌ Error sending initial connection message:', error.message);
+        res.end();
+        return;
+    }
 
-    const clientId = Date.now();
+    const clientId = Date.now() + Math.random();
     const client = {
         id: clientId,
-        res: res
+        res: res,
+        createdAt: new Date(),
+        isAlive: true
     };
+    
+    // Track client connection time
+    console.log(`✅ Admin client connected (${clientId})`);
     
     RealTimeManager.addAdminClient(client);
 
+    // Send keep-alive comment every 25 seconds to prevent timeout
+    const keepAliveInterval = setInterval(() => {
+        if (!client.isAlive || res.writableEnded) {
+            clearInterval(keepAliveInterval);
+            return;
+        }
+        
+        try {
+            // Send keep-alive comment (not a data message)
+            res.write(': keep-alive\n\n');
+        } catch (error) {
+            console.warn(`⚠️ Error sending keep-alive to admin client ${clientId}:`, error.message);
+            clearInterval(keepAliveInterval);
+            client.isAlive = false;
+        }
+    }, 25000);
+
+    // Handle client disconnect
     req.on('close', () => {
+        clearInterval(keepAliveInterval);
+        client.isAlive = false;
+        RealTimeManager.removeAdminClient(client);
+        console.log(`❌ Admin client disconnected (${clientId})`);
+    });
+
+    // Handle errors
+    req.on('error', (error) => {
+        console.error(`❌ Admin EventSource error (${clientId}):`, error.message);
+        clearInterval(keepAliveInterval);
+        client.isAlive = false;
+        RealTimeManager.removeAdminClient(client);
+        try {
+            res.end();
+        } catch (e) {
+            console.warn('⚠️ Error ending response:', e.message);
+        }
+    });
+
+    res.on('error', (error) => {
+        console.error(`❌ Admin response error (${clientId}):`, error.message);
+        clearInterval(keepAliveInterval);
+        client.isAlive = false;
         RealTimeManager.removeAdminClient(client);
     });
 });
 
 app.get('/api/staff/events', verifyToken, (req, res) => {
+    // Set proper headers for Server-Sent Events
     res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
+        'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'X-Accel-Buffering': 'no'
+        'X-Accel-Buffering': 'no',
+        'Access-Control-Allow-Origin': '*'
     });
 
-    res.write('data: {"type": "connected", "message": "Connected to staff real-time updates"}\n\n');
+    // Send initial connection message
+    try {
+        res.write('data: {"type": "connected", "message": "Connected to staff real-time updates"}\n\n');
+    } catch (error) {
+        console.error('❌ Error sending initial connection message:', error.message);
+        res.end();
+        return;
+    }
 
-    const clientId = Date.now();
+    const clientId = Date.now() + Math.random();
     const client = {
         id: clientId,
         res: res,
-        role: req.user.role
+        role: req.user.role,
+        createdAt: new Date(),
+        isAlive: true
     };
+    
+    // Track client connection time
+    console.log(`✅ Staff client connected (${clientId}, role: ${req.user.role})`);
     
     RealTimeManager.addStaffClient(client);
 
+    // Send keep-alive comment every 25 seconds to prevent timeout
+    const keepAliveInterval = setInterval(() => {
+        if (!client.isAlive || res.writableEnded) {
+            clearInterval(keepAliveInterval);
+            return;
+        }
+        
+        try {
+            // Send keep-alive comment (not a data message)
+            res.write(': keep-alive\n\n');
+        } catch (error) {
+            console.warn(`⚠️ Error sending keep-alive to staff client ${clientId}:`, error.message);
+            clearInterval(keepAliveInterval);
+            client.isAlive = false;
+        }
+    }, 25000);
+
+    // Handle client disconnect
     req.on('close', () => {
+        clearInterval(keepAliveInterval);
+        client.isAlive = false;
+        RealTimeManager.removeStaffClient(client);
+        console.log(`❌ Staff client disconnected (${clientId})`);
+    });
+
+    // Handle errors
+    req.on('error', (error) => {
+        console.error(`❌ Staff EventSource error (${clientId}):`, error.message);
+        clearInterval(keepAliveInterval);
+        client.isAlive = false;
+        RealTimeManager.removeStaffClient(client);
+        try {
+            res.end();
+        } catch (e) {
+            console.warn('⚠️ Error ending response:', e.message);
+        }
+    });
+
+    res.on('error', (error) => {
+        console.error(`❌ Staff response error (${clientId}):`, error.message);
+        clearInterval(keepAliveInterval);
+        client.isAlive = false;
         RealTimeManager.removeStaffClient(client);
     });
 });
@@ -7675,16 +7811,9 @@ app.put("/api/stock-requests/:id", verifyToken, verifyAdmin, async (req, res) =>
 app.put("/api/stock-requests/:id/confirm", verifyToken, verifyAdmin, async (req, res) => {
     try {
         const { id } = req.params;
+        const { productStock } = req.body; // Optional: frontend can send current stock to calculate new stock
         
-        const stockRequest = await StockRequest.findByIdAndUpdate(
-            id,
-            {
-                status: 'confirmed',
-                confirmedDate: new Date(),
-                confirmedBy: req.user._id
-            },
-            { new: true }
-        );
+        const stockRequest = await StockRequest.findById(id);
         
         if (!stockRequest) {
             return res.status(404).json({
@@ -7693,7 +7822,55 @@ app.put("/api/stock-requests/:id/confirm", verifyToken, verifyAdmin, async (req,
             });
         }
         
-        console.log(`✅ Stock request confirmed: ${stockRequest._id}`);
+        console.log(`\n📦 ========== CONFIRMING STOCK REQUEST ==========`);
+        console.log(`Request ID: ${id}`);
+        console.log(`Product: ${stockRequest.productName}`);
+        console.log(`Quantity: ${stockRequest.requestedQuantity}`);
+        
+        // Update the stock request status
+        stockRequest.status = 'confirmed';
+        stockRequest.confirmedDate = new Date();
+        stockRequest.confirmedBy = req.user._id;
+        await stockRequest.save();
+        
+        console.log(`✅ Stock request status updated to confirmed`);
+        
+        // Try to update the actual product stock
+        try {
+            const MenuItem = mongoose.model('MenuItem');
+            
+            // Try to find by productName first
+            let product = await MenuItem.findOne({ 
+                $or: [
+                    { name: stockRequest.productName },
+                    { itemName: stockRequest.productName }
+                ]
+            });
+            
+            if (product) {
+                const currentStock = product.currentStock || 0;
+                const newStock = currentStock + stockRequest.requestedQuantity;
+                
+                console.log(`📊 Product found: ${product.name || product.itemName}`);
+                console.log(`Current stock: ${currentStock} → New stock: ${newStock}`);
+                
+                // Update product stock
+                product.currentStock = newStock;
+                await product.save();
+                
+                console.log(`✅ Product stock updated successfully`);
+                stockRequest.stockUpdatedFlag = true;
+                await stockRequest.save();
+            } else {
+                console.warn(`⚠️ Product not found for: ${stockRequest.productName}`);
+                console.log(`Available product names to check:`, stockRequest.productName);
+            }
+        } catch (updateError) {
+            console.warn(`⚠️ Could not auto-update product stock:`, updateError.message);
+            // Don't fail the request - just log the warning
+        }
+        
+        console.log(`================================================\n`);
         
         res.status(200).json({
             success: true,

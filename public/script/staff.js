@@ -10,22 +10,16 @@ let pendingStockRequests = [];
 let outOfStockItems = [];
 let currentUser = null;
 
-// Track active stock requests with their status
-let activeStockRequests = new Map(); // key: productName, value: { timestamp, quantity, status }
+let activeStockRequests = new Map();
 
-// Flag to prevent multiple submissions
 let isSubmittingStockRequest = false;
 
-// ==================== 🔴 ADMIN NOTIFICATION TRACKING ====================
 let outOfStockNotifications = new Set();
 
-// ==================== 🔴 EVENT SOURCE FOR REAL-TIME UPDATES ====================
 let stockEventSource = null;
 
-// ==================== 🔴 MAXIMUM STOCK LIMIT ====================
 const MAX_STOCK_PER_ITEM = 100;
 
-// ==================== 🍽️ SERVINGWARE INVENTORY ====================
 let servingwareInventory = {
     'plate': { name: 'Plate', current: 100, max: 100, unit: 'piece', minThreshold: 20 },
     'tray': { name: 'Party Tray', current: 100, max: 100, unit: 'piece', minThreshold: 15 },
@@ -41,7 +35,6 @@ let servingwareInventory = {
     'pot': { name: 'Cooking Pot', current: 30, max: 30, unit: 'piece', minThreshold: 5 }
 };
 
-// ==================== 🥩 INGREDIENT INVENTORY ====================
 let ingredientInventory = {
     'pork': { name: 'Pork', current: 50, max: 500, unit: 'kg', minThreshold: 20 },
     'chicken': { name: 'Chicken', current: 40, max: 300, unit: 'kg', minThreshold: 15 },
@@ -64,9 +57,7 @@ let ingredientInventory = {
     'rice': { name: 'Rice', current: 80, max: 200, unit: 'kg', minThreshold: 30 }
 };
 
-// ==================== 🍽️ PRODUCT INGREDIENT MAPPING ====================
 const productIngredientMap = {
-    // ==================== RICE BOWL MEALS ====================
     'Korean Spicy Bulgogi (Pork)': {
         ingredients: { 
             'pork': 0.2, 
@@ -170,8 +161,6 @@ const productIngredientMap = {
         },
         servingware: 'plate'
     },
-
-    // ==================== HOT SIZZLERS ====================
     'Sizzling Pork Sisig': {
         ingredients: { 
             'pork': 0.2, 
@@ -222,8 +211,6 @@ const productIngredientMap = {
         },
         servingware: 'sizzling_plate'
     },
-
-    // ==================== PARTY TRAY ====================
     'Pansit Bihon': {
         ingredients: { 
             'rice_noodles': 0.8,
@@ -355,8 +342,6 @@ const productIngredientMap = {
         },
         servingware: 'plate'
     },
-
-    // ==================== DRINKS (GLASS) ====================
     'Cucumber Lemonade (Glass)': {
         ingredients: { 
             'cucumber': 0.08,
@@ -395,8 +380,6 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-
-    // ==================== DRINKS (PITCHER) ====================
     'Cucumber Lemonade (Pitcher)': {
         ingredients: { 
             'cucumber': 0.25,
@@ -435,8 +418,6 @@ const productIngredientMap = {
         },
         servingware: 'pitcher'
     },
-
-    // ==================== SODA ====================
     'Soda (Mismo) Coke': {
         ingredients: { 
             'coke_syrup': 0.05,
@@ -486,8 +467,6 @@ const productIngredientMap = {
         },
         servingware: 'bottle'
     },
-
-    // ==================== HOT COFFEE ====================
     'Espresso Hot': {
         ingredients: { 
             'coffee_beans': 0.02,
@@ -551,8 +530,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== NON-COFFEE HOT ====================
     'White Chocolate Hot': {
         ingredients: { 
             'white_chocolate_syrup': 0.05,
@@ -569,8 +546,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== HOT CEYLON TEA ====================
     'Hot Ceylon Tea Black': {
         ingredients: { 
             'black_tea': 0.02,
@@ -596,8 +571,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== OVER-ICE COFFEE ====================
     'Iced Café Latte': {
         ingredients: { 
             'espresso': 0.05,
@@ -652,8 +625,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== MILK TEA ====================
     'Milk Tea Regular': {
         ingredients: { 
             'black_tea': 0.03,
@@ -728,8 +699,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== FRAPPE - PREMIUM ====================
     'Matcha Green Tea Frappe': {
         ingredients: { 
             'matcha_powder': 0.02,
@@ -815,8 +784,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== FRAPPE - REGULAR ====================
     'Choco Fudge Frappe': {
         ingredients: { 
             'chocolate_syrup': 0.06,
@@ -859,8 +826,6 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-
-    // ==================== ADDITIONAL MENU ITEMS ====================
     'Sinigang (Pork)': {
         ingredients: { 
             'pork': 0.25, 
@@ -954,14 +919,6 @@ const productIngredientMap = {
         ingredients: { 
             'rice': 0.2,
             'tinapa': 0.05
-        },
-        servingware: 'plate'
-    },
-    'Tuyo Pesto': {
-        ingredients: { 
-            'rice': 0.2,
-            'tuyo': 0.03,
-            'shrimp_paste': 0.02
         },
         servingware: 'plate'
     },
@@ -1069,7 +1026,6 @@ const productIngredientMap = {
     }
 };
 
-// ==================== 🏷️ CATEGORY DISPLAY NAMES ====================
 const categoryDisplayNames = {
     'Rice Bowl Meals': 'Rice Bowl Meals',
     'Hot Sizzlers': 'Hot Sizzlers',
@@ -1083,79 +1039,120 @@ const categoryDisplayNames = {
     'Specialties': 'Specialties'
 };
 
-// ==================== 🖼️ PRODUCT IMAGE MAPPING ====================
 const productImageMap = {
-    'Korean Spicy Bulgogi (Pork)': 'rice/korean_spicy_bulgogi.png',
-    'Korean Salt and Pepper (Pork)': 'rice/korean_salt_pepper_pork.png',
-    'Crispy Pork Lechon Kawali': 'rice/lechon_kawali.png',
-    'Pork Shanghai': 'rice/pork_shanghai.png',
-    'Sinigang (Pork)': 'specialties/sinigang_pork.png',
-    'Sizzling Pork Sisig': 'sizzling/pork_sisig.png',
-    'Sizzling Liempo': 'sizzling/liempo.png',
-    'Sizzling Porkchop': 'sizzling/porkchop.png',
-    'Buttered Honey Chicken': 'rice/buttered_honey_chicken.png',
-    'Buttered Spicy Chicken': 'rice/buttered_spicy_chicken.png',
-    'Chicken Adobo': 'rice/chicken_adobo.png',
-    'Fried Chicken': 'sizzling/fried_chicken.png',
-    'Sizzling Fried Chicken': 'sizzling/fried_chicken.png',
-    'Budget Fried Chicken': 'budget/fried_chicken_Meal.png',
-    'Clubhouse Sandwich': 'snacks/club_house_sandwich.png',
-    'Cream Dory Fish Fillet': 'rice/cream_dory.png',
-    'Fish and Fries': 'snacks/fish_fries.png',
-    'Sinigang (Shrimp)': 'specialties/sinigang_shrimp.png',
-    'Buttered Shrimp': 'specialties/buttered_shrimp.png',
-    'Special Bulalo': 'specialties/bulalo.png',
-    'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)': 'specialties/bulalo.png',
-    'Paknet (Pakbet w/ Bagnet)': 'specialties/paknet.png',
-    'Pancit Bihon (S)': 'party/pancit_bihon_large.png',
-    'Pancit Bihon (M)': 'party/pancit_bihon_large.png',
-    'Pancit Bihon (L)': 'party/pancit_bihon_large.png',
-    'Pancit Canton (S)': 'party/pancit_canton_large.png',
-    'Pancit Canton (M)': 'party/pancit_canton_large.png',
-    'Pancit Canton (L)': 'party/pancit_canton_large.png',
-    'Spaghetti (S)': 'party/spaghetti_large.png',
-    'Spaghetti (M)': 'party/spaghetti_large.png',
-    'Spaghetti (L)': 'party/spaghetti_large.png',
-    'Tinapa Rice': 'budget/Tinapa_fried_rice.png',
-    'Tuyo Pesto': 'budget/Tuyo_pesto.png',
-    'Fried Rice': 'budget/fried_rice.png',
-    'Plain Rice': 'budget/plain_rice.png',
-    'Cheesy Nachos': 'snacks/cheesy_nachos.png',
-    'Nachos Supreme': 'snacks/nachos_supreme.png',
-    'French Fries': 'snacks/french_fries.png',
-    'Cheesy Dynamite Lumpia': 'snacks/Cheesy_dynamite.png',
-    'Lumpiang Shanghai': 'snacks/lumpiang_shanghai.png',
-    'Cucumber Lemonade (Glass)': 'drinks/cucumber_lemonade.png',
-    'Cucumber Lemonade (Pitcher)': 'drinks/cucumber_lemonade.png',
-    'Blue Lemonade (Glass)': 'drinks/blue_lemonade.png',
-    'Blue Lemonade (Pitcher)': 'drinks/blue_lemonade.png',
-    'Red Tea (Glass)': 'drinks/red_tea.png',
-    'Soda (Mismo)': 'drinks/soda_mismo.png',
-    'Soda 1.5L': 'drinks/soda_mismo.png',
-    'Cafe Americano Tall': 'coffee/cafe_americano_grande.png',
-    'Cafe Americano Grande': 'coffee/cafe_americano_grande.png',
-    'Cafe Latte Tall': 'coffee/cafe_latte_grande.png',
-    'Cafe Latte Grande': 'coffee/cafe_latte_grande.png',
-    'Caramel Macchiato Tall': 'coffee/caramel_macchiato_grande.png',
-    'Caramel Macchiato Grande': 'coffee/caramel_macchiato_grande.png',
-    'Milk Tea Regular HC': 'milktea/Milktea_regular.png',
-    'Milk Tea Regular MC': 'milktea/Milktea_regular.png',
-    'Matcha Green Tea HC': 'milktea/Matcha_greentea_HC.png',
-    'Matcha Green Tea MC': 'milktea/Matcha_greentea_HC.png',
-    'Cookies & Cream HC': 'frappe/Cookies_&Cream_HC.png',
-    'Cookies & Cream MC': 'frappe/Cookies_&Cream_HC.png',
-    'Strawberry & Cream HC': 'frappe/Strawberry_Cream_frappe_HC.png',
-    'Mango cheese cake HC': 'frappe/Mango_cheesecake_HC.png'
+    'Korean Spicy Bulgogi (Pork)': '/images/rice/korean_spicy_bulgogi.png',
+    'Korean Salt and Pepper (Pork)': '/images/rice/korean_salt_pepper_pork.png',
+    'Crispy Pork Lechon Kawali': '/images/rice/lechon_kawali.png',
+    'Pork Shanghai': '/images/rice/pork_shanghai.png',
+    'Buttered Honey Chicken': '/images/rice/buttered_honey_chicken.png',
+    'Buttered Spicy Chicken': '/images/rice/buttered_spicy_chicken.png',
+    'Chicken Adobo': '/images/rice/chicken_adobo.png',
+    'Fried Chicken': '/images/sizzling/fried_chicken.png',
+    'Sizzling Fried Chicken': '/images/sizzling/fried_chicken.png',
+    'Budget Fried Chicken': '/images/budget/fried_chicken_Meal.png',
+    'Sinigang (Pork)': '/images/specialties/sinigang_pork.png',
+    'Sizzling Pork Sisig': '/images/sizzling/pork_sisig.png',
+    'Sizzling Liempo': '/images/sizzling/liempo.png',
+    'Sizzling Porkchop': '/images/sizzling/porkchop.png',
+    'Cream Dory Fish Fillet': '/images/rice/cream_dory.png',
+    'Fish and Fries': '/images/snacks/fish_fries.png',
+    'Sinigang (Shrimp)': '/images/specialties/sinigang_shrimp.png',
+    'Buttered Shrimp': '/images/specialties/buttered_shrimp.png',
+    'Special Bulalo': '/images/specialties/bulalo.png',
+    'Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)': '/images/specialties/bulalo.png',
+    'Paknet (Pakbet w/ Bagnet)': '/images/specialties/paknet.png',
+    'Pancit Bihon (S)': '/images/party/pancit_bihon_large.png',
+    'Pancit Bihon (M)': '/images/party/pancit_bihon_large.png',
+    'Pancit Bihon (L)': '/images/party/pancit_bihon_large.png',
+    'Pancit Canton (S)': '/images/party/pancit_canton_large.png',
+    'Pancit Canton (M)': '/images/party/pancit_canton_large.png',
+    'Pancit Canton (L)': '/images/party/pancit_canton_large.png',
+    'Spaghetti (S)': '/images/party/spaghetti_large.png',
+    'Spaghetti (M)': '/images/party/spaghetti_large.png',
+    'Spaghetti (L)': '/images/party/spaghetti_large.png',
+    'Kare-Kare': '/images/party/Kare_Kare.png',
+    'Tinapa Rice': '/images/budget/Tinapa_fried_rice.png',
+    'Tuyo Pesto': '/images/budget/Tuyo_pesto.png',
+    'Fried Rice': '/images/budget/fried_rice.png',
+    'Plain Rice': '/images/budget/plain_rice.png',
+    'Cheesy Nachos': '/images/snacks/cheesy_nachos.png',
+    'Nachos Supreme': '/images/snacks/nachos_supreme.png',
+    'French Fries': '/images/snacks/french_fries.png',
+    'Cheesy Dynamite Lumpia': '/images/snacks/Cheesy_dynamite.png',
+    'Lumpiang Shanghai': '/images/snacks/lumpiang_shanghai.png',
+    'Clubhouse Sandwich': '/images/snacks/club_house_sandwich.png',
+    'Cucumber Lemonade (Glass)': '/images/drinks/cucumber_lemonade.png',
+    'Cucumber Lemonade (Pitcher)': '/images/drinks/cucumber_lemonade.png',
+    'Blue Lemonade (Glass)': '/images/drinks/blue_lemonade.png',
+    'Blue Lemonade (Pitcher)': '/images/drinks/blue_lemonade.png',
+    'Red Tea (Glass)': '/images/drinks/red_tea.png',
+    'Soda (Mismo)': '/images/drinks/soda_mismo.png',
+    'Soda 1.5L': '/images/drinks/soda_mismo.png',
+    'Coke 1.5L': '/images/drinks/soda_mismo.png',
+    'Coke Zero 1.5L': '/images/drinks/soda_mismo.png',
+    'Sprite 1.5L': '/images/drinks/soda_mismo.png',
+    'Royal 1.5L': '/images/drinks/soda_mismo.png',
+    'Coke (Mismo)': '/images/drinks/soda_mismo.png',
+    'Sprite (Mismo)': '/images/drinks/soda_mismo.png',
+    'Royal (Mismo)': '/images/drinks/soda_mismo.png',
+    'Cafe Americano Tall': '/images/coffee/cafe_americano_grande.png',
+    'Cafe Americano Grande': '/images/coffee/cafe_americano_grande.png',
+    'Cafe Latte Tall': '/images/coffee/cafe_latte_grande.png',
+    'Cafe Latte Grande': '/images/coffee/cafe_latte_grande.png',
+    'Caramel Macchiato Tall': '/images/coffee/caramel_macchiato_tall.png',
+    'Caramel Macchiato Grande': '/images/coffee/caramel_macchiato_grande.png',
+    'Caramel Macchiato Hot': '/images/coffee/Caramel_machaitto_Hot.png',
+    'Cappuccino Tall': '/images/coffee/cappuccino_grande.png',
+    'Cappuccino Grande': '/images/coffee/cappuccino_grande.png',
+    'Green Tea Latte Tall': '/images/coffee/green_tea_latte_grande.png',
+    'Green Tea Latte Grande': '/images/coffee/green_tea_latte_grande.png',
+    'Mocha Latte Tall': '/images/coffee/mocha_latte_grande.png',
+    'Mocha Latte Grande': '/images/coffee/mocha_latte_grande.png',
+    'Vanilla Latte Tall': '/images/coffee/vanilla_latte_grande.png',
+    'Vanilla Latte Grande': '/images/coffee/vanilla_latte_grande.png',
+    'White Chocolate Latte Tall': '/images/coffee/white_chocolate_hot.png',
+    'White Chocolate Latte Grande': '/images/coffee/white_chocolate_hot.png',
+    'Dark Chocolate  Tall': '/images/coffee/dark_chocolate_iced.png',
+    'Dark Chocolate Grande': '/images/coffee/dark_chocolate_iced.png',
+    'Black Tea':'/images/coffee/black_tea.png',
+    'Lemon Tea': '/images/coffee/lemon_tea.png',
+    'Peppermint Tea': '/images/coffee/peppermint_tea.png',
+    'Milk Tea Regular HC': '/images/milktea/Milktea_regular.png',
+    'Milk Tea Regular MC': '/images/milktea/Milktea_regular.png',
+    'Matcha Green Tea HC': '/images/milktea/Matcha_greentea_HC.png',
+    'Matcha Green Tea MC': '/images/milktea/Matcha_greentea_HC.png',
+    'Cookies & Cream HC': '/images/milktea/Cookies&Cream_MilkTea.png',
+    'Cookies & Cream MC': '/images/milktea/Cookies&Cream_MilkTea.png',
+    'Caramel HC': '/images/milktea/Caramel_MilkTea.png',
+    'Caramel MC': '/images/milktea/Caramel_MilkTea.png',
+    'Dark Choco HC': '/images/milktea/Dark_Choco_MilkTea.png',
+    'Dark Choco MC': '/images/milktea/Dark_Choco_MilkTea.png',
+    'Okinawa HC': '/images/milktea/Okinawa_MilkTea.png',
+    'Okinawa MC': '/images/milktea/Okinawa_MilkTea.png',
+    'Wintermelon HC': '/images/milktea/Wintermelon_MilkTea.png',
+    'Wintermelon MC': '/images/milktea/Wintermelon_MilkTea.png',
+    'Cookies & Cream HC': '/images/frappe/Cookies_&Cream_HC.png',
+    'Cookies & Cream MC': '/images/frappe/Cookies_&Cream_HC.png',
+    'Strawberry & Cream HC': '/images/frappe/Strawberry_Cream_frappe_HC.png',
+    'Mango cheese cake HC': '/images/frappe/Mango_cheesecake_HC.png',
+    'Cookies & Cream Frappe': '/images/frappe/Cookies_&Cream_Frappe.png',
+    'Strawberry & Cream Frappe': '/images/frappe/Strawberry_Cream_frappe.png',
+    'Mango cheese cake Frappe': '/images/frappe/Mango_cheesecake_Frappe.png',
+    'Rocky Road Frappe': '/images/frappe/Rocky_Road_Frappe.png',
+    'Choco Fudge Frappe': '/images/frappe/Chocofudge_frappe.png',
+    'Choco Mousse Frappe': '/images/frappe/Choco_Mousse_Frappe.png',
+    'Coffee Crumble Frappe': '/images/frappe/Coffee_Crumble_Frappe.png',
+    'Vanilla Cream Frappe': '/images/frappe/Vanilla_Cream_Frappe.png',
+    'Matcha Green Tea Frappe': '/images/frappe/Matcha_Green_Tea_Frappe.png',
+    'Salted Caramel Frappe': '/images/frappe/Salted_Caramel_Frappe.png',
 };
 
 const BACKEND_URL = window.location.origin;
 
-// ==================== 📸 GET PRODUCT IMAGE ====================
 function getProductImage(productName) {
-    return productImageMap[productName] || 'default_food.jpg';
+    return productImageMap[productName] || '/images/default_food.png';
 }
 
-// ==================== 🎯 TOAST NOTIFICATION ====================
 function showToast(message, type = 'success', duration = 3000) {
     const existingToast = document.getElementById('activeToast');
     if (existingToast) {
@@ -1193,7 +1190,6 @@ function showToast(message, type = 'success', duration = 3000) {
     return toast;
 }
 
-// ==================== 👤 GET CURRENT USER ====================
 async function getCurrentUser() {
     try {
         const response = await fetch('/api/user/me', {
@@ -1202,7 +1198,6 @@ async function getCurrentUser() {
         if (response.ok) {
             const data = await response.json();
             currentUser = data.user;
-            console.log('👤 Current user:', currentUser);
             return currentUser;
         }
     } catch (error) {
@@ -1211,13 +1206,8 @@ async function getCurrentUser() {
     return null;
 }
 
-// ==================== LOGOUT HANDLER ====================
 function handleLogout() {
-    console.log('🚪 Logging out staff user...');
-    
-    // Show logout confirmation modal
     showLogoutConfirmation(() => {
-        // On confirm
         try {
             currentOrder = [];
             pendingStockRequests = [];
@@ -1239,8 +1229,8 @@ function handleLogout() {
             showToast('Logging out... Please wait', 'info', 2000);
             
             setTimeout(() => {
-                fetch('/api/auth/logout', {  // Fixed endpoint
-                    method: 'POST',  // Changed from GET to POST
+                fetch('/api/auth/logout', {
+                    method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' }
                 })
@@ -1253,23 +1243,17 @@ function handleLogout() {
             }, 500);
             
         } catch (error) {
-            console.error('❌ Error during logout:', error);
             window.location.href = '/login?logout=true';
         }
     }, () => {
-        // On cancel
-        console.log('🔙 Logout cancelled');
     });
 }
 
-// Logout confirmation modal function
 function showLogoutConfirmation(onConfirm, onCancel) {
-    // Check if modal already exists
     if (document.getElementById('logoutModal')) {
         return;
     }
 
-    // Create modal container
     const modal = document.createElement('div');
     modal.id = 'logoutModal';
     modal.style.cssText = `
@@ -1286,7 +1270,6 @@ function showLogoutConfirmation(onConfirm, onCancel) {
         animation: fadeIn 0.3s ease;
     `;
 
-    // Add animation styles if they don't exist
     if (!document.getElementById('logoutModalStyles')) {
         const style = document.createElement('style');
         style.id = 'logoutModalStyles';
@@ -1303,7 +1286,6 @@ function showLogoutConfirmation(onConfirm, onCancel) {
         document.head.appendChild(style);
     }
 
-    // Create modal content
     const modalContent = document.createElement('div');
     modalContent.style.cssText = `
         background: white;
@@ -1360,7 +1342,6 @@ function showLogoutConfirmation(onConfirm, onCancel) {
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
 
-    // Handle cancel button
     const cancelBtn = document.getElementById('cancelLogoutBtn');
     const confirmBtn = document.getElementById('confirmLogoutBtn');
 
@@ -1374,7 +1355,6 @@ function showLogoutConfirmation(onConfirm, onCancel) {
         if (onConfirm) onConfirm();
     });
 
-    // Handle clicking outside the modal
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             document.body.removeChild(modal);
@@ -1382,7 +1362,6 @@ function showLogoutConfirmation(onConfirm, onCancel) {
         }
     });
 
-    // Handle escape key
     const handleEscape = (e) => {
         if (e.key === 'Escape') {
             document.removeEventListener('keydown', handleEscape);
@@ -1395,10 +1374,7 @@ function showLogoutConfirmation(onConfirm, onCancel) {
     document.addEventListener('keydown', handleEscape);
 }
 
-// ==================== 📋 LOAD ALL MENU ITEMS FROM MONGODB ====================
 async function loadAllMenuItems() {
-    // console.log('📋 Loading menu items from MongoDB...');
-    
     try {
         const response = await fetch('/api/menu', {
             method: 'GET',
@@ -1432,29 +1408,24 @@ async function loadAllMenuItems() {
                 };
                 
                 productCatalog.push(product);
-                // console.log(`📦 Loaded product: ${product.name} (ID: ${product._id}) - Stock: ${currentStock}`);
                 
                 if (currentStock <= 0) {
                     outOfStockItems.push(product.name);
                 }
             });
-            // console.log(`✅ Loaded ${productCatalog.length} products from MongoDB`);
             renderMenu();
             return true;
         }
         
         showToast('❌ Invalid database response', 'error', 3000);
-        // console.error('❌ Invalid response from MongoDB:', result);
         return false;
         
     } catch (error) {
         showToast(`❌ Database error: ${error.message}`, 'error', 3000);
-        // console.error('❌ Error loading menu from MongoDB:', error);
         return false;
     }
 }
 
-// ==================== 🎯 RENDER MENU ====================
 function renderMenu() {
     const container = document.getElementById('menuContainer');
     if (!container) return;
@@ -1496,7 +1467,6 @@ function renderMenu() {
     });
 }
 
-// ==================== 🎯 PRODUCT CARD ====================
 function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'compact-product-card';
@@ -1523,9 +1493,8 @@ function createProductCard(product) {
     const stockColor = product.stock > 0 ? '#28a745' : '#dc3545';
     
     const hasPendingRequest = activeStockRequests.has(product.name);
-    const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">⏳ Request Pending (Waiting for Admin)</span>' : '';
+    const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">Request Pending (Waiting for Admin)</span>' : '';
     
-    // Construct proper image path based on category
     const categoryFolderMap = {
         'Coffee': 'coffee',
         'Milk Tea': 'milktea',
@@ -1540,11 +1509,10 @@ function createProductCard(product) {
     };
     
     const categoryFolder = categoryFolderMap[product.category] || 'images';
-    let imagePath = `/images/${product.image}`;
+    let imagePath = product.image;
     
-    // If product.image doesn't already include the category path, construct it
-    if (product.image && !product.image.includes('/')) {
-        imagePath = `/images/${categoryFolder}/${product.image}`;
+    if (imagePath && !imagePath.startsWith('/')) {
+        imagePath = `/images/${categoryFolder}/${imagePath}`;
     }
     
     card.innerHTML = `
@@ -1564,12 +1532,8 @@ function createProductCard(product) {
     return card;
 }
 
-// ==================== 🔴 ADD ITEM TO ORDER ====================
-// ==================== UPDATE STOCK IN MONGODB ====================
 async function updateStockInMongoDB(productId, newStock) {
     try {
-        // console.log(`🔄 Sending stock update: Product ${productId}, New Stock: ${newStock}`);
-        
         const response = await fetch(`/api/menu/${productId}/stock`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -1578,20 +1542,15 @@ async function updateStockInMongoDB(productId, newStock) {
         });
 
         if (!response.ok) {
-            // console.error(`❌ Failed to update stock for product ${productId}: ${response.status}`);
             const errorData = await response.json();
-            // console.error('Error details:', errorData);
-            showToast(`⚠️ Stock update failed`, 'warning', 2000);
+            showToast(` Stock update failed`, 'warning', 2000);
             return false;
         }
 
         const result = await response.json();
-        // console.log(`✅ Stock PERSISTED in MongoDB for ${productId}: ${newStock} units`);
-        // console.log('Server Response:', result);
         return true;
     } catch (error) {
-        // console.error(`❌ Error updating stock in MongoDB:`, error);
-        showToast(`⚠️ Error updating stock`, 'warning', 2000);
+        showToast(` Error updating stock`, 'warning', 2000);
         return false;
     }
 }
@@ -1608,10 +1567,8 @@ function addItemToOrder(name, price, product = null) {
     
     const existingItem = currentOrder.find(item => item.name === name);
     
-    // Update stock locally
     product.stock--;
     
-    // Update stock in MongoDB asynchronously
     updateStockInMongoDB(product._id, product.stock);
     
     if (existingItem) {
@@ -1627,7 +1584,7 @@ function addItemToOrder(name, price, product = null) {
             subtotal: product.price,
             unit: product.unit,
             _id: product._id,
-            image: product.image || 'default_food.jpg',
+            image: product.image || '/images/default_food.png',
             vatable: product.vatable !== undefined ? product.vatable : true,
             size: 'Regular'
         });
@@ -1646,7 +1603,6 @@ function addItemToOrder(name, price, product = null) {
     updateChange();
 }
 
-// ==================== 🧾 ORDER FUNCTIONS ====================
 function renderOrder() {
     const list = document.getElementById('productlist');
     const subtotalEl = document.getElementById('subtotal');
@@ -1680,14 +1636,12 @@ function removeItemFromOrder(index) {
     if (product) {
         product.stock += item.quantity;
         
-        // Update stock in MongoDB asynchronously
         updateStockInMongoDB(product._id, product.stock);
         
         if (product.stock > 0) {
             product.status = 'in_stock';
             outOfStockItems = outOfStockItems.filter(name => name !== product.name);
             
-            // If stock becomes available, remove from active requests if exists
             if (activeStockRequests.has(product.name)) {
                 activeStockRequests.delete(product.name);
             }
@@ -1711,14 +1665,12 @@ function clearCurrentOrder() {
         if (product) {
             product.stock += item.quantity;
             
-            // Update stock in MongoDB asynchronously
             updateStockInMongoDB(product._id, product.stock);
             
             if (product.stock > 0) {
                 product.status = 'in_stock';
                 outOfStockItems = outOfStockItems.filter(name => name !== product.name);
                 
-                // If stock becomes available, remove from active requests if exists
                 if (activeStockRequests.has(product.name)) {
                     activeStockRequests.delete(product.name);
                 }
@@ -1733,7 +1685,6 @@ function clearCurrentOrder() {
     updateChange();
 }
 
-// ==================== 💰 PAYMENT CONFIRMATION ====================
 function showOrderConfirmation() {
     if (!currentOrder || currentOrder.length === 0) {
         alert("No items in order");
@@ -1755,20 +1706,17 @@ function showOrderConfirmation() {
         return;
     }
     
-    // Show the payment confirmation modal
     const paymentModal = document.getElementById('paymentModal');
     if (paymentModal) {
         paymentModal.style.display = 'block';
     }
 }
 
-// ==================== 💰 ORDER TYPE FUNCTIONS ====================
 function setDineIn() {
     orderType = "Dine In";
     const display = document.getElementById("orderTypeDisplay");
     if (display) display.textContent = orderType;
     
-    // Enable table number input for dine in
     const tableInput = document.getElementById('tableNumber');
     if (tableInput) {
         tableInput.disabled = false;
@@ -1787,7 +1735,6 @@ function setTakeout() {
     const display = document.getElementById("orderTypeDisplay");
     if (display) display.textContent = orderType;
     
-    // Disable and clear table number input for takeout
     const tableInput = document.getElementById('tableNumber');
     if (tableInput) {
         tableInput.disabled = true;
@@ -1804,12 +1751,9 @@ function setTakeout() {
 function setTableNumber() {
     const input = document.getElementById('tableNumber');
     tableNumber = input.value.trim();
-    if (tableNumber) {
-    }
     updatePayButtonState();
 }
 
-// ==================== 💰 PAYMENT FUNCTIONS ====================
 function selectPaymentMethod(method) {
     selectedPaymentMethod = method;
     const display = document.getElementById("paymentMethodDisplay");
@@ -1817,7 +1761,6 @@ function selectPaymentMethod(method) {
         display.textContent = method === 'cash' ? 'Cash' : 'GCash';
     }
     
-    // Highlight selected button
     document.querySelectorAll('.payment-method-btn').forEach(btn => {
         if (method === 'cash' && btn.id === 'cash-btn') {
             btn.style.background = '#007bff';
@@ -1828,12 +1771,10 @@ function selectPaymentMethod(method) {
         }
     });
     
-    // Handle payment input based on method
     const paymentInput = document.getElementById('inputPayment');
     
     if (paymentInput) {
         if (method === 'cash') {
-            // Enable payment input for cash
             paymentInput.disabled = false;
             paymentInput.style.backgroundColor = 'white';
             paymentInput.style.opacity = '1';
@@ -1842,7 +1783,6 @@ function selectPaymentMethod(method) {
             paymentInput.value = '';
             paymentAmount = 0;
         } else {
-            // Disable payment input for GCash
             paymentInput.disabled = true;
             paymentInput.style.backgroundColor = '#f0f0f0';
             paymentInput.style.opacity = '0.7';
@@ -1861,7 +1801,6 @@ function updatePaymentAmount() {
     const paymentInput = document.getElementById('inputPayment');
     if (!paymentInput) return;
     
-    // Only update from input if method is cash
     if (selectedPaymentMethod === 'cash') {
         paymentAmount = parseFloat(paymentInput.value) || 0;
     }
@@ -1893,7 +1832,6 @@ function updateChange() {
     }
 }
 
-// ==================== 💰 UPDATE PAY BUTTON STATE ====================
 function updatePayButtonState() {
     const payButton = document.getElementById('payment-btn');
     if (!payButton) return;
@@ -1903,17 +1841,14 @@ function updatePayButtonState() {
     const hasOrderType = orderType && orderType !== "None";
     const hasPaymentMethod = selectedPaymentMethod;
     
-    // For GCash: always valid for payment (no amount needed)
-    // For Cash: need payment amount >= total
     let canPay = false;
     
     if (selectedPaymentMethod === 'gcash') {
-        canPay = true; // GCash can always pay immediately
+        canPay = true;
     } else if (selectedPaymentMethod === 'cash') {
-        canPay = paymentAmount >= total && paymentAmount > 0; // Cash needs sufficient amount
+        canPay = paymentAmount >= total && paymentAmount > 0;
     }
     
-    // Special case: Dine In requires table number
     let tableValid = true;
     if (orderType === "Dine In") {
         const tableInput = document.getElementById('tableNumber');
@@ -1921,21 +1856,16 @@ function updatePayButtonState() {
         tableValid = tableNumber && tableNumber.trim() !== '';
     }
     
-    // Enable pay button only if all conditions are met
     payButton.disabled = !(hasItems && hasOrderType && hasPaymentMethod && canPay && tableValid);
     
-    // Visual feedback
     payButton.style.opacity = payButton.disabled ? '0.5' : '1';
     payButton.style.backgroundColor = payButton.disabled ? '#6c757d' : '#28a745';
     payButton.style.cursor = payButton.disabled ? 'not-allowed' : 'pointer';
     payButton.style.pointerEvents = payButton.disabled ? 'none' : 'auto';
 }
 
-// ==================== 💰 PROCESS PAYMENT ====================
-// ==================== CUSTOM PAYMENT CONFIRMATION MODAL ====================
 function showPaymentConfirmation(paymentDetails) {
     return new Promise((resolve) => {
-        // Create modal overlay
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
@@ -1950,7 +1880,6 @@ function showPaymentConfirmation(paymentDetails) {
             z-index: 10000;
         `;
         
-        // Create modal container
         const modal = document.createElement('div');
         modal.style.cssText = `
             background: white;
@@ -1962,7 +1891,6 @@ function showPaymentConfirmation(paymentDetails) {
             font-family: Arial, sans-serif;
         `;
         
-        // Create title
         const title = document.createElement('h2');
         title.textContent = 'Confirm Payment';
         title.style.cssText = `
@@ -1972,7 +1900,6 @@ function showPaymentConfirmation(paymentDetails) {
             font-size: 20px;
         `;
         
-        // Create details container
         const details = document.createElement('div');
         details.style.cssText = `
             background: #f5f5f5;
@@ -2019,7 +1946,6 @@ function showPaymentConfirmation(paymentDetails) {
         
         details.innerHTML = detailsHTML;
         
-        // Create buttons container
         const buttonsContainer = document.createElement('div');
         buttonsContainer.style.cssText = `
             display: flex;
@@ -2027,7 +1953,6 @@ function showPaymentConfirmation(paymentDetails) {
             justify-content: space-between;
         `;
         
-        // Confirm button
         const confirmBtn = document.createElement('button');
         confirmBtn.textContent = '✓ Confirm';
         confirmBtn.style.cssText = `
@@ -2049,7 +1974,6 @@ function showPaymentConfirmation(paymentDetails) {
             resolve(true);
         };
         
-        // Cancel button
         const cancelBtn = document.createElement('button');
         cancelBtn.textContent = '✕ Cancel';
         cancelBtn.style.cssText = `
@@ -2071,7 +1995,6 @@ function showPaymentConfirmation(paymentDetails) {
             resolve(false);
         };
         
-        // Assemble modal
         buttonsContainer.appendChild(confirmBtn);
         buttonsContainer.appendChild(cancelBtn);
         
@@ -2082,18 +2005,11 @@ function showPaymentConfirmation(paymentDetails) {
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
         
-        // Focus on confirm button
         confirmBtn.focus();
     });
 }
 
 async function Payment() {
-    console.log('💳 === PAYMENT PROCESS STARTED ===');
-    console.log('Current order items:', currentOrder.length);
-    console.log('Order type:', orderType);
-    console.log('Payment method:', selectedPaymentMethod);
-    console.log('Payment amount:', paymentAmount);
-    
     if (!currentOrder.length) {
         alert("Please add items to order");
         return;
@@ -2120,7 +2036,6 @@ async function Payment() {
     
     const total = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    // For Cash, validate payment amount
     if (selectedPaymentMethod === 'cash' && paymentAmount < total) {
         alert(`Insufficient payment. Please enter at least ₱${total.toFixed(2)}`);
         return;
@@ -2128,7 +2043,6 @@ async function Payment() {
     
     const change = selectedPaymentMethod === 'cash' ? paymentAmount - total : 0;
     
-    // Show custom payment confirmation modal
     const paymentConfirmed = await showPaymentConfirmation({
         orderType: orderType,
         tableNumber: tableNumber,
@@ -2143,13 +2057,6 @@ async function Payment() {
     }
     
     try {
-        // 1️⃣ SAVE ORDER TO DATABASE
-        console.log('🔄 Validating payment data...');
-        console.log('Payment method selected:', selectedPaymentMethod);
-        console.log('Payment amount entered:', paymentAmount);
-        console.log('Order total:', total);
-        
-        // ✅ Map GCash to 'online' for valid enum value
         const paymentMethod = selectedPaymentMethod === 'gcash' ? 'online' : selectedPaymentMethod;
         
         const orderPayload = {
@@ -2160,7 +2067,7 @@ async function Payment() {
                 price: item.price,
                 quantity: item.quantity,
                 size: item.size || 'Regular',
-                image: item.image || 'default_food.jpg',
+                image: item.image || '/images/default_food.png',
                 vatable: item.vatable !== undefined ? item.vatable : true
             })),
             total: total,
@@ -2173,9 +2080,6 @@ async function Payment() {
             notes: ''
         };
         
-        console.log('💾 Prepared order payload:', orderPayload);
-        console.log('📦 Sending to /api/orders endpoint...');
-        
         const saveResponse = await fetch('/api/orders', {
             method: 'POST',
             headers: {
@@ -2186,15 +2090,6 @@ async function Payment() {
             body: JSON.stringify(orderPayload)
         });
         
-        console.log('📨 Response received:', {
-            status: saveResponse.status,
-            statusText: saveResponse.statusText,
-            ok: saveResponse.ok,
-            headers: {
-                'content-type': saveResponse.headers.get('content-type')
-            }
-        });
-        
         if (!saveResponse.ok) {
             let errorMessage = 'Failed to save order';
             try {
@@ -2203,49 +2098,26 @@ async function Payment() {
             } catch (e) {
                 errorMessage = `Server error: ${saveResponse.status} ${saveResponse.statusText}`;
             }
-            console.error('❌ Order save failed:', errorMessage);
             throw new Error(errorMessage);
         }
         
         const savedOrder = await saveResponse.json();
-        console.log('✅ Order saved successfully:', savedOrder);
         
-        // Show success message
         showToast('✅ Order saved! Preparing receipt...', 'success', 2000);
         
-        // 2️⃣ Generate and print receipt
         const receiptNumber = `RCP-${Date.now().toString().slice(-8)}`;
         const gcashRef = selectedPaymentMethod === 'gcash' ? `GCASH-${Date.now().toString().slice(-8)}` : '';
         
-        // Create receipt HTML
         const receiptHTML = generateReceiptHTML(receiptNumber, total, change, gcashRef);
-        console.log('📄 Receipt HTML generated, length:', receiptHTML.length);
         
-        // Print receipt
-        console.log('🖨️ Initiating print...');
         printReceipt(receiptHTML);
         
-        // 3️⃣ Clear order completely after a short delay to ensure print dialog appears
         setTimeout(() => {
             clearOrderAfterPayment();
             showToast('✅ Order completed! Ready for new order.', 'success', 3000);
         }, 500);
                
     } catch (error) {
-        console.error('❌ === PAYMENT ERROR ===');
-        console.error('Error type:', error.constructor.name);
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
-        
-        // Log more details for debugging
-        if (error instanceof TypeError) {
-            console.error('🔴 This is likely a network error (CORS, server down, etc.)');
-        }
-        if (error instanceof SyntaxError) {
-            console.error('🔴 Response parsing error - invalid JSON from server');
-        }
-        
-        // Show user-friendly error message
         let userMessage = error.message;
         if (error.message.includes('NetworkError') || error instanceof TypeError) {
             userMessage = 'Network error: Server is not responding. Please check if server is running.';
@@ -2259,18 +2131,14 @@ async function Payment() {
             userMessage = 'Order has no items. Please add items to the order.';
         }
         
-        console.error('Final error message to user:', userMessage);
         showToast(`❌ ${userMessage}`, 'error', 4000);
     }
 }
 
-// ==================== 🧹 CLEAR ORDER AFTER PAYMENT ====================
 function clearOrderAfterPayment() {
-    // Clear current order
     currentOrder = [];
     paymentAmount = 0;
     
-    // Reset payment input
     const paymentInput = document.getElementById('inputPayment');
     if (paymentInput) {
         paymentInput.value = '';
@@ -2281,7 +2149,6 @@ function clearOrderAfterPayment() {
         paymentInput.placeholder = 'Select Cash first';
     }
     
-    // Reset table number input
     const tableInput = document.getElementById('tableNumber');
     if (tableInput) {
         tableInput.value = '';
@@ -2292,13 +2159,11 @@ function clearOrderAfterPayment() {
         tableInput.placeholder = 'Select Dine In first';
     }
     
-    // Reset payment method
     selectedPaymentMethod = null;
     document.querySelectorAll('.payment-method-btn').forEach(btn => {
         btn.style.background = '#6c757d';
     });
     
-    // Reset displays
     const paymentMethodDisplay = document.getElementById("paymentMethodDisplay");
     if (paymentMethodDisplay) paymentMethodDisplay.textContent = "None";
     
@@ -2311,16 +2176,13 @@ function clearOrderAfterPayment() {
         changeEl.style.color = '#666';
     }
     
-    // Reset order type
     orderType = null;
     tableNumber = null;
     
-    // Update UI
     renderOrder();
     updatePayButtonState();
 }
 
-// ==================== 🧾 GENERATE RECEIPT HTML ====================
 function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
     const timestamp = new Date();
     const dateStr = timestamp.toLocaleDateString('en-US', { 
@@ -2342,10 +2204,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
         subtotal += itemTotal;
         const itemName = item.itemName || item.name;
         
-        // Split item name for better formatting
-        const nameParts = itemName.split(' ');
-        let formattedName = itemName;
-        
         itemsHTML += `
             <div class="receipt-item">
                 <span class="item-name">${itemName}</span>
@@ -2354,7 +2212,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
         `;
     });
     
-    // VAT Computation (12%) - VAT INCLUSIVE
     const totalDue = subtotal;
     const vatAmount = totalDue * (0.12 / 1.12);
     const vatableSales = totalDue - vatAmount;
@@ -2387,7 +2244,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
         <div class="info-row">Order Type: Takeout</div>
     `;
     
-    // Generate transaction number
     const transNumber = `TRX-${Math.floor(Math.random() * 100000000)}`;
     const receiptDateTime = `${timestamp.getFullYear()}${(timestamp.getMonth()+1).toString().padStart(2,'0')}${timestamp.getDate().toString().padStart(2,'0')}-${timeStr.replace(':','')}-00000`;
     
@@ -2426,7 +2282,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                     line-height: 1.4;
                 }
                 
-                /* HEADER - Center aligned */
                 .header {
                     text-align: center;
                     margin-bottom: 10px;
@@ -2442,20 +2297,17 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                     margin: 1px 0;
                 }
                 
-                /* Divider */
                 .divider {
                     border-top: 1px dashed #000;
                     margin: 8px 0;
                 }
                 
-                /* Info Section - Justified */
                 .info-row {
                     display: flex;
                     justify-content: space-between;
                     margin: 2px 0;
                 }
                 
-                /* Items Section - Justified */
                 .items-header {
                     text-align: left;
                     margin: 5px 0 2px 0;
@@ -2479,7 +2331,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                     flex: 1;
                 }
                 
-                /* Totals Section - Justified */
                 .summary-row {
                     display: flex;
                     justify-content: space-between;
@@ -2491,14 +2342,12 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                     margin-top: 5px;
                 }
                 
-                /* Payment Section - Justified */
                 .payment-row {
                     display: flex;
                     justify-content: space-between;
                     margin: 2px 0;
                 }
                 
-                /* VAT Section - Justified */
                 .vat-header {
                     text-align: left;
                     margin: 5px 0 2px 0;
@@ -2510,7 +2359,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                     margin: 2px 0;
                 }
                 
-                /* Footer - Center aligned */
                 .footer {
                     text-align: center;
                     margin-top: 10px;
@@ -2525,7 +2373,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                     font-size: 10px;
                 }
                 
-                /* Ensure proper spacing */
                 .section-title {
                     text-align: left;
                     margin: 5px 0 2px 0;
@@ -2550,7 +2397,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
         </head>
         <body>
             <div class="receipt-container">
-                <!-- HEADER - CENTERED -->
                 <div class="header">
                     <div class="restaurant-name">GRAY COUNTRYSIDE CAFE</div>
                     <div>JD Building, Crossing, Norzagaray,</div>
@@ -2561,7 +2407,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                 
                 <div class="divider"></div>
                 
-                <!-- RECEIPT INFO - JUSTIFIED -->
                 <div class="info-row">
                     <span>RECEIPT</span>
                 </div>
@@ -2577,22 +2422,18 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                 
                 <div class="divider"></div>
                 
-                <!-- ORDER TYPE - JUSTIFIED -->
                 ${tableInfo}
                 
                 <div class="divider"></div>
                 
-                <!-- ITEMS HEADER -->
                 <div class="items-header">Items:</div>
                 
-                <!-- ORDER ITEMS - JUSTIFIED -->
                 <div>
                     ${itemsHTML}
                 </div>
                 
                 <div class="divider"></div>
                 
-                <!-- TOTALS - JUSTIFIED -->
                 <div class="summary-row">
                     <span>SUB-TOTAL</span>
                     <span>PHP ${totalDue.toFixed(2)}</span>
@@ -2604,13 +2445,11 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                 
                 <div class="divider"></div>
                 
-                <!-- PAYMENT - JUSTIFIED -->
                 <div class="section-title">Payment:</div>
                 ${changeDisplay}
                 
                 <div class="divider"></div>
                 
-                <!-- VAT BREAKDOWN - JUSTIFIED -->
                 <div class="vat-header">VAT Breakdown:</div>
                 <div class="vat-row">
                     <span>VATable Sales</span>
@@ -2631,7 +2470,6 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
                 
                 <div class="divider"></div>
                 
-                <!-- FOOTER - CENTERED -->
                 <div class="footer">
                     <div class="thank-you">THANK YOU. PLEASE COME AGAIN.</div>
                     <div class="footer-small">${receiptDateTime}</div>
@@ -2642,59 +2480,42 @@ function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
     `;
 }
 
-// ==================== 🖨️ PRINT RECEIPT ====================
 function printReceipt(receiptHTML) {
     try {
-        console.log('🖨️ Preparing receipt for printing...');
-        
-        // Create a new window with specific features
         const printWindow = window.open('', 'receipt_' + Date.now(), 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no');
         
         if (!printWindow || printWindow.closed) {
-            console.error('❌ Print window blocked by browser');
             showToast('Print window blocked. Please allow popups in browser settings.', 'error', 3000);
             return;
         }
         
-        console.log('✅ Print window opened successfully');
-        
-        // Write content to the new window
         printWindow.document.open();
         printWindow.document.write(receiptHTML);
         printWindow.document.close();
         
-        // Function to handle print
         const triggerPrint = () => {
-            console.log('�️ Triggering print dialog...');
             try {
                 printWindow.focus();
                 printWindow.print();
-                console.log('✅ Print dialog opened');
             } catch (err) {
-                console.error('❌ Print trigger error:', err);
             }
         };
         
-        // Try to print once document is ready
         let printAttempts = 0;
         const maxAttempts = 5;
         
         const printInterval = setInterval(() => {
             printAttempts++;
             
-            // Check if window is still open and content is loaded
             if (printWindow && !printWindow.closed && printWindow.document.readyState === 'complete') {
                 clearInterval(printInterval);
-                console.log('📄 Document ready, printing now...');
                 setTimeout(triggerPrint, 300);
             } else if (printAttempts >= maxAttempts) {
                 clearInterval(printInterval);
-                console.log('⏱️ Max attempts reached, printing anyway...');
                 setTimeout(triggerPrint, 300);
             }
         }, 200);
         
-        // Ensure print is triggered even if readyState check fails
         setTimeout(() => {
             if (printWindow && !printWindow.closed) {
                 clearInterval(printInterval);
@@ -2702,34 +2523,17 @@ function printReceipt(receiptHTML) {
             }
         }, 1500);
         
-        // Close window after print (handle browser print dialog close)
-        if (printWindow.onbeforeunload === undefined) {
-            printWindow.onbeforeunload = () => {
-                console.log('✅ Print window closing');
-            };
-        }
-        
-        console.log('✅ Print receipt setup completed');
-        
     } catch (error) {
-        console.error('❌ Print receipt error:', error);
         showToast(`Print error: ${error.message}`, 'error', 3000);
     }
 }
 
-// ==================== 📦 STOCK REQUEST FUNCTIONS ====================
-// Check if product has pending request
 function hasPendingRequest(productName) {
     return activeStockRequests.has(productName);
 }
 
 function requestStock(productId) {
-    // console.log('🛒 Requesting stock for ID:', productId);
-    
-    // Get the product name from the page (from the table row)
-    // The productId is a numeric ID, we need to find the actual product name
     const stocksData = [
-        // Rice Bowl Meals
         { id: 1, name: "Korean Spicy Bulgogi (Pork)" },
         { id: 2, name: "Korean Salt and Pepper (Pork)" },
         { id: 3, name: "Crispy Pork Lechon Kawali" },
@@ -2738,14 +2542,10 @@ function requestStock(productId) {
         { id: 6, name: "Buttered Spicy Chicken" },
         { id: 7, name: "Chicken Adobo" },
         { id: 8, name: "Pork Shanghai" },
-        
-        // Hot Sizzlers
         { id: 9, name: "Sizzling Pork Sisig" },
         { id: 10, name: "Sizzling Liempo" },
         { id: 11, name: "Sizzling Porkchop" },
         { id: 12, name: "Sizzling Fried Chicken" },
-        
-        // Party Trays
         { id: 13, name: "Pansit Bihon (S)" },
         { id: 14, name: "Pansit Bihon (M)" },
         { id: 15, name: "Pansit Bihon (L)" },
@@ -2755,253 +2555,273 @@ function requestStock(productId) {
         { id: 19, name: "Creamy Carbonara" },
         { id: 20, name: "Lumpia Shanghai" },
         { id: 21, name: "Chicken Buffalo Wings" },
-        
-        // Budget Meals
-        { id: 22, name: "Budget Fried Chicken" },
-        { id: 23, name: "Tinapa Rice" },
-        { id: 24, name: "Tuyo Pesto" },
-        { id: 25, name: "Fried Rice" },
-        { id: 26, name: "Plain Rice" },
-        
-        // Snacks & Appetizers
-        { id: 27, name: "Cheesy Nachos" },
-        { id: 28, name: "Nachos Supreme" },
-        { id: 29, name: "French Fries" },
-        { id: 30, name: "Cheesy Dynamite Lumpia" },
-        { id: 31, name: "Clubhouse Sandwich" },
-        { id: 32, name: "Fish and Fries" },
-        
-        // Drinks
-        { id: 33, name: "Cucumber Lemonade (Glass)" },
-        { id: 34, name: "Cucumber Lemonade (Pitcher)" },
-        { id: 35, name: "Blue Lemonade (Glass)" },
-        { id: 36, name: "Blue Lemonade (Pitcher)" },
-        { id: 37, name: "Red Tea (Glass)" },
-        { id: 38, name: "Calamansi Juice (Glass)" },
-        { id: 39, name: "Calamansi Juice (Pitcher)" },
-        { id: 40, name: "Soda (Mismo)" },
-        { id: 41, name: "Soda 1.5L Coke" },
-        { id: 42, name: "Soda 1.5L Sprite" },
-        { id: 43, name: "Soda 1.5L Royal" },
-        
-        // Coffee
-        { id: 44, name: "Cafe Americano" },
-        { id: 45, name: "Cafe Americano Tall" },
-        { id: 46, name: "Cafe Americano Grande" },
-        { id: 47, name: "Cafe Latte" },
-        { id: 48, name: "Cafe Latte Tall" },
-        { id: 49, name: "Cafe Latte Grande" },
-        { id: 50, name: "Caramel Macchiato" },
-        { id: 51, name: "Caramel Macchiato Tall" },
-        { id: 52, name: "Caramel Macchiato Grande" },
-        { id: 53, name: "Espresso Hot" },
-        { id: 54, name: "Cappuccino Hot" },
-        { id: 55, name: "Mocha Latte Hot" },
-        
-        // Milk Tea
-        { id: 56, name: "Milk Tea Regular HC" },
-        { id: 57, name: "Milk Tea Regular MC" },
-        { id: 58, name: "Caramel Milk Tea" },
-        { id: 59, name: "Cookies & Cream Milk Tea" },
-        { id: 60, name: "Dark Choco Milk Tea" },
-        { id: 61, name: "Okinawa Milk Tea" },
-        { id: 62, name: "Wintermelon Milk Tea" },
-        { id: 63, name: "Matcha Green Tea HC" },
-        { id: 64, name: "Matcha Green Tea MC" },
-        
-        // Frappe
-        { id: 65, name: "Matcha Green Tea Frappe" },
-        { id: 66, name: "Salted Caramel Frappe" },
-        { id: 67, name: "Strawberry Cheesecake Frappe" },
-        { id: 68, name: "Mango Cheesecake Frappe" },
-        { id: 69, name: "Strawberry Cream Frappe" },
-        { id: 70, name: "Cookies & Cream Frappe" },
-        { id: 71, name: "Rocky Road Frappe" },
-        { id: 72, name: "Choco Fudge Frappe" },
-        { id: 73, name: "Choco Mousse Frappe" },
-        { id: 74, name: "Coffee Crumble Frappe" },
-        { id: 75, name: "Vanilla Cream Frappe" },
-        
-        // Specialties
-        { id: 76, name: "Special Bulalo" },
-        { id: 77, name: "Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)" },
-        { id: 78, name: "Paknet (Pakbet w/ Bagnet)" },
-        { id: 79, name: "Sinigang (Pork)" },
-        { id: 80, name: "Sinigang (Shrimp)" },
-        { id: 81, name: "Buttered Shrimp" },
-        { id: 82, name: "Kare-Kare" }
+        { id: 28, name: "Cheesy Nachos" },
+        { id: 29, name: "Nachos Supreme" },
+        { id: 30, name: "French Fries" },
+        { id: 31, name: "Cheesy Dynamite Lumpia" },
+        { id: 32, name: "Clubhouse Sandwich" },
+        { id: 33, name: "Fish and Fries" },
+        { id: 34, name: "Cucumber Lemonade (Glass)" },
+        { id: 35, name: "Cucumber Lemonade (Pitcher)" },
+        { id: 36, name: "Blue Lemonade (Glass)" },
+        { id: 37, name: "Blue Lemonade (Pitcher)" },
+        { id: 38, name: "Red Tea (Glass)" },
+        { id: 39, name: "Calamansi Juice (Glass)" },
+        { id: 40, name: "Calamansi Juice (Pitcher)" },
+        { id: 41, name: "Soda (Mismo)" },
+        { id: 42, name: "Soda 1.5L Coke" },
+        { id: 43, name: "Soda 1.5L Sprite" },
+        { id: 44, name: "Soda 1.5L Royal" },
+        { id: 45, name: "Cafe Americano" },
+        { id: 46, name: "Cafe Americano Tall" },
+        { id: 47, name: "Cafe Americano Grande" },
+        { id: 48, name: "Cafe Latte" },
+        { id: 49, name: "Cafe Latte Tall" },
+        { id: 50, name: "Cafe Latte Grande" },
+        { id: 51, name: "Caramel Macchiato" },
+        { id: 52, name: "Caramel Macchiato Tall" },
+        { id: 53, name: "Caramel Macchiato Grande" },
+        { id: 54, name: "Espresso Hot" },
+        { id: 55, name: "Cappuccino Hot" },
+        { id: 56, name: "Mocha Latte Hot" },
+        { id: 57, name: "Milk Tea Regular HC" },
+        { id: 58, name: "Milk Tea Regular MC" },
+        { id: 59, name: "Caramel Milk Tea" },
+        { id: 60, name: "Cookies & Cream Milk Tea" },
+        { id: 61, name: "Dark Choco Milk Tea" },
+        { id: 62, name: "Okinawa Milk Tea" },
+        { id: 63, name: "Wintermelon Milk Tea" },
+        { id: 64, name: "Matcha Green Tea HC" },
+        { id: 65, name: "Matcha Green Tea MC" },
+        { id: 66, name: "Matcha Green Tea Frappe" },
+        { id: 67, name: "Salted Caramel Frappe" },
+        { id: 68, name: "Strawberry Cheesecake Frappe" },
+        { id: 69, name: "Mango Cheesecake Frappe" },
+        { id: 70, name: "Strawberry Cream Frappe" },
+        { id: 71, name: "Cookies & Cream Frappe" },
+        { id: 72, name: "Rocky Road Frappe" },
+        { id: 73, name: "Choco Fudge Frappe" },
+        { id: 74, name: "Choco Mousse Frappe" },
+        { id: 75, name: "Coffee Crumble Frappe" },
+        { id: 76, name: "Vanilla Cream Frappe" },
+        { id: 81, name: "Fried Chicken" },
+        { id: 82, name: "Budget Fried Chicken" },
+        { id: 83, name: "Tinapa Rice" },
+        { id: 84, name: "Tuyo Pesto" },
+        { id: 85, name: "Fried Rice" },
+        { id: 86, name: "Plain Rice" },
+        { id: 87, name: "Sinigang (Pork)" },
+        { id: 88, name: "Sinigang (Shrimp)" },
+        { id: 89, name: "Paknet (Pakbet w/ Bagnet)" },
+        { id: 90, name: "Buttered Shrimp" },
+        { id: 91, name: "Special Bulalo (good for 2-3 Persons)" },
+        { id: 92, name: "Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)" }
     ];
     
-    // Find product name by ID
     const stockItem = stocksData.find(item => item.id === productId);
     const productName = stockItem ? stockItem.name : null;
     
     if (!productName) {
-        // console.error('❌ Product not found with ID:', productId);
         showToast('❌ Product not found', 'error', 3000);
         return;
     }
     
-    // Check if there's already a pending request for this product
     if (hasPendingRequest(productName)) {
-        showToast(`⏳ Request already pending for ${productName}. Please wait for admin to process.`, 'warning', 3000);
+        showPendingRequestAlert(productName);
         return;
     }
     
-    // console.log('✅ Found product:', productName);
-    
-    // Show custom modal for quantity input
     showStockRequestModal(productName);
 }
 
-// ==================== CUSTOM STOCK REQUEST MODAL ====================
-function showStockRequestModal(productName) {
-    // Remove any existing modal
-    const existingModal = document.getElementById('stockRequestModal');
-    if (existingModal) existingModal.remove();
+function showPendingRequestAlert(productName) {
+    const existingAlert = document.getElementById('pendingRequestAlert');
+    if (existingAlert) existingAlert.remove();
     
-    // Create modal HTML
-    const modalHTML = `
-        <div id="stockRequestModal" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        ">
-            <div style="
-                background: white;
-                border-radius: 12px;
-                padding: 30px;
-                width: 90%;
-                max-width: 400px;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-                position: relative;
-            ">
-                <!-- Close Button -->
-                <button onclick="closeStockRequestModal()" style="
-                    position: absolute;
-                    top: 15px;
-                    right: 15px;
-                    background: none;
-                    border: none;
-                    font-size: 24px;
-                    color: #999;
-                    cursor: pointer;
-                    padding: 0;
-                    width: 30px;
-                    height: 30px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 0.2s ease;
-                " onmouseover="this.style.color='#333'" onmouseout="this.style.color='#999'">
-                    ✕
-                </button>
-                
-                <h2 style="margin: 0 0 20px; color: #333; font-size: 20px;">📦 Stock Request</h2>
-                
-                <p style="margin: 0 0 15px; color: #666; font-size: 14px;">
-                    Enter quantity to request for:
-                </p>
-                
-                <div style="
-                    background: #f5f5f5;
-                    padding: 12px;
-                    border-radius: 8px;
-                    margin-bottom: 20px;
-                    font-weight: bold;
-                    color: #0b5e8a;
-                    text-align: center;
-                ">
-                    ${productName}
-                </div>
-                
-                <input type="number" id="quantityInput" placeholder="Enter quantity" value="10" 
-                    style="
-                        width: 100%;
-                        padding: 12px;
-                        border: 2px solid #ddd;
-                        border-radius: 8px;
-                        font-size: 16px;
-                        box-sizing: border-box;
-                        margin-bottom: 20px;
-                    "
-                    min="1" 
-                    max="1000"
-                />
-                
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="closeStockRequestModal()" style="
-                        flex: 1;
-                        background: #f0f0f0;
-                        color: #666;
-                        border: none;
-                        padding: 12px;
-                        border-radius: 8px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        font-weight: bold;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
-                        Cancel
-                    </button>
-                    
-                    <button onclick="submitStockRequestWithConfirm('${productName}')" style="
-                        flex: 1;
-                        background: #28a745;
-                        color: white;
-                        border: none;
-                        padding: 12px;
-                        border-radius: 8px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        font-weight: bold;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='#218838'" onmouseout="this.style.background='#28a745'">
-                        ✓ Submit
-                    </button>
-                </div>
-            </div>
-        </div>
+    const overlay = document.createElement('div');
+    overlay.id = 'pendingRequestAlert';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
     `;
     
-    // Insert modal into DOM
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    `;
     
-    // Focus on input and select default value
-    setTimeout(() => {
-        const input = document.getElementById('quantityInput');
-        input.focus();
-        input.select();
-    }, 100);
+    const icon = document.createElement('div');
+    icon.textContent = '⏳';
+    icon.style.cssText = `
+        font-size: 48px;
+        margin-bottom: 15px;
+    `;
     
-    // Auto-submit on Enter key or when user finishes input
-    const input = document.getElementById('quantityInput');
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            submitStockRequestWithConfirm(productName);
+    const title = document.createElement('h2');
+    title.textContent = 'Request Already Pending';
+    title.style.cssText = `
+        margin: 0 0 10px 0;
+        color: #ff9800;
+        font-size: 20px;
+    `;
+    
+    const message = document.createElement('p');
+    message.textContent = `A stock request for "${productName}" is already pending. Please wait for the admin to process it.`;
+    message.style.cssText = `
+        margin: 0 0 25px 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+    `;
+    
+    const okBtn = document.createElement('button');
+    okBtn.textContent = '✓ OK';
+    okBtn.style.cssText = `
+        padding: 12px 30px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+        width: 100%;
+    `;
+    okBtn.onmouseover = () => okBtn.style.background = '#f57c00';
+    okBtn.onmouseout = () => okBtn.style.background = '#ff9800';
+    okBtn.onclick = () => overlay.remove();
+    
+    modal.appendChild(icon);
+    modal.appendChild(title);
+    modal.appendChild(message);
+    modal.appendChild(okBtn);
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    okBtn.focus();
+    
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            overlay.remove();
+            document.removeEventListener('keydown', handleEscape);
         }
-    });
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
+function showStockRequestModal(productName) {
+    // Directly submit stock request with default quantity of 100
+    submitStockRequest(productName, 100);
+}
+
+function showInvalidQuantityAlert(callback = null) {
+    const existingAlert = document.getElementById('invalidQuantityAlert');
+    if (existingAlert) existingAlert.remove();
     
-    // Auto-submit after user stops typing (auto-confirm behavior)
-    let autoSubmitTimeout;
-    input.addEventListener('input', () => {
-        clearTimeout(autoSubmitTimeout);
-        autoSubmitTimeout = setTimeout(() => {
-            // Auto-submit only if value is valid
-            const quantity = input.value.trim();
-            const quantityNum = parseInt(quantity);
-            if (!isNaN(quantityNum) && quantityNum > 0 && quantityNum <= 1000) {
-                submitStockRequestWithConfirm(productName);
-            }
-        }, 1500); // Auto-submit after 1.5 seconds of no typing
-    });
+    const overlay = document.createElement('div');
+    overlay.id = 'invalidQuantityAlert';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    `;
+    
+    const icon = document.createElement('div');
+    icon.textContent = '❌';
+    icon.style.cssText = `
+        font-size: 48px;
+        margin-bottom: 15px;
+    `;
+    
+    const title = document.createElement('h2');
+    title.textContent = 'Invalid Quantity';
+    title.style.cssText = `
+        margin: 0 0 10px 0;
+        color: #f44336;
+        font-size: 20px;
+    `;
+    
+    const message = document.createElement('p');
+    message.textContent = 'Please fill up the quantity (25 or 100 only)';
+    message.style.cssText = `
+        margin: 0 0 25px 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+    `;
+    
+    const okBtn = document.createElement('button');
+    okBtn.textContent = '✓ OK';
+    okBtn.style.cssText = `
+        padding: 12px 30px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+        width: 100%;
+    `;
+    okBtn.onmouseover = () => okBtn.style.background = '#d32f2f';
+    okBtn.onmouseout = () => okBtn.style.background = '#f44336';
+    okBtn.onclick = () => {
+        overlay.remove();
+        if (callback) callback();
+    };
+    
+    modal.appendChild(icon);
+    modal.appendChild(title);
+    modal.appendChild(message);
+    modal.appendChild(okBtn);
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    okBtn.focus();
+    
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            overlay.remove();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
 }
 
 function closeStockRequestModal() {
@@ -3009,41 +2829,15 @@ function closeStockRequestModal() {
     if (modal) modal.remove();
 }
 
-// ==================== AUTO-SUBMIT STOCK REQUEST ====================
-function submitStockRequestWithConfirm(productName) {
-    const input = document.getElementById('quantityInput');
-    const quantity = input ? input.value.trim() : '';
-    
-    if (!quantity) {
-        showToast('❌ Please enter a quantity', 'error', 2000);
-        return;
-    }
-    
-    const quantityNum = parseInt(quantity);
-    if (isNaN(quantityNum) || quantityNum <= 0) {
-        showToast('❌ Please enter a valid quantity', 'error', 2000);
-        return;
-    }
-    
-    // Close the input modal and auto-submit
-    closeStockRequestModal();
-    
-    // Directly submit without confirmation
-    submitStockRequest(productName, quantityNum);
-}
-
 function submitStockRequest(productName, quantityNum) {
-    
-    // Double-check if request is still not pending (in case of rapid clicks)
     if (hasPendingRequest(productName)) {
         closeStockRequestModal();
-        showToast(`⏳ Request already pending for ${productName}. Please wait for admin to process.`, 'warning', 3000);
+        showPendingRequestAlert(productName);
         return;
     }
     
     closeStockRequestModal();
     
-    // Save to MongoDB via API
     fetch('/api/stock-requests', {
         method: 'POST',
         headers: {
@@ -3059,33 +2853,28 @@ function submitStockRequest(productName, quantityNum) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // Add to active stock requests
             activeStockRequests.set(productName, {
                 timestamp: Date.now(),
                 quantity: quantityNum,
                 status: 'pending'
             });
             
-            // console.log('✅ Stock request saved to MongoDB:', data);
             if (data.updated) {
                 showToast(`🔄 Updated request: ${quantityNum} units`, 'success', 3000);
             } else {
                 showToast(`✅ Stock request sent to admin!`, 'success', 3000);
             }
             
-            // Increment request count for badge
             const count = (parseInt(localStorage.getItem('stockRequestCount')) || 0) + 1;
             localStorage.setItem('stockRequestCount', count);
             updateStockRequestNotification();
             
-            // Update UI to show pending indicator
             renderMenu();
         } else {
             throw new Error(data.message || 'Failed to save request');
         }
     })
     .catch(err => {
-        // console.error('❌ Error saving stock request:', err);
         showToast(`❌ Request failed: ${err.message}`, 'error', 3000);
     });
     
@@ -3094,11 +2883,9 @@ function submitStockRequest(productName, quantityNum) {
     }
 }
 
-// Function to check for fulfilled stock requests (called when stock is updated)
 function checkFulfilledStockRequests(productName) {
     const product = productCatalog.find(p => p.name === productName);
     if (product && product.stock > 0 && activeStockRequests.has(productName)) {
-        // Stock has been replenished by admin, remove from pending requests
         activeStockRequests.delete(productName);
         pendingStockRequests = pendingStockRequests.filter(name => name !== productName);
         renderMenu();
@@ -3106,10 +2893,8 @@ function checkFulfilledStockRequests(productName) {
     }
 }
 
-// ==================== � NOTIFICATION BADGE UPDATE ====================
 function updateStockRequestNotification() {
     try {
-        // Update badge in menu.js if it exists
         const badge = document.getElementById('notificationBadge');
         if (badge) {
             const currentCount = parseInt(badge.textContent) || 0;
@@ -3117,23 +2902,16 @@ function updateStockRequestNotification() {
             badge.textContent = newCount > 99 ? '99+' : newCount;
             badge.style.display = 'inline-flex';
             badge.style.animation = 'pulse 0.5s ease-in-out';
-            
-            // console.log('📢 Stock request notification badge updated!');
         }
         
-        // Also save to localStorage to notify menu.js if on different page/window
         const stockRequestCount = (parseInt(localStorage.getItem('stockRequestCount')) || 0) + 1;
         localStorage.setItem('stockRequestCount', stockRequestCount);
         localStorage.setItem('lastStockRequest', new Date().toISOString());
         
-        console.log('� Stock request saved to localStorage. Count:', stockRequestCount);
-        
     } catch (error) {
-        // console.log('Badge update error:', error.message);
     }
 }
 
-// ==================== �📋 CATEGORY FUNCTIONS ====================
 function filterCategory(category) {
     currentCategory = category;
     
@@ -3190,7 +2968,6 @@ function searchFood(searchTerm) {
     });
 }
 
-// ==================== 💾 STORAGE FUNCTIONS ====================
 function saveInventoryToStorage() {
     localStorage.setItem('servingwareInventory', JSON.stringify(servingwareInventory));
     localStorage.setItem('ingredientInventory', JSON.stringify(ingredientInventory));
@@ -3210,7 +2987,6 @@ function loadInventoryFromStorage() {
     }
 }
 
-// Load active stock requests from localStorage
 function loadActiveStockRequests() {
     const saved = localStorage.getItem('activeStockRequests');
     if (saved) {
@@ -3221,48 +2997,34 @@ function loadActiveStockRequests() {
     }
 }
 
-// ==================== SYNC PENDING REQUESTS WITH SERVER ====================
-// Refresh pending requests from MongoDB to sync with admin actions
 async function syncPendingRequests() {
     try {
-        console.log('🔄 Syncing pending requests with server...');
         const response = await fetch('/api/stock-requests/pending');
         
         if (response.ok) {
             const result = await response.json();
             const pendingRequests = result.data || result || [];
             
-            // Get list of product names in pending requests from server
             const serverPendingNames = new Set(
                 pendingRequests.map(req => req.productName || req.product_name || '')
             );
             
-            console.log('📋 Server pending requests:', serverPendingNames);
-            
-            // Remove any requests from activeStockRequests that are NOT on the server anymore
-            // (meaning they were confirmed/rejected by admin)
             for (const [productName] of activeStockRequests) {
                 if (!serverPendingNames.has(productName)) {
-                    console.log(`✅ Clearing completed request for: ${productName}`);
                     activeStockRequests.delete(productName);
                 }
             }
             
-            // Save updated requests
             saveActiveStockRequests();
             
         } else {
-            console.error('Failed to sync pending requests:', response.status);
         }
     } catch (error) {
-        console.error('Error syncing pending requests:', error);
     }
 }
 
-// Call sync function periodically to clear completed requests
-setInterval(syncPendingRequests, 10000); // Check every 10 seconds
+setInterval(syncPendingRequests, 10000);
 
-// Save active stock requests to localStorage
 function saveActiveStockRequests() {
     try {
         const toSave = Array.from(activeStockRequests.entries());
@@ -3270,22 +3032,17 @@ function saveActiveStockRequests() {
     } catch (e) {}
 }
 
-// ==================== 🚀 INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', async function() {
-    // console.log('🚀 Initializing POS System...');
-    
     loadInventoryFromStorage();
     loadActiveStockRequests();
     await getCurrentUser();
     
-    // console.log('📋 Loading menu items from MongoDB...');
     const menuLoaded = await loadAllMenuItems();
     
     if (!menuLoaded) {
         alert('Cannot connect to database. Please check your connection.');
     }
     
-    // Setup event listeners
     const searchInput = document.querySelector('input[placeholder*="Search"]');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => searchFood(e.target.value));
@@ -3300,18 +3057,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
     
-    // Order type buttons
     const dineInBtn = document.querySelector('.dineinandtakeout-btn:nth-child(1)');
     const takeoutBtn = document.querySelector('.dineinandtakeout-btn:nth-child(2)');
     
     if (dineInBtn) dineInBtn.addEventListener('click', setDineIn);
     if (takeoutBtn) takeoutBtn.addEventListener('click', setTakeout);
     
-    // Table number input
     const tableInput = document.getElementById('tableNumber');
     if (tableInput) {
         tableInput.addEventListener('input', setTableNumber);
-        // Initially disabled
         tableInput.disabled = true;
         tableInput.style.backgroundColor = '#f0f0f0';
         tableInput.style.opacity = '0.7';
@@ -3319,18 +3073,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         tableInput.placeholder = 'Select Dine In first';
     }
     
-    // Payment method buttons
     const cashBtn = document.getElementById('cash-btn');
     const gcashBtn = document.getElementById('gcash-btn');
     
     if (cashBtn) cashBtn.addEventListener('click', () => selectPaymentMethod('cash'));
     if (gcashBtn) gcashBtn.addEventListener('click', () => selectPaymentMethod('gcash'));
     
-    // Payment amount input
     const paymentInput = document.getElementById('inputPayment');
     if (paymentInput) {
         paymentInput.addEventListener('input', updatePaymentAmount);
-        // Initially disabled
         paymentInput.disabled = true;
         paymentInput.style.backgroundColor = '#f0f0f0';
         paymentInput.style.opacity = '0.7';
@@ -3338,7 +3089,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         paymentInput.placeholder = 'Select Cash first';
     }
     
-    // Pay button
     const payButton = document.getElementById('payment-btn');
     if (payButton) {
         payButton.addEventListener('click', Payment);
@@ -3347,9 +3097,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderMenu();
     updatePayButtonState();
     
-    // Check for stock updates periodically
     setInterval(() => {
-        // Check if any pending requests should be cleared (e.g., stock has been added)
         productCatalog.forEach(product => {
             if (product.stock > 0 && activeStockRequests.has(product.name)) {
                 activeStockRequests.delete(product.name);
@@ -3359,14 +3107,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
     }, 5000);
-    
-    // console.log('✅ POS System initialized');
 });
 
 setInterval(saveInventoryToStorage, 30000);
 setInterval(saveActiveStockRequests, 10000);
 
-// ==================== 🎯 EXPORT GLOBAL FUNCTIONS ====================
 window.requestStock = requestStock;
 window.showStockRequestModal = showStockRequestModal;
 window.closeStockRequestModal = closeStockRequestModal;
@@ -3382,4 +3127,4 @@ window.searchFood = searchFood;
 window.handleLogout = handleLogout;
 window.productCatalog = productCatalog;
 window.pendingStockRequests = pendingStockRequests;
-window.checkFulfilledStockRequests = checkFulfilledStockRequests;
+window.checkFulfilledStockRequests = checkFulfilledStockRequests; 

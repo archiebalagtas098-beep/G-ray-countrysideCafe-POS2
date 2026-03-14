@@ -7,6 +7,8 @@ class SessionManager {
         this.roleKey = 'userRole';
         this.isLoggedInKey = 'isLoggedIn';
         this.lastActivityKey = 'lastActivity';
+        this.profileInitRetries = 0;
+        this.maxProfileInitRetries = 3;
         this.init();
     }
 
@@ -31,6 +33,16 @@ class SessionManager {
     // Get current user role
     getRole() {
         return sessionStorage.getItem(this.roleKey);
+    }
+
+    // Initialize role from data attribute (for EJS templates)
+    initializeRoleFromData(role) {
+        if (role && ['admin', 'staff'].includes(role.toLowerCase())) {
+            this.setRole(role.toLowerCase());
+            console.log(`✅ Role initialized from page data: ${role}`);
+            return true;
+        }
+        return false;
     }
 
     // Check if user is logged in
@@ -92,8 +104,21 @@ class SessionManager {
     // ==================== USER PROFILE DISPLAY ====================
     // Generate user profile HTML with avatar and role
     getUserProfileHTML() {
-        const role = this.getRole();
-        if (!role) return '';
+        let role = this.getRole();
+        
+        // If no role in session, try to detect from current URL
+        if (!role) {
+            if (window.location.pathname.includes('/admindashboard')) {
+                role = 'admin';
+                this.setRole('admin');
+            } else if (window.location.pathname.includes('/staffdashboard')) {
+                role = 'staff';
+                this.setRole('staff');
+            } else {
+                // Don't default - let initializeUserProfile handle it
+                return null;
+            }
+        }
 
         // Create avatar with first letter of role
         const avatarLetter = role.charAt(0).toUpperCase();
@@ -114,15 +139,20 @@ class SessionManager {
     // Initialize user profile in navbar
     initializeUserProfile() {
         try {
+            // Silently check if logout container exists (not all pages have it)
             const logoutContainer = document.querySelector('.logout-container');
             if (!logoutContainer) {
-                console.warn('⚠️ Logout container not found for user profile');
+                // This is normal - login page, register page, etc. don't have navbar
+                return;
+            }
+
+            // Check if profile already exists to avoid duplicates
+            if (logoutContainer.querySelector('.user-profile-container')) {
                 return;
             }
 
             const profileHTML = this.getUserProfileHTML();
             if (!profileHTML) {
-                console.warn('⚠️ No user role found for profile');
                 return;
             }
 
@@ -138,9 +168,9 @@ class SessionManager {
                 logoutContainer.appendChild(profileDiv.firstElementChild);
             }
 
-            console.log('✅ User profile initialized in navbar');
+            console.log('✅ User profile initialized');
         } catch (error) {
-            console.error('❌ Error initializing user profile:', error);
+            // Silently ignore errors - this is non-critical
         }
     }
 

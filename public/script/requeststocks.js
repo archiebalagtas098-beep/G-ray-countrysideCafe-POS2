@@ -384,8 +384,9 @@ async function submitSingleRequest(key) {
     const quantity = parseInt(row.querySelector('.quantity-input').value);
     const priority = row.querySelector('.priority-select').value;
     
-    if (!quantity || quantity <= 0) {
-        alert('Please enter a valid quantity');
+    // Check if quantity is valid (must be 25 or 100 only)
+    if (!quantity || (quantity !== 25 && quantity !== 100)) {
+        showRequestStocksInvalidQuantityAlert();
         return;
     }
     
@@ -556,6 +557,98 @@ function showNotification(message, type = 'info') {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
+}
+
+// Show invalid quantity alert modal
+function showRequestStocksInvalidQuantityAlert() {
+    const existingAlert = document.getElementById('requestStocksInvalidQuantityAlert');
+    if (existingAlert) existingAlert.remove();
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'requestStocksInvalidQuantityAlert';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    `;
+    
+    const icon = document.createElement('div');
+    icon.textContent = '❌';
+    icon.style.cssText = `
+        font-size: 48px;
+        margin-bottom: 15px;
+    `;
+    
+    const title = document.createElement('h2');
+    title.textContent = 'Invalid Quantity';
+    title.style.cssText = `
+        margin: 0 0 10px 0;
+        color: #f44336;
+        font-size: 20px;
+    `;
+    
+    const message = document.createElement('p');
+    message.textContent = 'Please fill up the quantity with 25 or 100 only';
+    message.style.cssText = `
+        margin: 0 0 25px 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+    `;
+    
+    const okBtn = document.createElement('button');
+    okBtn.textContent = '✓ OK';
+    okBtn.style.cssText = `
+        padding: 12px 30px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+        width: 100%;
+    `;
+    okBtn.onmouseover = () => okBtn.style.background = '#d32f2f';
+    okBtn.onmouseout = () => okBtn.style.background = '#f44336';
+    okBtn.onclick = () => overlay.remove();
+    
+    modal.appendChild(icon);
+    modal.appendChild(title);
+    modal.appendChild(message);
+    modal.appendChild(okBtn);
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    okBtn.focus();
+    
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            overlay.remove();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
 }
 
 // Add styles for animations

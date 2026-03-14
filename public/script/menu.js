@@ -35,61 +35,105 @@ const INVENTORY_CACHE_DURATION = 5000;
 
 // ==================== INGREDIENT INVENTORY ====================
 const ingredientInventory = {
+    // ====================== PROTEINS ======================
     'Pork': { name: 'Pork', current: 100, max: 500, unit: 'kg', minThreshold: 20 },
-    'Chicken': { name: 'Chicken', current: 100, max: 300, unit: 'kg', minThreshold: 15 },
-    'Beef': { name: 'Beef', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
-    'Shrimp': { name: 'Shrimp', current: 50, max: 100, unit: 'kg', minThreshold: 8 },
-    'Cream Dory': { name: 'Cream Dory', current: 50, max: 150, unit: 'kg', minThreshold: 10 },
     'Pork Belly': { name: 'Pork Belly', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
     'Pork Chop': { name: 'Pork Chop', current: 50, max: 80, unit: 'kg', minThreshold: 8 },
+    'Chicken': { name: 'Chicken', current: 100, max: 300, unit: 'kg', minThreshold: 15 },
+    'Beef': { name: 'Beef', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
+    'beef_shank': { name: 'Beef Shank', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
+    'Shrimp': { name: 'Shrimp', current: 50, max: 100, unit: 'kg', minThreshold: 8 },
+    'Cream Dory': { name: 'Cream Dory', current: 50, max: 150, unit: 'kg', minThreshold: 10 },
+    'tuyo': { name: 'Tuyo', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'tinapa': { name: 'Tinapa', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Egg': { name: 'Egg', current: 300, max: 500, unit: 'piece', minThreshold: 50 },
+
+    // ====================== VEGETABLES ======================
     'Onion': { name: 'Onion', current: 30, max: 50, unit: 'kg', minThreshold: 5 },
     'Garlic': { name: 'Garlic', current: 20, max: 30, unit: 'kg', minThreshold: 3 },
     'Cabbage': { name: 'Cabbage', current: 30, max: 40, unit: 'kg', minThreshold: 5 },
     'Carrot': { name: 'Carrot', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'bell_pepper': { name: 'Bell Pepper', current: 15, max: 20, unit: 'kg', minThreshold: 3 },
-    'Calamansi': { name: 'Calamansi', current: 15, max: 20, unit: 'kg', minThreshold: 5 },
-    'tomato': { name: 'Tomato', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'potato': { name: 'Potato', current: 30, max: 100, unit: 'kg', minThreshold: 10 },
+    'Tomato': { name: 'Tomato', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'Potato': { name: 'Potato', current: 30, max: 100, unit: 'kg', minThreshold: 10 },
     'cucumber': { name: 'Cucumber', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'Eggplant': { name: 'Eggplant', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'green_beans': { name: 'Green Beans', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'rice': { name: 'Rice', current: 100, max: 200, unit: 'kg', minThreshold: 30 },
+    'corn': { name: 'Corn', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
+
+    // ====================== FRUITS & CITRUS ======================
+    'Calamansi': { name: 'Calamansi', current: 15, max: 20, unit: 'kg', minThreshold: 5 },
+    'lemon': { name: 'Lemon', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'strawberry': { name: 'Strawberry', current: 15, max: 20, unit: 'kg', minThreshold: 3 },
+    'mango': { name: 'Mango', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+
+    // ====================== GRAINS & STARCHES ======================
+    'Rice': { name: 'Rice', current: 100, max: 200, unit: 'kg', minThreshold: 30 },
     'pancit_bihon': { name: 'Pancit Bihon', current: 50, max: 100, unit: 'kg', minThreshold: 15 },
     'pancit_canton': { name: 'Pancit Canton', current: 50, max: 100, unit: 'kg', minThreshold: 15 },
     'Spaghetti pasta': { name: 'Spaghetti Pasta', current: 50, max: 80, unit: 'kg', minThreshold: 10 },
+    'Bread': { name: 'Bread', current: 30, max: 50, unit: 'loaf', minThreshold: 10 },
+
+    // ====================== SAUCES & CONDIMENTS ======================
     'Soy sauce': { name: 'Soy Sauce', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
     'Vinegar': { name: 'Vinegar', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
     'oyster_sauce': { name: 'Oyster Sauce', current: 30, max: 30, unit: 'liter', minThreshold: 5 },
     'fish_sauce': { name: 'Fish Sauce', current: 30, max: 30, unit: 'liter', minThreshold: 5 },
-    'Butter': { name: 'Butter', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'Honey': { name: 'Honey', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
     'Cooking oil': { name: 'Cooking Oil', current: 40, max: 50, unit: 'liter', minThreshold: 10 },
-    'milk': { name: 'Milk', current: 30, max: 50, unit: 'liter', minThreshold: 10 },
+    'Sesame oil': { name: 'Sesame Oil', current: 15, max: 25, unit: 'liter', minThreshold: 5 },
+    'Chicken_broth': { name: 'Chicken Broth', current: 20, max: 30, unit: 'liter', minThreshold: 5 },
+
+    // ====================== DAIRY & CREAMY ======================
+    'Milk': { name: 'Milk', current: 30, max: 50, unit: 'liter', minThreshold: 10 },
     'Cheese': { name: 'Cheese', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
     'Cream': { name: 'Cream', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
+    'Butter': { name: 'Butter', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+
+    // ====================== BEVERAGES & BASES ======================
     'coffee_beans': { name: 'Coffee Beans', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'milk_tea_base': { name: 'Milk Tea Base', current: 25, max: 40, unit: 'liter', minThreshold: 8 },
+    'Milk_tea_base': { name: 'Milk Tea Base', current: 25, max: 40, unit: 'liter', minThreshold: 8 },
     'matcha': { name: 'Matcha Powder', current: 8, max: 10, unit: 'kg', minThreshold: 2 },
-    'lemon': { name: 'Lemon', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'strawberry': { name: 'Strawberry', current: 15, max: 20, unit: 'kg', minThreshold: 3 },
-    'mango': { name: 'Mango', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'nachos': { name: 'Nachos Chips', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
-    'french_fries': { name: 'French Fries', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
-    'bread': { name: 'Bread', current: 30, max: 50, unit: 'loaf', minThreshold: 10 },
-    'lumpia_wrapper': { name: 'Lumpia Wrapper', current: 60, max: 100, unit: 'pack', minThreshold: 20 },
-    'dynamite': { name: 'Dynamite', current: 30, max: 50, unit: 'kg', minThreshold: 8 },
-    'Egg': { name: 'Egg', current: 300, max: 500, unit: 'piece', minThreshold: 50 },
-    'tuyo': { name: 'Tuyo', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'tinapa': { name: 'Tinapa', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
+    'water': { name: 'Water', current: 100, max: 100, unit: 'liter', minThreshold: 30 },
+    'Honey': { name: 'Honey', current: 15, max: 20, unit: 'liter', minThreshold: 3 },
+
+    // ====================== SEASONINGS & SPICES ======================
     'Sugar': { name: 'Sugar', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
     'Salt': { name: 'Salt', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
     'Black pepper': { name: 'Black Pepper', current: 20, max: 30, unit: 'kg', minThreshold: 5 },
-    'water': { name: 'Water', current: 100, max: 100, unit: 'liter', minThreshold: 30 },
-    'beef_shank': { name: 'Beef Shank', current: 50, max: 100, unit: 'kg', minThreshold: 10 },
     'Bay leaves': { name: 'Bay Leaves', current: 10, max: 20, unit: 'piece', minThreshold: 3 },
     'Peppercorn': { name: 'Peppercorn', current: 5, max: 10, unit: 'kg', minThreshold: 1 },
-    'Chicken_broth': { name: 'Chicken Broth', current: 20, max: 30, unit: 'liter', minThreshold: 5 },
-    'corn': { name: 'Corn', current: 30, max: 50, unit: 'kg', minThreshold: 10 }
+
+    // ====================== SPECIALTY INGREDIENTS ======================
+    'lumpia_wrapper': { name: 'Lumpia Wrapper', current: 60, max: 100, unit: 'pack', minThreshold: 20 },
+    'dynamite': { name: 'Dynamite', current: 30, max: 50, unit: 'kg', minThreshold: 8 },
+    'nachos': { name: 'Nachos Chips', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
+    'french_fries': { name: 'French Fries', current: 30, max: 50, unit: 'kg', minThreshold: 10 },
+
+    // ====================== KOREAN INGREDIENTS (MISSING) ======================
+    'gochujang': { name: 'Gochujang', current: 10, max: 20, unit: 'kg', minThreshold: 3 },
+    'Chili flakes': { name: 'Chili Flakes', current: 5, max: 15, unit: 'kg', minThreshold: 2 },
+    'Cornstarch': { name: 'Cornstarch', current: 10, max: 20, unit: 'kg', minThreshold: 3 },
+
+    // ====================== ITALIAN INGREDIENTS (MISSING) ======================
+    'Parmesan': { name: 'Parmesan Cheese', current: 10, max: 20, unit: 'kg', minThreshold: 3 },
+    'Tomato sauce': { name: 'Tomato Sauce', current: 20, max: 40, unit: 'liter', minThreshold: 5 },
+    'Basil': { name: 'Fresh Basil', current: 5, max: 10, unit: 'kg', minThreshold: 2 },
+    'Oregano': { name: 'Oregano', current: 5, max: 10, unit: 'kg', minThreshold: 2 },
+
+    // ====================== ASIAN SEASONINGS (MISSING) ======================
+    'White pepper': { name: 'White Pepper', current: 5, max: 10, unit: 'kg', minThreshold: 2 },
+    'Star anise': { name: 'Star Anise', current: 5, max: 10, unit: 'kg', minThreshold: 2 },
+    'Cinnamon': { name: 'Cinnamon', current: 5, max: 10, unit: 'kg', minThreshold: 1 },
+    'Ginger': { name: 'Ginger', current: 10, max: 20, unit: 'kg', minThreshold: 3 },
+
+    // ====================== BAKING INGREDIENTS (MISSING) ======================
+    'All-purpose flour': { name: 'All-Purpose Flour', current: 25, max: 50, unit: 'kg', minThreshold: 10 },
+    'Baking powder': { name: 'Baking Powder', current: 5, max: 10, unit: 'kg', minThreshold: 2 },
+    'Baking soda': { name: 'Baking Soda', current: 5, max: 10, unit: 'kg', minThreshold: 2 },
+    'Vanilla extract': { name: 'Vanilla Extract', current: 5, max: 10, unit: 'liter', minThreshold: 1 },
+
+    // ====================== THICKENING AGENTS (MISSING) ======================
+    'Starch': { name: 'Starch', current: 10, max: 20, unit: 'kg', minThreshold: 3 }
 };
 
 // ==================== SERVINGWARE INVENTORY ====================
@@ -110,7 +154,7 @@ const servingwareInventory = {
 
 // ==================== PRODUCT INGREDIENT MAPPING ====================
 const productIngredientMap = {
-    // ==================== RICE BOWL MEALS ====================
+    // ==================== 🍚 RICE BOWL MEALS - PORK ====================
     'Korean Spicy Bulgogi (Pork)': {
         ingredients: { 
             'Pork': 0.25, 
@@ -362,7 +406,7 @@ const productIngredientMap = {
     'Spaghetti (S)': {
         ingredients: { 
             'Spaghetti pasta': 0.5, 
-            'Sweet tomato paste': 0.2, 
+            'Sweet Tomato paste': 0.2, 
             'Ground meat': 0.15, 
             'Hotdog': 0.1, 
             'Cheese': 0.08, 
@@ -377,7 +421,7 @@ const productIngredientMap = {
     'Spaghetti (M)': {
         ingredients: { 
             'Spaghetti pasta': 0.75, 
-            'Sweet tomato paste': 0.3, 
+            'Sweet Tomato paste': 0.3, 
             'Ground meat': 0.225, 
             'Hotdog': 0.15, 
             'Cheese': 0.12,
@@ -392,7 +436,7 @@ const productIngredientMap = {
     'Spaghetti (L)': {
         ingredients: { 
             'Spaghetti pasta': 1,
-            'Sweet tomato paste': 0.4, 
+            'Sweet Tomato paste': 0.4, 
             'Ground meat': 0.3, 
             'Hotdog': 0.2, 
             'Cheese': 0.16,
@@ -416,7 +460,7 @@ const productIngredientMap = {
         'Shrimp paste': 0.1,
         'Water': 1,
         'Annatto oil': 0.05,
-        'Toasted ground rice': 0.1,
+        'Toasted ground Rice': 0.1,
         'Garlic': 0.02,
         'Onion': 0.03,
         'Salt': 0.01,
@@ -425,14 +469,14 @@ const productIngredientMap = {
         servingware: 'tray'
     },
 
-    // ==================== DRINKS ====================
+    // ==================== 🥤 DRINKS & LEMONADES ====================
     'Cucumber Lemonade': {
         ingredients: { 
             'cucumber': 0.1, 
             'lemon': 0.1, 
             'Sugar': 0.05, 
             'water': 0.3, 
-            'ice': 0.1 
+            'Ice': 0.1 
         },
         servingware: 'glass'
     },
@@ -442,7 +486,7 @@ const productIngredientMap = {
             'blue_syrup': 0.05, 
             'Sugar': 0.05, 
             'water': 0.3, 
-            'ice': 0.1 
+            'Ice': 0.1 
         },
         servingware: 'glass'
     },
@@ -451,70 +495,150 @@ const productIngredientMap = {
             'tea': 0.02, 
             'Sugar': 0.05, 
             'water': 0.3, 
-            'ice': 0.1 
+            'Ice': 0.1 
         },
         servingware: 'glass'
     },
     'Soda (Mismo / 1.5L)': {
         ingredients: { 
-            'carbonated_soft_drink': 1 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Caramel color': 0.005,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Caffeine': 0.001,
+            'Plastic Bottle': 1
         },
         servingware: 'bottle'
     },
 
-    // ==================== COFFEE & TEA ====================
+    // ==================== ☕ COFFEE VARIETIES ====================
     'Cafe Americano': {
         ingredients: { 
-            'espresso': 0.03, 
-            'hot_water': 0.2,
+            'Espresso': 0.03, 
+            'Hot water': 0.2,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Cafe Americano Hot': {
         ingredients: { 
-            'espresso': 0.03, 
-            'hot_water': 0.2,
+            'Espresso': 0.03, 
+            'Hot water': 0.2,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Cafe Latte': {
         ingredients: { 
-            'espresso': 0.03, 
-            'steamed_milk': 0.25,
+            'Espresso': 0.03, 
+            'Steamed Milk': 0.25,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Caramel Macchiato': {
         ingredients: { 
-            'espresso': 0.03, 
-            'milk': 0.2, 
-            'caramel_syrup': 0.03, 
-            'vanilla_syrup': 0.01,
+            'Espresso': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla Syrup': 0.01,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
+    'Caramel Macchiato Hot': {
+        ingredients: { 
+            'Espresso': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla Syrup': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Iced Caramel Macchiato': {
+        ingredients: { 
+            'Espresso': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla Syrup': 0.01,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Caramel Milk Tea': {
+        ingredients: { 
+            'Black Tea': 0.02, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.04,
+            'Sugar': 0.05, 
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    'Salted Caramel Frappe': {
+        ingredients: { 
+            'Ice': 0.2, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.05, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Salt': 0.003,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
 
-    // ==================== MILK TEA ====================
+    // ==================== 🍵 MILK TEA VARIETIES ====================
     'Milk Tea': {
         ingredients: { 
-            'black_tea': 0.02, 
-            'milk': 0.2, 
+            'Black Tea': 0.02, 
+            'Milk': 0.2, 
             'Sugar': 0.05, 
-            'tapioca_pearls': 0.03,
-            'boba_straws': 1
+            'Tapioca Pearls': 0.03,
+            'Boba Straws': 1
         },
         servingware: 'cup'
     },
     'Matcha Green Tea': {
         ingredients: { 
-            'matcha_powder': 0.01, 
-            'milk': 0.25, 
+            'Matcha Powder': 0.01, 
+            'Milk': 0.25, 
             'Sugar': 0.05,
-            'boba_straws': 1
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Milk Tea Regular': {
+        ingredients: { 
+            'Milk': 0.2, 
+            'Sugar': 0.05, 
+            'Boba Straws': 1,
+            'Tapioca Pearls': 0.03
+        },
+        servingware: 'cup'
+    },
+
+    'Okinawa Milk Tea': {
+        ingredients: { 
+            'Black Tea': 0.02, 
+            'Milk': 0.2, 
+            'Okinawa Brown Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Wintermelon Milk Tea': {
+        ingredients: { 
+            'Black Tea': 0.02, 
+            'Milk': 0.2, 
+            'Wintermelon Syrup': 0.05,
+            'Boba Straws': 1
         },
         servingware: 'cup'
     },
@@ -522,34 +646,104 @@ const productIngredientMap = {
     // ==================== FRAPPE ====================
     'Cookies & Cream Frappe': {
         ingredients: { 
-            'ice': 0.2, 
-            'milk': 0.2, 
-            'cookie_crumbs': 0.03, 
+            'Ice': 0.2, 
+            'Milk': 0.2, 
+            'cookie crumbs': 0.03, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'boba_straws': 1
+            'Boba Straws': 1
         },
         servingware: 'cup'
     },
+
+    'Cookies & Cream Milk Tea': {
+        ingredients: { 
+            'Milk': 0.2, 
+            'Cookie Crumbs': 0.03, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },  
+
     'Strawberry & Cream Frappe': {
         ingredients: { 
             'Strawberry syrup': 0.05, 
-            'milk': 0.2, 
-            'ice': 0.2, 
+            'Milk': 0.2, 
+            'Ice': 0.2, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'boba_straws': 1
+            'Boba Straws': 1
         },
         servingware: 'cup'
     },
     'Mango Cheesecake Frappe': {
         ingredients: { 
             'Mango syrup': 0.05, 
-            'Cream_Cheese_flavor': 0.03, 
-            'milk': 0.2, 
-            'ice': 0.2,
+            'Cream Cheese flavor': 0.03, 
+            'Milk': 0.2, 
+            'Ice': 0.2,
             'Sugar': 0.05,
-            'boba_straws': 1
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    'Rocky Road Frappe': {
+        ingredients: { 
+            'Chocolate Syrup': 0.05, 
+            'Marshmallows': 0.02, 
+            'Nuts': 0.02, 
+            'Ice': 0.2, 
+            'Milk': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    'Choco Fudge Frappe': {
+        ingredients: { 
+            'Chocolate Fudge': 0.07, 
+            'Ice': 0.2, 
+            'Milk': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    'Choco Mousse Frappe': {
+        ingredients: { 
+            'Chocolate Mousse': 0.06, 
+            'Ice': 0.2, 
+            'Milk': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    'Coffee Crumble Frappe': {
+        ingredients: { 
+            'Espresso': 0.03, 
+            'Coffee Crumbles': 0.03, 
+            'Ice': 0.2, 
+            'Milk': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    'Vanilla Cream Frappe': {
+        ingredients: { 
+            'Vanilla Syrup': 0.04, 
+            'Cream': 0.15, 
+            'Ice': 0.2, 
+            'Milk': 0.2,
+            'Sugar': 0.05,
+            'Boba Straws': 1
         },
         servingware: 'cup'
     },
@@ -557,24 +751,24 @@ const productIngredientMap = {
     // ==================== SNACKS & APPETIZERS ====================
     'Cheesy Nachos': {
         ingredients: { 
-            'nacho_chips': 0.3, 
-            'Cheese_sauce': 0.15 
+            'Nacho chips': 0.3, 
+            'Cheese sauce': 0.15 
         },
         servingware: 'serving'
     },
     'Nachos Supreme': {
         ingredients: { 
-            'nacho_chips': 0.3, 
+            'Nacho chips': 0.3, 
             'Cheese': 0.15, 
             'Ground meat': 0.1, 
-            'tomato': 0.05, 
+            'Tomato': 0.05, 
             'Onion': 0.03 
         },
         servingware: 'serving'
     },
     'French Fries': {
         ingredients: { 
-            'potato': 0.25, 
+            'Potato': 0.25, 
             'Cooking oil': 0.1, 
             'Salt': 0.005 
         },
@@ -582,12 +776,12 @@ const productIngredientMap = {
     },
     'Clubhouse Sandwich': {
         ingredients: { 
-            'bread': 0.1, 
+            'Bread': 0.1, 
             'Chicken': 0.1, 
-            'ham': 0.05, 
+            'Ham': 0.05, 
             'Egg': 1, 
-            'lettuce': 0.03, 
-            'tomato': 0.05, 
+            'Lettuce': 0.03, 
+            'Tomato': 0.05, 
             'Mayonnaise': 0.02 
         },
         servingware: 'sandwich'
@@ -596,7 +790,7 @@ const productIngredientMap = {
         ingredients: { 
             'fish_fillet': 0.15, 
             'Butter': 0.05, 
-            'potato': 0.2, 
+            'Potato': 0.2, 
             'Cooking oil': 0.15, 
             'Salt': 0.005 
         },
@@ -614,7 +808,7 @@ const productIngredientMap = {
     'Lumpiang Shanghai': {
         ingredients: { 
             'Ground Pork': 0.15, 
-            'vegetables': 0.1, 
+            'Vegetables': 0.1, 
             'lumpia_wrapper': 15, 
             'Cooking oil': 0.15 
         },
@@ -635,8 +829,8 @@ const productIngredientMap = {
     // ==================== RICE VARIETIES ====================
     'Tinapa Rice': {
         ingredients: { 
-            'tinapa': 0.1, 
-            'rice': 0.3, 
+            'Tinapa': 0.1, 
+            'Rice': 0.3, 
             'Garlic': 0.02, 
             'Egg': 1, 
             'Cooking oil': 0.05 
@@ -645,7 +839,7 @@ const productIngredientMap = {
     },
     'Tuyo Pesto': {
         ingredients: { 
-            'tuyo': 0.08, 
+            'Tuyo': 0.08, 
             'Spaghetti pasta': 0.3, 
             'Garlic': 0.02, 
             'Cooking oil': 0.05, 
@@ -653,7 +847,6 @@ const productIngredientMap = {
         },
         servingware: 'meal'
     },
-
     'Creamy Pesto': {
         ingredients: { 
             'Spaghetti pasta': 0.3, 
@@ -665,10 +858,9 @@ const productIngredientMap = {
         },
         servingware: 'meal'
     },
-
     'Fried Rice': {
         ingredients: { 
-            'rice': 0.3, 
+            'Rice': 0.3, 
             'Garlic': 0.03, 
             'Egg': 1, 
             'Soy sauce': 0.02, 
@@ -678,7 +870,7 @@ const productIngredientMap = {
     },
     'Plain Rice': {
         ingredients: { 
-            'rice': 0.25, 
+            'Rice': 0.25, 
             'water': 0.5 
         },
         servingware: 'bowl'
@@ -689,7 +881,7 @@ const productIngredientMap = {
         ingredients: { 
             'Pork': 0.4, 
             'tamarind_mix': 0.05, 
-            'tomato': 0.05, 
+            'Tomato': 0.05, 
             'Onion': 0.05, 
             'radish': 0.1, 
             'kangkong': 0.1 
@@ -700,7 +892,7 @@ const productIngredientMap = {
         ingredients: { 
             'Shrimp': 0.35, 
             'tamarind_mix': 0.05, 
-            'tomato': 0.05, 
+            'Tomato': 0.05, 
             'Onion': 0.05, 
             'kangkong': 0.1 
         },
@@ -733,7 +925,7 @@ const productIngredientMap = {
             'Beef Shank': 0.8, 
             'corn': 0.1, 
             'Cabbage': 0.3, 
-            'potato': 0.2, 
+            'Potato': 0.2, 
             'Onion': 0.1, 
             'Peppercorn': 0.01 
         },
@@ -743,7 +935,7 @@ const productIngredientMap = {
         ingredients: { 
             'Beef Shank': 0.8, 
             'corn': 0.1, 
-            'potato': 0.2, 
+            'Potato': 0.2, 
             'Cabbage': 0.3, 
             'Carrot': 0.15, 
             'Bay leaves': 2, 
@@ -758,7 +950,7 @@ const productIngredientMap = {
         ingredients: { 
             'Beef Shank': 1.6, 
             'corn': 0.2, 
-            'potato': 0.4, 
+            'Potato': 0.4, 
             'Cabbage': 0.6, 
             'Carrot': 0.3, 
             'Bay leaves': 4, 
@@ -770,7 +962,7 @@ const productIngredientMap = {
         servingware: 'pot'
     },
 
-    // ==================== PACKAGING SUPPLIES ====================
+    // ====================  PACKAGING SUPPLIES ====================
     'Plastic Cups (12oz)': {
         ingredients: {},
         servingware: 'pack'
@@ -1120,31 +1312,43 @@ const menuDatabase = {
         { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', defaultPrice: 148 }
     ],
     'Party': [
-        { name: 'Pancit Bihon (S)', unit: 'tray', defaultPrice: 250 },
-        { name: 'Pancit Bihon (M)', unit: 'tray', defaultPrice: 350 },
-        { name: 'Pancit Bihon (L)', unit: 'tray', defaultPrice: 400 },
-        { name: 'Pancit Canton (S)', unit: 'tray', defaultPrice: 250 },
-        { name: 'Pancit Canton (M)', unit: 'tray', defaultPrice: 350 },
-        { name: 'Pancit Canton (L)', unit: 'tray', defaultPrice: 400 },
-        { name: 'Spaghetti (S)', unit: 'tray', defaultPrice: 250 },
-        { name: 'Spaghetti (M)', unit: 'tray', defaultPrice: 350 },
-        { name: 'Spaghetti (L)', unit: 'tray', defaultPrice: 400 },
-        { name: 'Creamy Carbonara', unit: 'tray', defaultPrice: 500 },
-        { name: 'Creamy Pesto', unit: 'tray', defaultPrice: 500 },
-        { name: 'Tuyo Pesto', unit: 'tray', defaultPrice: 600 },
-        { name: 'Kare-Kare', unit: 'tray', defaultPrice: 600 },
-        { name: 'Chicken Buffalo Wings', unit: 'tray', defaultPrice: 400 },
-        { name: 'Lumpia Shanghai', unit: 'tray', defaultPrice: 300 }
+        { name: 'Pansit Bihon (S)', unit: 'tray', defaultPrice: 300 },
+        { name: 'Pansit Bihon (M)', unit: 'tray', defaultPrice: 550 },
+        { name: 'Pansit Bihon (L)', unit: 'tray', defaultPrice: 800 },
+        { name: 'Pancit Canton (S)', unit: 'tray', defaultPrice: 300 },
+        { name: 'Pancit Canton (M)', unit: 'tray', defaultPrice: 550 },
+        { name: 'Pancit Canton (L)', unit: 'tray', defaultPrice: 800 },
+        { name: 'Spaghetti (S)', unit: 'tray', defaultPrice: 400 },
+        { name: 'Spaghetti (M)', unit: 'tray', defaultPrice: 750 },
+        { name: 'Spaghetti (L)', unit: 'tray', defaultPrice: 1100 },
+        { name: 'Creamy Carbonara (S)', unit: 'tray', defaultPrice: 500 },
+        { name: 'Creamy Carbonara (M)', unit: 'tray', defaultPrice: 950 },
+        { name: 'Creamy Carbonara (L)', unit: 'tray', defaultPrice: 1400 },
+        { name: 'Creamy Pesto (S)', unit: 'tray', defaultPrice: 500 },
+        { name: 'Creamy Pesto (M)', unit: 'tray', defaultPrice: 950 },
+        { name: 'Creamy Pesto (L)', unit: 'tray', defaultPrice: 1400 },
+        { name: 'Tuyo Pesto (S)', unit: 'tray', defaultPrice: 600 },
+        { name: 'Tuyo Pesto (M)', unit: 'tray', defaultPrice: 1100 },
+        { name: 'Tuyo Pesto (L)', unit: 'tray', defaultPrice: 1600 },
+        { name: 'Kare-Kare (S)', unit: 'tray', defaultPrice: 600 },
+        { name: 'Kare-Kare (M)', unit: 'tray', defaultPrice: 1100 },
+        { name: 'Kare-Kare (L)', unit: 'tray', defaultPrice: 1600 },
+        { name: 'Chicken Buffalo Wings (S)', unit: 'tray', defaultPrice: 400 },
+        { name: 'Chicken Buffalo Wings (M)', unit: 'tray', defaultPrice: 750 },
+        { name: 'Chicken Buffalo Wings (L)', unit: 'tray', defaultPrice: 1100 },
+        { name: 'Lumpia Shanghai (S)', unit: 'tray', defaultPrice: 300 },
+        { name: 'Lumpia Shanghai (M)', unit: 'tray', defaultPrice: 550 },
+        { name: 'Lumpia Shanghai (L)', unit: 'tray', defaultPrice: 800 }
     ],
     'Drink': [
         { name: 'Cucumber Lemonade (Glass)', unit: 'glass', defaultPrice: 38 },
-        { name: 'Cucumber Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Cucumber Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 168 },
         { name: 'Blue Lemonade (Glass)', unit: 'glass', defaultPrice: 38 },
-        { name: 'Blue Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Blue Lemonade (Pitcher)', unit: 'pitcher', defaultPrice: 168 },
         { name: 'Red Tea (Glass)', unit: 'glass', defaultPrice: 38 },
-        { name: 'Red Tea (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Red Tea (Pitcher)', unit: 'pitcher', defaultPrice: 168 },
         { name: 'Calamansi Juice (Glass)', unit: 'glass', defaultPrice: 38 },
-        { name: 'Calamansi Juice (Pitcher)', unit: 'pitcher', defaultPrice: 114 },
+        { name: 'Calamansi Juice (Pitcher)', unit: 'pitcher', defaultPrice: 168 },
         { name: 'Soda (Mismo) Coke', unit: 'bottle', defaultPrice: 28 },
         { name: 'Soda (Mismo) Sprite', unit: 'bottle', defaultPrice: 28 },
         { name: 'Soda (Mismo) Royal', unit: 'bottle', defaultPrice: 28 },
@@ -1154,58 +1358,92 @@ const menuDatabase = {
         { name: 'Soda 1.5L Royal', unit: 'bottle', defaultPrice: 118 }
     ],
     'Cafe': [
-        { name: 'Espresso Hot', unit: 'cup', defaultPrice: 88 },
-        { name: 'Café Americano Hot', unit: 'cup', defaultPrice: 108 },
-        { name: 'Cappuccino Hot', unit: 'cup', defaultPrice: 98 },
-        { name: 'Café Latte Hot', unit: 'cup', defaultPrice: 108 },
-        { name: 'Mocha Latte Hot', unit: 'cup', defaultPrice: 108 },
-        { name: 'Vanilla Latte Hot', unit: 'cup', defaultPrice: 108 },
-        { name: 'Caramel Macchiato Hot', unit: 'cup', defaultPrice: 108 },
-        { name: 'Green Tea Latte Hot', unit: 'cup', defaultPrice: 118 },
-        { name: 'White Chocolate Hot', unit: 'cup', defaultPrice: 108 },
-        { name: 'Green Tea Matcha Hot', unit: 'cup', defaultPrice: 118 },
-        { name: 'Hot Ceylon Tea Black', unit: 'cup', defaultPrice: 78 },
-        { name: 'Hot Ceylon Tea Lemon', unit: 'cup', defaultPrice: 78 },
-        { name: 'Hot Ceylon Tea Peppermint', unit: 'cup', defaultPrice: 78 },
+        { name: 'Espresso (Tall)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Espresso (Grande)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Café Americano (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Café Americano (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Cappuccino (Tall)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Cappuccino (Grande)', unit: 'cup', defaultPrice: 128 },
+        { name: 'Café Latte (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Café Latte (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Mocha Latte (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Mocha Latte (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Vanilla Latte (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Vanilla Latte (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Caramel Macchiato (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Caramel Macchiato (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Green Tea Latte (Tall)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Green Tea Latte (Grande)', unit: 'cup', defaultPrice: 148 },
+        { name: 'White Chocolate (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'White Chocolate (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Green Tea Matcha (Tall)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Green Tea Matcha (Grande)', unit: 'cup', defaultPrice: 148 },
+        { name: 'Black Tea (Tall)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Black Tea (Grande)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Lemon Tea (Tall)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Lemon Tea (Grande)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Peppermint Tea (Tall)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Peppermint Tea (Grande)', unit: 'cup', defaultPrice: 108 },
         { name: 'Iced Café Latte', unit: 'cup', defaultPrice: 108 },
         { name: 'Iced Mocha Latte', unit: 'cup', defaultPrice: 118 },
         { name: 'Iced Vanilla Latte', unit: 'cup', defaultPrice: 118 },
         { name: 'Iced Caramel Macchiato', unit: 'cup', defaultPrice: 128 },
-        { name: 'Iced White Chocolate Latte', unit: 'cup', defaultPrice: 98 },
+        { name: 'Iced White Chocolate', unit: 'cup', defaultPrice: 98 },
         { name: 'Iced Dark Chocolate', unit: 'cup', defaultPrice: 98 }
     ],
     'Milk Tea': [
-        { name: 'Milk Tea Regular', unit: 'cup', defaultPrice: 68 },
-        { name: 'Caramel Milk Tea', unit: 'cup', defaultPrice: 78 },
-        { name: 'Cookies & Cream Milk Tea', unit: 'cup', defaultPrice: 78 },
-        { name: 'Dark Choco Milk Tea', unit: 'cup', defaultPrice: 78 },
-        { name: 'Okinawa Milk Tea', unit: 'cup', defaultPrice: 78 },
-        { name: 'Wintermelon Milk Tea', unit: 'cup', defaultPrice: 78 },
-        { name: 'Matcha Green Tea Milk Tea', unit: 'cup', defaultPrice: 88 }
+        { name: 'Regular Milk Tea (Regular)', unit: 'cup', defaultPrice: 68 },
+        { name: 'Regular Milk Tea (HC)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Regular Milk Tea (MC)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Caramel Milk Tea (Regular)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Caramel Milk Tea (HC)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Caramel Milk Tea (MC)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Cookies & Cream Milk Tea (Regular)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Cookies & Cream Milk Tea (HC)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Cookies & Cream Milk Tea (MC)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Dark Choco Milk Tea (Regular)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Dark Choco Milk Tea (HC)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Dark Choco Milk Tea (MC)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Okinawa Milk Tea (Regular)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Okinawa Milk Tea (HC)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Okinawa Milk Tea (MC)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Wintermelon Milk Tea (Regular)', unit: 'cup', defaultPrice: 78 },
+        { name: 'Wintermelon Milk Tea (HC)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Wintermelon Milk Tea (MC)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Matcha Green Tea Milk Tea (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Matcha Green Tea Milk Tea (HC)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Matcha Green Tea Milk Tea (MC)', unit: 'cup', defaultPrice: 128 }
     ],
     'Frappe': [
-        { name: 'Matcha Green Tea Frappe', unit: 'cup', defaultPrice: 108 },
-        { name: 'Salted Caramel Frappe', unit: 'cup', defaultPrice: 108 },
-        { name: 'Strawberry Cheesecake Frappe', unit: 'cup', defaultPrice: 108 },
-        { name: 'Mango Cheesecake Frappe', unit: 'cup', defaultPrice: 108 },
-        { name: 'Strawberry Cream Frappe', unit: 'cup', defaultPrice: 98 },
-        { name: 'Cookies & Cream Frappe', unit: 'cup', defaultPrice: 98 },
-        { name: 'Rocky Road Frappe', unit: 'cup', defaultPrice: 88 },
-        { name: 'Choco Fudge Frappe', unit: 'cup', defaultPrice: 88 },
-        { name: 'Choco Mousse Frappe', unit: 'cup', defaultPrice: 88 },
-        { name: 'Coffee Crumble Frappe', unit: 'cup', defaultPrice: 88 },
-        { name: 'Vanilla Cream Frappe', unit: 'cup', defaultPrice: 88 }
+        { name: 'Matcha Green Tea Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Matcha Green Tea Frappe (Premium)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Salted Caramel Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Salted Caramel Frappe (Premium)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Strawberry Cheesecake Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Strawberry Cheesecake Frappe (Premium)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Mango Cheesecake Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Mango Cheesecake Frappe (Premium)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Strawberry Cream Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Strawberry Cream Frappe (Premium)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Cookies & Cream Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Cookies & Cream Frappe (Premium)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Rocky Road Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Rocky Road Frappe (Premium)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Choco Fudge Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Choco Mousse Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Coffee Crumble Frappe (Regular)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Vanilla Cream Frappe (Regular)', unit: 'cup', defaultPrice: 88 }
     ],
     'Snack & Appetizer': [
         { name: 'Cheesy Nachos', unit: 'serving', defaultPrice: 150 },
         { name: 'Nachos Supreme', unit: 'serving', defaultPrice: 180 },
-        { name: 'French fries', unit: 'serving', defaultPrice: 90 },
+        { name: 'French Fries', unit: 'serving', defaultPrice: 90 },
         { name: 'Clubhouse Sandwich', unit: 'sandwich', defaultPrice: 120 },
         { name: 'Fish and Fries', unit: 'serving', defaultPrice: 160 },
         { name: 'Cheesy Dynamite Lumpia', unit: 'piece', defaultPrice: 25 },
         { name: 'Lumpiang Shanghai', unit: 'piece', defaultPrice: 20 }
     ],
-    'Budget Meals Served with Rice': [
+    'Budget Meals': [
         { name: 'Fried Chicken', unit: 'meal', defaultPrice: 95 },
         { name: 'Buttered Honey Chicken', unit: 'meal', defaultPrice: 105 },
         { name: 'Buttered Spicy Chicken', unit: 'meal', defaultPrice: 105 },
@@ -1215,7 +1453,7 @@ const menuDatabase = {
         { name: 'Plain Rice', unit: 'bowl', defaultPrice: 25 }
     ],
     'Specialties': [
-        { name: 'Sinigang (PORK)', unit: 'serving', defaultPrice: 280 },
+        { name: 'Sinigang (Pork)', unit: 'serving', defaultPrice: 280 },
         { name: 'Sinigang (Shrimp)', unit: 'serving', defaultPrice: 320 },
         { name: 'Paknet (Pakbet w/ Bagnet)', unit: 'serving', defaultPrice: 260 },
         { name: 'Buttered Shrimp', unit: 'serving', defaultPrice: 300 },
@@ -1237,7 +1475,7 @@ const elements = {
     currentStock: document.getElementById('currentStock'),
     minimumStock: document.getElementById('minimumStock'),
     maximumStock: document.getElementById('maximumStock'),
-    itemPrice: document.getElementById('itemPrice'),
+    itemPRIce: document.getElementById('itemPRIce'),
     addNewItem: document.getElementById('addNewItem'),
     saveItemBtn: document.querySelector('.modal-footer .btn-primary'),
     cancelBtn: document.querySelector('.modal-footer .btn-secondary'),
@@ -3302,7 +3540,7 @@ function initializeEventListeners() {
             updateFromCategory();
             if (elements.itemName) elements.itemName.value = '';
             if (elements.itemUnit) elements.itemUnit.value = '';
-            if (elements.itemPrice) elements.itemPrice.value = '';
+            if (elements.itemPRIce) elements.itemPRIce.value = '';
         });
     }
     
@@ -3389,7 +3627,7 @@ function populateItemNamesByCategory(category = null) {
         option.value = item.name;
         option.textContent = item.name;
         option.dataset.unit = item.unit;
-        option.dataset.price = item.defaultPrice;
+        option.dataset.pRIce = item.defaultPRIce;
         itemNameSelect.appendChild(option);
     });
 }
@@ -3402,10 +3640,10 @@ async function updateFromItemNameSelect() {
     
     const selectedOption = elements.itemName.options[elements.itemName.selectedIndex];
     const unit = selectedOption.dataset.unit;
-    const price = selectedOption.dataset.price;
+    const pRIce = selectedOption.dataset.pRIce;
     
     if (unit && elements.itemUnit) elements.itemUnit.value = unit;
-    if (price && elements.itemPrice) elements.itemPrice.value = price;
+    if (pRIce && elements.itemPRIce) elements.itemPRIce.value = pRIce;
     
     // Calculate and set max stock based on ingredients for new products only
     if (!elements.itemId || !elements.itemId.value) {
@@ -3547,7 +3785,7 @@ function updateFromCategory() {
     if (!category || category.trim() === '' || category === 'Select Category') {
         if (elements.itemName) elements.itemName.innerHTML = '<option value="">Select Product</option>';
         if (elements.itemUnit) elements.itemUnit.value = '';
-        if (elements.itemPrice) elements.itemPrice.value = '';
+        if (elements.itemPRIce) elements.itemPRIce.value = '';
         return;
     }
     
@@ -3556,7 +3794,7 @@ function updateFromCategory() {
     
     if (elements.itemName) elements.itemName.value = '';
     if (elements.itemUnit) elements.itemUnit.value = '';
-    if (elements.itemPrice) elements.itemPrice.value = '';
+    if (elements.itemPRIce) elements.itemPRIce.value = '';
 }
 
 function updateUnitOptions(category) {
@@ -3579,7 +3817,7 @@ function updateUnitOptions(category) {
         unitSelect.value = currentUnit;
     } else if (availableUnits.length > 0) {
         const defaultUnits = {
-            'Rice': 'plate',
+            'RIce': 'plate',
             'Sizzling': 'sizzling plate',
             'Party': 'tray',
             'Drink': 'glass',
@@ -3587,7 +3825,7 @@ function updateUnitOptions(category) {
             'Milk Tea': 'cup',
             'Frappe': 'cup',
             'Snack & Appetizer': 'serving',
-            'Budget Meals Served with Rice': 'meal',
+            'Budget Meals Served with RIce': 'meal',
             'Specialties': 'serving',
         };
         unitSelect.value = defaultUnits[category] || availableUnits[0];
@@ -3718,7 +3956,7 @@ function openAddModal() {
         elements.currentStock.title = 'Current quantity in stock';
     }
     if (elements.minimumStock) elements.minimumStock.value = '20';
-    if (elements.itemPrice) elements.itemPrice.value = '';
+    if (elements.itemPRIce) elements.itemPRIce.value = '';
     
     if (elements.itemCategory) {
         elements.itemCategory.value = '';
@@ -3775,7 +4013,7 @@ async function openEditModal(itemId) {
             }
             
             if (elements.itemUnit) elements.itemUnit.value = item.unit || '';
-            if (elements.itemPrice) elements.itemPrice.value = item.price || '';
+            if (elements.itemPRIce) elements.itemPRIce.value = item.pRIce || '';
             if (elements.currentStock) {
                 elements.currentStock.value = item.currentStock || 0;
                 elements.currentStock.readOnly = true;
@@ -3823,7 +4061,7 @@ async function handleSaveItem() {
         currentStock: elements.currentStock ? elements.currentStock.value : '0',
         minStock: elements.minimumStock ? elements.minimumStock.value : '20',
         maxStock: elements.maximumStock ? elements.maximumStock.value : '200',
-        price: elements.itemPrice ? elements.itemPrice.value : '0'
+        pRIce: elements.itemPRIce ? elements.itemPRIce.value : '0'
     };
     
     if (!formData.itemName || formData.itemName.trim() === '' || formData.itemName === 'Select Product') {
@@ -3844,12 +4082,12 @@ async function handleSaveItem() {
         return;
     }
     
-    const price = parseFloat(formData.price);
-    if (isNaN(price) || price <= 0) {
-        showToast('Please enter a valid price (must be a number greater than 0)', 'error');
-        if (elements.itemPrice) {
-            elements.itemPrice.focus();
-            elements.itemPrice.style.borderColor = '#dc3545';
+    const pRIce = parseFloat(formData.pRIce);
+    if (isNaN(pRIce) || pRIce <= 0) {
+        showToast('Please enter a valid pRIce (must be a number greater than 0)', 'error');
+        if (elements.itemPRIce) {
+            elements.itemPRIce.focus();
+            elements.itemPRIce.style.borderColor = '#dc3545';
         }
         return;
     }
@@ -3948,7 +4186,7 @@ async function saveMenuItem(itemData) {
             currentStock: Number(itemData.currentStock),
             minStock: Number(itemData.minStock),
             maxStock: Number(itemData.maxStock),
-            price: Number(itemData.price),
+            pRIce: Number(itemData.pRIce),
             itemType: 'finished',
             isActive: true
         };
@@ -4007,11 +4245,28 @@ async function saveMenuItem(itemData) {
 
 // ==================== DELETE MENU ITEM ====================
 async function deleteMenuItem(itemId, event) {
-    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+    // Validate itemId
+    if (!itemId || itemId.trim() === '') {
+        console.error('❌ Invalid itemId provided');
+        showToast('Error: Invalid product ID', 'error');
+        return;
+    }
+
+    // Find the product in allMenuItems for confirmation
+    const productToDelete = allMenuItems.find(item => item._id === itemId);
+    if (!productToDelete) {
+        console.warn(`⚠️ Product not found in allMenuItems: ${itemId}`);
+        showToast('Product not found in local data', 'error');
+        return;
+    }
+
+    const productName = productToDelete.name || 'Unknown Product';
+    
+    if (!confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
         return;
     }
     
-    console.log(`🗑️ Deleting product: ${itemId}`);
+    console.log(`🗑️ Deleting product: ${productName} (ID: ${itemId})`);
     
     // Get the button element - either from event or by searching the DOM
     let deleteBtn = null;
@@ -4031,6 +4286,7 @@ async function deleteMenuItem(itemId, event) {
     
     try {
         console.log(`📡 Sending DELETE request to /api/menu/${itemId}`);
+        console.log(`📋 Product ID format: ${itemId} (length: ${itemId.length})`);
         
         const response = await fetch(`/api/menu/${itemId}`, {
             method: 'DELETE',
@@ -4042,6 +4298,7 @@ async function deleteMenuItem(itemId, event) {
         
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
+            console.error(`❌ Invalid response type: ${contentType}`);
             throw new Error('Invalid server response format');
         }
         
@@ -4049,12 +4306,13 @@ async function deleteMenuItem(itemId, event) {
         console.log(`📋 Response data:`, data);
         
         if (!response.ok) {
+            console.error(`❌ Server error ${response.status}: ${data.message}`);
             throw new Error(`Server error ${response.status}: ${data.message || 'Unknown error'}`);
         }
         
         if (data.success) {
-            console.log(`✅ Product deleted successfully from MongoDB`);
-            showToast('Product deleted successfully!', 'success');
+            console.log(`✅ Product "${productName}" deleted successfully from MongoDB`);
+            showToast(`Product "${productName}" deleted successfully!`, 'success');
             
             // Remove from local array
             allMenuItems = allMenuItems.filter(item => item._id !== itemId);
@@ -4070,8 +4328,9 @@ async function deleteMenuItem(itemId, event) {
         }
     } catch (error) {
         console.error('❌ Error deleting product:', error);
+        console.error(`❌ Error details:`, error.stack);
         showToast(`Failed to delete product: ${error.message}`, 'error');
-        addNotification(`Delete failed for product`, 'error', itemId);
+        addNotification(`Delete failed for product: ${productName}`, 'error', itemId);
     } finally {
         if (deleteBtn) {
             deleteBtn.style.opacity = '1';
@@ -4119,9 +4378,9 @@ function updateDashboardStats() {
     const inStockItems = allMenuItems.filter(item => (item.currentStock || 0) > (item.minStock || 0)).length;
     
     const menuValueTotal = allMenuItems.reduce((total, item) => {
-        const price = item.price || 0;
+        const pRIce = item.pRIce || 0;
         const stock = item.currentStock || 0;
-        return total + (price * stock);
+        return total + (pRIce * stock);
     }, 0);
     
     const totalEl = document.getElementById('totalProducts');
@@ -4142,7 +4401,7 @@ function updateCategoryCounts() {
     
     const categories = {
         'all': allMenuItems.length,
-        'Rice': allMenuItems.filter(item => item.category === 'Rice').length,
+        'RIce': allMenuItems.filter(item => item.category === 'RIce').length,
         'Sizzling': allMenuItems.filter(item => item.category === 'Sizzling').length,
         'Party': allMenuItems.filter(item => item.category === 'Party').length,
         'Drink': allMenuItems.filter(item => item.category === 'Drink').length,
@@ -4150,7 +4409,7 @@ function updateCategoryCounts() {
         'Milk Tea': allMenuItems.filter(item => item.category === 'Milk Tea').length,
         'Frappe': allMenuItems.filter(item => item.category === 'Frappe').length,
         'Snack & Appetizer': allMenuItems.filter(item => item.category === 'Snack & Appetizer').length,
-        'Budget Meals Served with Rice': allMenuItems.filter(item => item.category === 'Budget Meals Served with Rice').length,
+        'Budget Meals Served with RIce': allMenuItems.filter(item => item.category === 'Budget Meals Served with RIce').length,
         'Specialties': allMenuItems.filter(item => item.category === 'Specialties').length,
     };
     
@@ -4248,13 +4507,13 @@ function renderMenuGrid() {
     
     const gridHTML = filteredItems.map(item => {
         const itemName = item.name || item.itemName || 'Unnamed Product';
-        const itemPrice = item.price || 0;
+        const itemPRIce = item.pRIce || 0;
         const currentStock = item.currentStock || 0;
         const maxStock = item.maxStock || 100;
         const minStock = item.minStock || 5;
         const unit = item.unit || 'unit';
         const displayUnit = unitDisplayLabels[unit] || unit;
-        const itemValue = itemPrice * currentStock;
+        const itemValue = itemPRIce * currentStock;
         const stockPercentage = maxStock > 0 ? ((currentStock / maxStock) * 100) : 0;
         
         let stockClass = '';
@@ -4293,7 +4552,7 @@ function renderMenuGrid() {
             </div>
             <div class="card-body">
                 <div class="card-info"><span class="label">Category:</span> ${getCategoryDisplayName(item.category)}</div>
-                <div class="card-info"><span class="label">Selling Price:</span> ₱${itemPrice.toFixed(2)}</div>
+                <div class="card-info"><span class="label">Selling PRIce:</span> ₱${itemPRIce.toFixed(2)}</div>
                 <div class="card-info"><span class="label">Unit:</span> ${displayUnit}</div>
                 
                 <div style="margin: 12px 0 8px;">
@@ -4652,7 +4911,7 @@ function showStockRequestsModal(pendingRequests) {
                     ${notes}
                     
                     <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
-                        <button onclick="confirmStockRequest('${request._id}')" style="
+                        <button onclick="confirmStockRequest('${request._id}', '${escapeHtml(productName).replace(/'/g, "\\'")}', ${quantity})" style="
                             background: #4caf50;
                             border: none;
                             color: white;
@@ -4735,21 +4994,146 @@ function closeStockRequestsModal() {
 }
 
 // Function to confirm stock request
-async function confirmStockRequest(requestId) {
+async function confirmStockRequest(requestId, productName, requestedQuantity) {
     if (!requestId) {
         showToast('❌ Invalid request ID', 'error');
         return;
     }
     
-    // Show confirmation dialog
-    if (!confirm('Are you sure you want to confirm this stock request? This will update the inventory.')) {
-        return;
-    }
-    
     try {
         console.log('✅ Confirming stock request:', requestId);
+        console.log(`📦 Request details:`, {
+            productName,
+            requestedQuantity,
+            requestId
+        });
         
-        const response = await fetch(`/api/stock-requests/${requestId}/confirm`, {
+        let product = null;
+        
+        // First, try to find in allMenuItems if available
+        if (allMenuItems && allMenuItems.length > 0) {
+            console.log(`� Using loaded allMenuItems (${allMenuItems.length} items)`);
+            
+            // Strategy 1: Exact name match
+            product = allMenuItems.find(p => 
+                (p.name && p.name === productName) ||
+                (p.itemName && p.itemName === productName)
+            );
+            
+            // Strategy 2: Case-insensitive match
+            if (!product) {
+                product = allMenuItems.find(p => 
+                    (p.name && p.name.toLowerCase() === productName.toLowerCase()) ||
+                    (p.itemName && p.itemName.toLowerCase() === productName.toLowerCase())
+                );
+            }
+            
+            // Strategy 3: Partial match
+            if (!product) {
+                product = allMenuItems.find(p => 
+                    (p.name && p.name.includes(productName)) ||
+                    (p.itemName && p.itemName.includes(productName))
+                );
+            }
+        }
+        
+        // If not found in allMenuItems, fetch all products from API
+        if (!product) {
+            console.log('📥 Product not in memory, fetching from API...');
+            
+            const response = await fetch('/api/menu', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                const products = data.data || [];
+                console.log(`📊 Fetched ${products.length} products from API`);
+                
+                // Update allMenuItems for future use
+                if (products.length > 0) {
+                    allMenuItems = products;
+                }
+                
+                // Strategy 1: Exact name match
+                product = products.find(p => 
+                    (p.name && p.name === productName) ||
+                    (p.itemName && p.itemName === productName)
+                );
+                
+                // Strategy 2: Case-insensitive match
+                if (!product) {
+                    product = products.find(p => 
+                        (p.name && p.name.toLowerCase() === productName.toLowerCase()) ||
+                        (p.itemName && p.itemName.toLowerCase() === productName.toLowerCase())
+                    );
+                }
+                
+                // Strategy 3: Partial match
+                if (!product) {
+                    product = products.find(p => 
+                        (p.name && p.name.includes(productName)) ||
+                        (p.itemName && p.itemName.includes(productName))
+                    );
+                }
+            }
+        }
+        
+        if (!product) {
+            console.error(`❌ Product not found. Looking for: "${productName}"`);
+            throw new Error(`Product "${productName}" not found in inventory`);
+        }
+        
+        console.log(`✅ Found product:`, {
+            id: product._id,
+            name: product.name || product.itemName,
+            currentStock: product.currentStock
+        });
+        
+        const currentStock = product.currentStock || 0;
+        const maxStock = product.maxStock || 100;
+        const newStock = currentStock + requestedQuantity;
+        
+        console.log(`📊 Stock calculation:`, {
+            productName,
+            currentStock,
+            requestedQuantity,
+            newStock,
+            maxStock
+        });
+        
+        // Check if would exceed max stock
+        if (newStock > maxStock) {
+            showToast(`❌ Adding ${requestedQuantity} units would exceed max stock (${maxStock})`, 'error');
+            return;
+        }
+        
+        // Update the product stock via API
+        const updateResponse = await fetch(`/api/menu/${product._id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentStock: newStock
+            }),
+            credentials: 'include'
+        });
+        
+        if (!updateResponse.ok) {
+            const error = await updateResponse.text();
+            throw new Error(`Failed to update stock: ${error}`);
+        }
+        
+        console.log('✅ Stock updated in inventory');
+        
+        // Now confirm the request in the database
+        const confirmResponse = await fetch(`/api/stock-requests/${requestId}/confirm`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -4757,20 +5141,26 @@ async function confirmStockRequest(requestId) {
             credentials: 'include'
         });
         
-        if (response.ok) {
-            const result = await response.json();
+        if (confirmResponse.ok) {
+            const result = await confirmResponse.json();
             console.log('✅ Stock request confirmed:', result);
             
-            // Show success message
-            showToast('✅ Stock request confirmed! Inventory updated.', 'success');
+            // Update local allMenuItems
+            const idx = allMenuItems.findIndex(p => p._id === product._id);
+            if (idx >= 0) {
+                allMenuItems[idx].currentStock = newStock;
+            }
             
-            // Refresh ONLY the dashboard grid, not the entire page
+            // Show success message
+            showToast(`✅ Added ${requestedQuantity} units to ${productName}! Stock is now ${newStock}`, 'success');
+            
+            // Close the modal and refresh
+            closeStockRequestsModal();
             lastDashboardLoadTime = 0; // Reset the throttle
             await renderDashboardGrid();
         } else {
-            const error = await response.text();
-            console.error('❌ Failed to confirm stock request:', error);
-            showToast(`❌ Failed: ${error || 'Unknown error'}`, 'error');
+            const error = await confirmResponse.text();
+            throw new Error(`Failed to confirm: ${error}`);
         }
     } catch (error) {
         console.error('❌ Error confirming stock request:', error);
@@ -4785,41 +5175,155 @@ async function rejectStockRequest(requestId) {
         return;
     }
     
-    // Show confirmation dialog
-    if (!confirm('Are you sure you want to reject this stock request?')) {
-        return;
-    }
-    
-    try {
-        console.log('❌ Rejecting stock request:', requestId);
+    // Show custom confirmation dialog
+    return new Promise((resolve) => {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        `;
         
-        const response = await fetch(`/api/stock-requests/${requestId}/reject`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
+        // Create modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            font-family: Arial, sans-serif;
+        `;
         
-        if (response.ok) {
-            const result = await response.json();
-            console.log('❌ Stock request rejected:', result);
+        // Title
+        const title = document.createElement('h2');
+        title.textContent = '⚠️ Confirm Rejection';
+        title.style.cssText = `
+            margin: 0 0 20px 0;
+            color: #d32f2f;
+            text-align: center;
+            font-size: 20px;
+        `;
+        
+        // Message
+        const message = document.createElement('p');
+        message.textContent = 'Are you sure you want to reject this stock request? This action cannot be undone.';
+        message.style.cssText = `
+            margin: 0 0 25px 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+        `;
+        
+        // Buttons container
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.style.cssText = `
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        `;
+        
+        // Cancel button
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = '✕ Cancel';
+        cancelBtn.style.cssText = `
+            flex: 1;
+            padding: 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        `;
+        cancelBtn.onmouseover = () => cancelBtn.style.background = '#5a6268';
+        cancelBtn.onmouseout = () => cancelBtn.style.background = '#6c757d';
+        cancelBtn.onclick = () => {
+            overlay.remove();
+            resolve(false);
+        };
+        
+        // Reject button
+        const rejectBtn = document.createElement('button');
+        rejectBtn.textContent = '⚠️ Reject';
+        rejectBtn.style.cssText = `
+            flex: 1;
+            padding: 12px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        `;
+        rejectBtn.onmouseover = () => rejectBtn.style.background = '#c62828';
+        rejectBtn.onmouseout = () => rejectBtn.style.background = '#d32f2f';
+        rejectBtn.onclick = async () => {
+            overlay.remove();
+            resolve(true);
             
-            // Show success message
-            showToast('✅ Stock request rejected successfully.', 'success');
-            
-            // Refresh ONLY the dashboard grid, not the entire page
-            lastDashboardLoadTime = 0; // Reset the throttle
-            await renderDashboardGrid();
-        } else {
-            const error = await response.text();
-            console.error('❌ Failed to reject stock request:', error);
-            showToast(`❌ Failed: ${error || 'Unknown error'}`, 'error');
-        }
-    } catch (error) {
-        console.error('❌ Error rejecting stock request:', error);
-        showToast(`❌ Error: ${error.message}`, 'error');
-    }
+            // Proceed with rejection
+            try {
+                console.log('❌ Rejecting stock request:', requestId);
+                
+                const response = await fetch(`/api/stock-requests/${requestId}/reject`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('❌ Stock request rejected:', result);
+                    
+                    // Show success message
+                    showToast('✅ Stock request rejected successfully.', 'success');
+                    
+                    // Close the modal and refresh
+                    closeStockRequestsModal();
+                    lastDashboardLoadTime = 0; // Reset the throttle
+                    await renderDashboardGrid();
+                } else {
+                    const error = await response.text();
+                    console.error('❌ Failed to reject stock request:', error);
+                    showToast(`❌ Failed: ${error || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                console.error('❌ Error rejecting stock request:', error);
+                showToast(`❌ Error: ${error.message}`, 'error');
+            }
+        };
+        
+        // Assemble
+        buttonsContainer.appendChild(cancelBtn);
+        buttonsContainer.appendChild(rejectBtn);
+        
+        modal.appendChild(title);
+        modal.appendChild(message);
+        modal.appendChild(buttonsContainer);
+        
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        // Focus reject button
+        rejectBtn.focus();
+    });
 }
 
 // Function to show notifications
@@ -4895,7 +5399,7 @@ async function updateInventoryStats() {
         }).length;
         
         const totalValue = window.allMenuItems.reduce((sum, item) => {
-            return sum + ((item.price || 0) * (item.currentStock || 0));
+            return sum + ((item.pRIce || 0) * (item.currentStock || 0));
         }, 0);
         
         // Update DOM elements
@@ -5191,7 +5695,7 @@ async function quickAddStock(itemId, itemName) {
                     name: product.name || product.itemName,
                     itemName: product.name || product.itemName,
                     category: product.category,
-                    price: product.price,
+                    pRIce: product.pRIce,
                     unit: product.unit,
                     currentStock: newStock,
                     minStock: product.minStock,

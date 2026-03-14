@@ -185,3 +185,11 @@
 <script src="/script/dashboard-realtime.js"></script>
 <script src="/script/dashboard.js"></script>
 
+<!-- Initialize session role for admin dashboard -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sessionManager = new SessionManager();
+    sessionManager.initializeRoleFromData('admin');
+  });
+</script>
+

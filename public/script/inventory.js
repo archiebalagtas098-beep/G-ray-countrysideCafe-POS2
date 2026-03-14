@@ -61,9 +61,13 @@ let isModalOpen = false;
 const categoryUnitsMapping = {
     'meat': ['kg', 'g', 'pieces'],
     'seafood': ['kg', 'g', 'pieces'],
-    'produce': ['kg', 'g', 'pieces'],
     'dairy': ['liters', 'ml', 'pieces'],
+    'produce': ['kg', 'g', 'pieces'],
+    'condiment': ['liters', 'ml', 'pieces', 'bottles'],
+    'oil': ['liters', 'ml', 'bottles'],
     'dry': ['kg', 'g', 'liters', 'ml', 'pieces'],
+    'snacks': ['pieces', 'packs', 'boxes'],
+    'bakery': ['pieces', 'packs', 'boxes'],
     'beverage': ['liters', 'ml', 'pieces'],
     'packaging': ['pieces', 'packs']
 };
@@ -86,29 +90,25 @@ const validRawIngredients = {
     'Pork Belly': 'meat',
     'Pork Chop': 'meat',
     'Pork Hocks': 'meat',
+    'Ground Pork': 'meat',
+    'Bacon': 'meat',
+    'Ham': 'meat',
+    'Bagnet': 'meat',
+    'Hotdog': 'meat',
+    'Beef': 'meat',
+    'Beef Shank': 'meat',
+    'Ground Meat': 'meat',
     'Oxtail': 'meat',
     'Tripe': 'meat',
-    'Beef': 'meat',
-    'Bacon': 'meat',
-    'Ground Pork': 'meat',
     'Chicken': 'meat',
     'Chicken Wings': 'meat',
-    'Shrimp': 'meat',
-    'Fish Fillet': 'meat',
-    'Cream Dory': 'meat',
-    'Beef Shank': 'meat',
-    'Bagnet': 'meat',
-    'Ham': 'meat',
-    'Hotdog': 'meat',
-    'Ground Meat': 'meat',
- 
     
     // ==================== SEAFOOD ====================
-    
+    'Shrimp': 'seafood',
+    'Cream Dory': 'seafood',
     'Tuyo': 'seafood',
     'Tinapa': 'seafood',
     'Fish Fillet': 'seafood',
-    
     
     // ==================== FRESH PRODUCE ====================
     'Garlic': 'produce',
@@ -131,10 +131,9 @@ const validRawIngredients = {
     'Ampalaya': 'produce',
     'Corn': 'produce',
     'Potato': 'produce',
-    'Bread': 'produce',
     'String Beans': 'produce',
-    'Banana Blossom': 'produce',
     'Pechay': 'produce',
+    'Banana Blossom': 'produce',
     'Banana Flower Bud': 'produce',
     'Pineapple': 'produce',
     
@@ -144,46 +143,51 @@ const validRawIngredients = {
     'Milk': 'dairy',
     'Cheese': 'dairy',
     'Cream': 'dairy',
-    'Mayonnaise': 'dairy',
     'Ice Cream': 'dairy',
     'Whipped Cream': 'dairy',
     
-    // ==================== PANTRY STAPLES ====================
-    'Soy Sauce': 'dry',
-    'Vinegar': 'dry',
+    // ==================== CONDIMENTS & SAUCES ====================
+    'Soy Sauce': 'condiment',
+    'Vinegar': 'condiment',
+    'Oyster Sauce': 'condiment',
+    'Fish Sauce': 'condiment',
+    'Shrimp Paste': 'condiment',
+    'Bagoong': 'condiment',
+    'Tamarind Mix': 'condiment',
+    'Tomato Sauce': 'condiment',
+    'Sweet Tomato Sauce': 'condiment',
+    'Pasta Sauce': 'condiment',
+    'Cheese Sauce': 'condiment',
+    'Gravy': 'condiment',
+    'Buffalo Sauce': 'condiment',
+    'Gochujang': 'condiment',
+    'Mayonnaise': 'condiment',
+    'Honey': 'condiment',
+    'Peanut Butter': 'condiment',
+    'Basil Pesto': 'condiment',
+    
+    // ==================== OILS ====================
+    'Cooking Oil': 'oil',
+    'Sesame Oil': 'oil',
+    'Olive Oil': 'oil',
+    'Annatto Oil': 'oil',
+    
+    // ==================== PANTRY DRY GOODS ====================
     'Salt': 'dry',
     'Sugar': 'dry',
-    'Black Pepper': 'dry',
-    'Cooking Oil': 'dry',
-    'Sesame Oil': 'dry',
-    'Olive Oil': 'dry',
     'Flour': 'dry',
+    'Rice Flour': 'dry',
     'Cornstarch': 'dry',
     'Breadcrumbs': 'dry',
-    'Gochujang': 'dry',
-    'Oyster Sauce': 'dry',
-    'Shrimp Paste': 'dry',
-    'Bagoong': 'dry',
-    'Tamarind Mix': 'dry',
+    'Black Pepper': 'dry',
     'Peppercorn': 'dry',
-    'Honey': 'dry',
     'Paprika': 'dry',
     'Bay Leaves': 'dry',
-    'Annatto oil': 'dry',
     'Herbs': 'dry',
-    'Vegetables': 'dry',
-    'Sweet Tomato Sauce': 'dry',
-    'Tomato Sauce': 'dry',
-    'Pasta Sauce': 'dry',
-    'Gravy': 'dry',
-    'Cheese Sauce': 'dry',
-    'Water': 'dry',
-    'Ice': 'dry',
+    'Rice': 'dry',
+    'Toasted Ground Rice': 'dry',
+    'Fried Rice': 'dry',
     'Pine Nuts': 'dry',
-    'Basil Pesto': 'dry',
-    'Buffalo Sauce': 'dry',
-    'Peanut Butter': 'dry',
-    'Rice Flour': 'dry',
     'Ground Peanuts': 'dry',
     
     // ==================== NOODLES & PASTA ====================
@@ -191,12 +195,16 @@ const validRawIngredients = {
     'Spaghetti Pasta': 'dry',
     'Bihon Noodles': 'dry',
     
-    // ==================== RICE & GRAINS ====================
-    'Rice': 'dry',
-    'Toasted Ground Rice': 'dry',
-    'Fried Rice': 'dry',
+    // ==================== SNACKS & SIDES ====================
+    'Nacho Chips': 'snacks',
+    'Tortilla Chips': 'snacks',
+    'French Fries': 'snacks',
+    'Lumpiang Wrapper': 'snacks',
     
-    // ==================== BEVERAGES ====================
+    // ==================== BAKERY ====================
+    'Bread': 'bakery',
+    
+    // ==================== BEVERAGES & SYRUPS ====================
     'Lemon Juice': 'beverage',
     'Blue Syrup': 'beverage',
     'Tea': 'beverage',
@@ -206,46 +214,40 @@ const validRawIngredients = {
     'Espresso': 'beverage',
     'Hot Water': 'beverage',
     'Steamed Milk': 'beverage',
-    'Carbonated Soft Drink': 'beverage',
     'Carbonated Water': 'beverage',
-    'Beef Broth': 'beverage',
     'Milk Tea Base': 'beverage',
-    
-    // ==================== COFFEE & TEA INGREDIENTS ====================
+    'High Fructose Corn Syrup': 'beverage',
+    'Caramel Color': 'beverage',
     'Coffee Beans': 'dry',
     'Matcha Powder': 'dry',
     'Matcha Green Tea Powder': 'dry',
-    'Caramel Syrup': 'dry',
-    'Caramel Sauce': 'dry',
-    'Vanilla Syrup': 'dry',
-    'Strawberry Syrup': 'dry',
-    'Mango Syrup': 'dry',
-    'Mango Flavor': 'dry',
-    'Mango Puree': 'dry',
-    'Cream Cheese Flavor': 'dry',
-    'White Chocolate Syrup': 'dry',
-    'Dark Chocolate Syrup': 'dry',
-    'Chocolate Syrup': 'dry',
-    'Chocolate Sauce': 'dry',
-    'Chocolate Mousse': 'dry',
+    'Caramel Syrup': 'beverage',
+    'Caramel Sauce': 'condiment',
+    'Vanilla Syrup': 'beverage',
+    'Strawberry Syrup': 'beverage',
+    'Mango Syrup': 'beverage',
+    'Mango Flavor': 'beverage',
+    'Mango Puree': 'beverage',
+    'Cream Cheese Flavor': 'beverage',
+    'White Chocolate Syrup': 'beverage',
+    'Dark Chocolate Syrup': 'beverage',
+    'Chocolate Syrup': 'beverage',
+    'Chocolate Sauce': 'condiment',
+    'Chocolate Mousse': 'dairy',
     'Tapioca Pearls': 'dry',
     'Cookie Crumbs': 'dry',
     'Sweetener': 'dry',
-    'Okinawa Syrup': 'dry',
-    'Wintermelon Syrup': 'dry',
-    'Marshmallows': 'dry',
+    'Okinawa Syrup': 'beverage',
+    'Wintermelon Syrup': 'beverage',
+    'Marshmallows': 'snacks',
     'Nuts': 'dry',
     'Graham Crumbs': 'dry',
-    'Coke Syrup': 'beverage',
-    'Coke Zero Syrup': 'beverage',
-    'Sprite Syrup': 'beverage',
-    'Royal Syrup': 'beverage',
     
     // ==================== SNACKS & SIDES ====================
-    'Nacho Chips': 'dry',
-    'Tortilla Chips': 'dry',
-    'Lumpiang Wrapper': 'dry',
-    'French Fries': 'dry',
+    'Nacho Chips': 'snacks',
+    'Tortilla Chips': 'snacks',
+    'Lumpiang Wrapper': 'snacks',
+    'French Fries': 'snacks',
     
     // ==================== PACKAGING ====================
     'Plastic Containers (Small)': 'packaging',
@@ -267,7 +269,7 @@ const validRawIngredients = {
     'Tray S': 'packaging',
     'Tray M': 'packaging',
     'Tray L': 'packaging'
-};
+}
 
 // ==================== COMPLETE RECIPE MAPPING ====================
 const recipeMapping = {
@@ -1258,6 +1260,33 @@ const recipeMapping = {
         'All food items',
         'All dine-in orders',
         'All takeout orders'
+    ],
+
+    'High Fructose Corn Syrup': [
+        'All carbonated beverages'
+    ],
+    'Caramel color': [
+        'All carbonated beverages'
+    ],
+    'Phosphoric acid': [
+        'All carbonated beverages'
+    ],
+    'Natural flavors': [
+        'All carbonated beverages'
+    ],
+    'Caffeine': [
+        'All carbonated beverages'
+    ],
+    'Plastic Bottle (1.5)': [
+        'Soda 1.5L Coke',
+        'Soda 1.5L Coke Zero',
+        'Soda 1.5L Sprite',
+        'Soda 1.5L Royal'
+    ],
+    'Plastic Bottle (500ml)': [
+        'Soda (Mismo) Coke',
+        'Soda (Mismo) Sprite',
+        'Soda (Mismo) Royal'
     ]
 };
 
@@ -1374,9 +1403,13 @@ function updateCategoryOptions() {
     const categories = {
         'meat': 'Meat & Poultry',
         'seafood': 'Seafood',
-        'produce': 'Vegetables & Fruits',
         'dairy': 'Dairy & Eggs',
+        'produce': 'Vegetables & Fruits',
+        'condiment': 'Condiments & Sauces',
+        'oil': 'Oils',
         'dry': 'Dry Goods',
+        'snacks': 'Snacks & Sides',
+        'bakery': 'Bakery',
         'beverage': 'Beverages',
         'packaging': 'Packaging'
     };
@@ -4095,28 +4128,28 @@ const menuItemIngredients = {
     'Iced Dark Chocolate': ['Dark chocolate syrup', 'Milk', 'Ice', 'Plastic Cups', 'Straws'],
 
     // ==================== MILK TEA ====================
-    'Milk Tea Regular': ['Black tea', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
-    'Caramel Milk Tea': ['Black tea', 'Milk', 'Caramel syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
-    'Cookies & Cream Milk Tea': ['Black tea', 'Milk', 'Cookie crumbs', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
-    'Dark Choco Milk Tea': ['Black tea', 'Milk', 'Chocolate syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
-    'Okinawa Milk Tea': ['Black tea', 'Milk', 'Okinawa syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
-    'Wintermelon Milk Tea': ['Wintermelon syrup', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
-    'Matcha Green Tea Milk Tea': ['Matcha powder', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba straws'],
+    'Milk Tea Regular': ['Black tea', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
+    'Caramel Milk Tea': ['Black tea', 'Milk', 'Caramel syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
+    'Cookies & Cream Milk Tea': ['Black tea', 'Milk', 'Cookie crumbs', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
+    'Dark Choco Milk Tea': ['Black tea', 'Milk', 'Chocolate syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
+    'Okinawa Milk Tea': ['Black tea', 'Milk', 'Okinawa syrup', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
+    'Wintermelon Milk Tea': ['Wintermelon syrup', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
+    'Matcha Green Tea Milk Tea': ['Matcha powder', 'Milk', 'Sugar', 'Tapioca pearls', 'Ice', 'Plastic Cups', 'Boba Straws'],
 
     // ==================== FRAPPE - PREMIUM ====================
-    'Matcha Green Tea Frappe': ['Matcha powder', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
-    'Salted Caramel Frappe': ['Coffee', 'Caramel syrup', 'Milk', 'Ice cream', 'Ice', 'Salt', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
-    'Strawberry Cheesecake Frappe': ['Strawberry syrup', 'Cream cheese', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Graham crumbs', 'Plastic Cups', 'Boba straws'],
-    'Mango Cheesecake Frappe': ['Mango puree', 'Cream cheese', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Graham crumbs', 'Plastic Cups', 'Boba straws'],
-    'Strawberry Cream Frappe': ['Strawberry syrup', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
-    'Cookies & Cream Frappe': ['Coffee', 'Cookie crumbs', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Chocolate syrup', 'Plastic Cups', 'Boba straws'],
-    'Rocky Road Frappe': ['Chocolate syrup', 'Milk', 'Ice cream', 'Ice', 'Marshmallows', 'Nuts', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
+    'Matcha Green Tea Frappe': ['Matcha powder', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
+    'Salted Caramel Frappe': ['Coffee', 'Caramel syrup', 'Milk', 'Ice cream', 'Ice', 'Salt', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
+    'Strawberry Cheesecake Frappe': ['Strawberry syrup', 'Cream cheese', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Graham crumbs', 'Plastic Cups', 'Boba Straws'],
+    'Mango Cheesecake Frappe': ['Mango puree', 'Cream cheese', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Graham crumbs', 'Plastic Cups', 'Boba Straws'],
+    'Strawberry Cream Frappe': ['Strawberry syrup', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
+    'Cookies & Cream Frappe': ['Coffee', 'Cookie crumbs', 'Milk', 'Ice cream', 'Ice', 'Sugar', 'Whipped cream', 'Chocolate syrup', 'Plastic Cups', 'Boba Straws'],
+    'Rocky Road Frappe': ['Chocolate syrup', 'Milk', 'Ice cream', 'Ice', 'Marshmallows', 'Nuts', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
 
     // ==================== FRAPPE - REGULAR ====================
-    'Choco Fudge Frappe': ['Chocolate syrup', 'Milk', 'Ice cream', 'Ice', 'Whipped cream', 'Chocolate sauce', 'Plastic Cups', 'Boba straws'],
-    'Choco Mousse Frappe': ['Chocolate syrup', 'Chocolate mousse', 'Milk', 'Ice', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
-    'Coffee Crumble Frappe': ['Coffee', 'Milk', 'Ice cream', 'Ice', 'Cookie crumbs', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
-    'Vanilla Cream Frappe': ['Vanilla syrup', 'Milk', 'Ice cream', 'Ice', 'Whipped cream', 'Plastic Cups', 'Boba straws'],
+    'Choco Fudge Frappe': ['Chocolate syrup', 'Milk', 'Ice cream', 'Ice', 'Whipped cream', 'Chocolate sauce', 'Plastic Cups', 'Boba Straws'],
+    'Choco Mousse Frappe': ['Chocolate syrup', 'Chocolate mousse', 'Milk', 'Ice', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
+    'Coffee Crumble Frappe': ['Coffee', 'Milk', 'Ice cream', 'Ice', 'Cookie crumbs', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
+    'Vanilla Cream Frappe': ['Vanilla syrup', 'Milk', 'Ice cream', 'Ice', 'Whipped cream', 'Plastic Cups', 'Boba Straws'],
 
     // ==================== SNACKS & APPETIZERS ====================
     'Cheesy Nachos': ['Nacho chips', 'Cheese sauce', 'Cheese', 'Cooking oil', 'Onion', 'Plates', 'Napkins'],
@@ -4147,7 +4180,7 @@ const menuItemIngredients = {
     'Plastic Cups (12oz)': ['Plastic cups pack'],
     'Plastic Cups (16oz)': ['Plastic cups pack'],
     'Straws (Regular)': ['Straws pack'],
-    'Straws (Boba)': ['Boba straws pack'],
+    'Straws (Boba)': ['Boba Straws pack'],
     'Plates (Small)': ['Food container pack'],
     'Plates (Medium)': ['Food container pack'],
     'Plates (Large)': ['Food container pack'],

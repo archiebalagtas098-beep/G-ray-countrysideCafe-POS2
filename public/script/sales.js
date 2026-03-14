@@ -676,12 +676,24 @@ function exportToCSV(reportData, dateStr, timeStr) {
     exportToExcel(reportData, dateStr, timeStr);
 }
 
-// ==================== EXPORT TO WORD DOCUMENT ====================
-function exportToCSV(reportData, dateStr, timeStr) {
-    exportToExcel(reportData, dateStr, timeStr);
-}
-
 function showNotification(message, type = 'info') {
+    // Input validation - ensure message is a string
+    if (!message || typeof message !== 'string') {
+        console.warn('⚠️ showNotification: Invalid message parameter', message);
+        message = 'An operation was completed';
+    }
+    
+    // Sanitize message to prevent XSS
+    const sanitizedMessage = message.replace(/[<>]/g, (char) => {
+        return char === '<' ? '&lt;' : '&gt;';
+    });
+    
+    // Validate type parameter
+    if (!['success', 'error', 'info', 'warning'].includes(type)) {
+        console.warn('⚠️ showNotification: Invalid type parameter', type);
+        type = 'info';
+    }
+    
     const existingNotifications = document.querySelectorAll('.export-notification');
     existingNotifications.forEach(notification => {
         if (notification.parentNode) {
@@ -693,7 +705,7 @@ function showNotification(message, type = 'info') {
     notification.className = `export-notification export-notification-${type}`;
     notification.innerHTML = `
         <span class="notification-icon">${type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ'}</span>
-        <span class="notification-text">${message}</span>
+        <span class="notification-text">${sanitizedMessage}</span>
     `;
     
     if (!document.querySelector('#export-notification-styles')) {
@@ -735,6 +747,10 @@ function showNotification(message, type = 'info') {
                 background: linear-gradient(135deg, #2196F3, #1976D2);
                 border-left: 4px solid #1565C0;
             }
+            .export-notification-warning {
+                background: linear-gradient(135deg, #ff9800, #f57c00);
+                border-left: 4px solid #e65100;
+            }
             .notification-icon { font-size: 18px; font-weight: bold; }
             .notification-text { flex: 1; }
         `;
@@ -770,22 +786,37 @@ async function loadSalesReport() {
         }
         
         const result = await response.json();
+        
+        // Validate response structure
+        if (!result || typeof result !== 'object') {
+            throw new Error('Invalid response format from API');
+        }
+        
         const stats = result.success ? result.data : result;
+        
+        // Validate stats object
+        if (!stats || typeof stats !== 'object') {
+            console.warn('⚠️ Stats object is invalid, using defaults');
+            throw new Error('Stats data is missing or invalid');
+        }
         
         console.log('Sales report stats:', stats);
         
         const oldData = { ...salesData };
         
-        salesData.totalRevenue = stats.totalRevenue || 0;
+        // Safe property access with defaults
+        salesData.totalRevenue = Math.max(0, parseFloat(stats.totalRevenue) || 0);
         salesData.grossSalesRevenue = salesData.totalRevenue;
         salesData.grossProfit = salesData.totalRevenue * 0.65;
         salesData.margin = salesData.totalRevenue > 0 ? (salesData.grossProfit / salesData.totalRevenue) * 100 : 0;
-        salesData.totalOrders = stats.totalOrders || 0;
-        salesData.totalCustomers = stats.totalCustomers || 0;
+        salesData.totalOrders = Math.max(0, parseInt(stats.totalOrders) || 0);
+        salesData.totalCustomers = Math.max(0, parseInt(stats.totalCustomers) || 0);
         salesData.avgOrderValue = salesData.totalOrders > 0 ? salesData.totalRevenue / salesData.totalOrders : 0;
         
-        if (stats.recentOrders && stats.recentOrders.length > 0) {
+        if (Array.isArray(stats.recentOrders) && stats.recentOrders.length > 0) {
             salesData.recentOrders = stats.recentOrders;
+        } else {
+            salesData.recentOrders = [];
         }
         
         console.log('✅ Calculated Sales Data:', {
@@ -802,9 +833,12 @@ async function loadSalesReport() {
         
         updateSalesReportDisplay(oldData);
         
-        setTimeout(() => {
-            calculateRevenueBreakdown();
-        }, 500);
+        // Only calculate breakdown if data was successfully loaded
+        if (salesData.totalRevenue > 0 || salesData.totalOrders > 0) {
+            setTimeout(() => {
+                calculateRevenueBreakdown();
+            }, 500);
+        }
         
     } catch (error) {
         console.error('❌ Error loading sales report:', error);
@@ -1014,8 +1048,13 @@ function updateRevenueBreakdown() {
                         categoryRevenue[mappedCategory] += itemTotal;
                         console.log(`  Item: ${itemName || 'Unknown'} -> ${mappedCategory}: ₱${itemTotal.toFixed(2)}`);
                     } else {
-                        console.log(`  Item: ${itemName || 'Unknown'} -> Unknown category, defaulting to Drink`);
-                        categoryRevenue['Drink'] += itemTotal;
+                        // Item couldn't be mapped - log warning but default to 'Drink' category
+                        console.warn(`  ⚠️ Item: ${itemName || 'Unknown'} -> Unknown category, defaulting to Drink`);
+                        if (categoryRevenue.hasOwnProperty('Drink')) {
+                            categoryRevenue['Drink'] += itemTotal;
+                        } else {
+                            console.error(`  ❌ Fallback category 'Drink' not found in categoryRevenue!`);
+                        }
                     }
                 });
             } else if (order.totalAmount) {
@@ -1537,22 +1576,64 @@ function addAnimationStyles() {
 }
 
 let salesEventSource = null;
+let salesReconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 5;
+const RECONNECT_DELAY = 5000; // 5 seconds
 
 function setupSalesRealTimeUpdates() {
     try {
         console.log('🔗 Setting up real-time updates for sales report...');
         
+        // Close existing connection properly
         if (salesEventSource) {
-            salesEventSource.close();
+            try {
+                salesEventSource.close();
+            } catch (e) {
+                console.warn('⚠️ Error closing previous EventSource:', e.message);
+            }
             salesEventSource = null;
         }
         
+        // Create new EventSource with timeout
         salesEventSource = new EventSource('/api/admin/events');
+        
+        // Set a timeout to prevent hanging connections
+        const connectionTimeout = setTimeout(() => {
+            console.warn('⚠️ Real-time connection timeout, reconnecting...');
+            if (salesEventSource && salesEventSource.readyState === EventSource.OPEN) {
+                try {
+                    salesEventSource.close();
+                } catch (e) {
+                    console.warn('⚠️ Error closing timeout connection:', e.message);
+                }
+                salesEventSource = null;
+                attemptSalesReconnect();
+            }
+        }, 30000); // 30 second timeout
         
         salesEventSource.onmessage = (event) => {
             try {
+                // Clear timeout on successful message
+                clearTimeout(connectionTimeout);
+                
+                // Validate event data
+                if (!event || !event.data) {
+                    console.warn('⚠️ Received empty event data');
+                    return;
+                }
+                
                 const data = JSON.parse(event.data);
+                
+                // Validate data structure
+                if (!data || typeof data !== 'object') {
+                    console.warn('⚠️ Invalid event data structure');
+                    return;
+                }
+                
                 console.log('📨 Real-time event received:', data.type);
+                
+                // Reset reconnection attempts on successful message
+                salesReconnectAttempts = 0;
                 
                 if (data.type === 'new_order') {
                     console.log('🆕 New order detected! Refreshing sales report and revenue breakdown...');
@@ -1568,6 +1649,8 @@ function setupSalesRealTimeUpdates() {
                     setTimeout(() => {
                         calculateRevenueBreakdown();
                     }, 800);
+                } else {
+                    console.debug('📨 Unhandled event type:', data.type);
                 }
             } catch (error) {
                 console.error('❌ Error parsing real-time event:', error);
@@ -1575,28 +1658,57 @@ function setupSalesRealTimeUpdates() {
         };
         
         salesEventSource.onerror = (error) => {
-            console.warn('⚠️ Real-time connection error, attempting to reconnect...');
+            console.warn('⚠️ Real-time connection error:', error);
+            console.warn('   Error state:', error.type, error.message);
             
+            // Log readyState
             if (salesEventSource) {
-                salesEventSource.close();
+                const stateNames = ['CONNECTING', 'OPEN', 'CLOSED'];
+                console.warn(`   EventSource readyState: ${stateNames[salesEventSource.readyState] || 'UNKNOWN'}`);
+            }
+            
+            // Close the connection
+            if (salesEventSource) {
+                try {
+                    salesEventSource.close();
+                } catch (e) {
+                    console.warn('⚠️ Error closing failed connection:', e.message);
+                }
                 salesEventSource = null;
             }
             
-            setTimeout(() => {
-                console.log('🔄 Reconnecting to real-time updates...');
-                setupSalesRealTimeUpdates();
-            }, 5000);
+            // Attempt to reconnect with backoff
+            attemptSalesReconnect();
         };
         
         salesEventSource.onopen = () => {
             console.log('✅ Real-time connection established for sales report');
+            salesReconnectAttempts = 0;
         };
         
         window.salesEventSource = salesEventSource;
         
     } catch (error) {
         console.error('❌ Error setting up real-time updates:', error);
+        attemptSalesReconnect();
     }
+}
+
+function attemptSalesReconnect() {
+    salesReconnectAttempts++;
+    
+    if (salesReconnectAttempts > MAX_RECONNECT_ATTEMPTS) {
+        console.error(`❌ Failed to reconnect after ${MAX_RECONNECT_ATTEMPTS} attempts. Giving up on real-time updates.`);
+        showNotification('Real-time updates unavailable. Please refresh the page.', 'warning');
+        return;
+    }
+    
+    const backoffDelay = RECONNECT_DELAY * Math.pow(1.5, salesReconnectAttempts - 1);
+    console.log(`🔄 Reconnecting to real-time updates (attempt ${salesReconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}) in ${(backoffDelay / 1000).toFixed(1)}s...`);
+    
+    setTimeout(() => {
+        setupSalesRealTimeUpdates();
+    }, backoffDelay);
 }
 
 function getItemCategory(itemName) {
@@ -2192,9 +2304,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     window.addEventListener('beforeunload', function() {
+        // Properly clean up EventSource connection
         if (salesEventSource) {
-            salesEventSource.close();
-            salesEventSource = null;
+            try {
+                console.log('🔌 Closing sales EventSource connection...');
+                salesEventSource.close();
+                salesEventSource = null;
+            } catch (error) {
+                console.warn('⚠️ Error closing EventSource:', error.message);
+            }
+        }
+    });
+    
+    // Also clean up on page visibility change
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            console.log('👁️ Page hidden - maintaining EventSource connection');
+        } else {
+            console.log('👁️ Page visible - EventSource should be active');
+            if (!salesEventSource || salesEventSource.readyState === EventSource.CLOSED) {
+                console.log('🔄 Reconnecting EventSource...');
+                setupSalesRealTimeUpdates();
+            }
         }
     });
 });

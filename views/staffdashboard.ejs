@@ -498,18 +498,19 @@
         const tableBody = document.getElementById('tableBody');
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         
-        // Category mapping for display names to abbreviated names
+        // Category mapping for display names to actual category names in data
         const categoryMap = {
             'all': 'all',
-            'Rice Bowl Meals': 'Rice',
-            'Hot Sizzlers': 'Sizzling',
-            'Party Tray': 'Party',
-            'Drinks': 'Drink',
-            'Coffee': 'Cafe',
+            'Rice Bowl Meals': 'Rice Bowl Meals',
+            'Hot Sizzlers': 'Hot Sizzlers',
+            'Party Tray': 'Party Tray',
+            'Drinks': 'Drinks',
+            'Coffee': 'Coffee',
             'Milk Tea': 'Milk Tea',
             'Frappe': 'Frappe',
-            'Snacks & Appetizer': 'Snack & Appetizer',
+            'Snacks & Appetizer': 'Snacks & Appetizer',
             'Budget Meals Served with Rice': 'Budget Meals Served with Rice',
+            'Budget Meals': 'Budget Meals Served with Rice',
             'Specialties': 'Specialties'
         };
         
@@ -525,10 +526,8 @@
         
         // Apply category filter
         if (currentStockFilter !== 'all') {
-            const abbrevCategory = categoryMap[currentStockFilter] || currentStockFilter;
-            filteredData = filteredData.filter(item => 
-                item.category === abbrevCategory || item.category === currentStockFilter
-            );
+            const mappedCategory = categoryMap[currentStockFilter] || currentStockFilter;
+            filteredData = filteredData.filter(item => item.category === mappedCategory);
         }
         
         tableBody.innerHTML = '';
