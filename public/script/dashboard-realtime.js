@@ -22,74 +22,18 @@ function debugLog(message, type = 'info') {
   console.log(`[DEBUG] ${message}`);
 }
 
-// Simple real-time test for G'RAY COUNTRYSIDE CAFÉ POS System
+// Simple real-time test for G'RAY COUNTRYSIDE CAFÉ POS System - DISABLED
 async function testRealTime() {
   debugLog('========================================');
-  debugLog('🔄 Starting G\'RAY COUNTRYSIDE CAFÉ Real-time Test');
+  debugLog('ℹ️ Real-time updates disabled - using periodic refresh only');
   debugLog('========================================');
   
   try {
-    // Check if we're logged in as admin
-    const token = document.cookie.includes('token=');
-    debugLog(`🔐 Authentication: ${token ? 'Logged in' : 'Not logged in'}`);
-    
-    if (!token) {
-      debugLog('⚠️ Please log in as admin to receive real-time updates', 'error');
-      return;
-    }
-    
-    // Try to connect to SSE endpoint
-    debugLog('📡 Connecting to real-time events endpoint...');
-    
-    const eventSource = new EventSource('/api/admin/events');
-    
-    eventSource.onopen = () => {
-      debugLog('✅ Connected to G\'RAY COUNTRYSIDE CAFÉ real-time server', 'success');
-      debugLog('📊 Listening for: New Orders, Low Stock Alerts, Stats Updates');
-    };
-    
-    eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        debugLog(`📥 Received event: ${data.type}`);
-        
-        switch(data.type) {
-          case 'new_order':
-            handleNewOrder(data.data);
-            break;
-          case 'low_stock_alert':
-            handleLowStockAlert(data.data);
-            break;
-          case 'stats_update':
-            handleStatsUpdate(data.data);
-            break;
-          case 'connected':
-            debugLog('🔗 Real-time connection established', 'success');
-            break;
-          default:
-            debugLog(`📤 Unknown event type: ${data.type}`);
-        }
-      } catch (e) {
-        debugLog(`❌ Error parsing event: ${e.message}`, 'error');
-      }
-    };
-    
-    eventSource.onerror = (error) => {
-      debugLog(`❌ Real-time connection error`, 'error');
-      eventSource.close();
-      
-      // Try to reconnect after 5 seconds
-      setTimeout(() => {
-        debugLog('🔄 Reconnecting to real-time server...');
-        testRealTime();
-      }, 5000);
-    };
-    
-    // Store for cleanup
-    window._eventSource = eventSource;
+    debugLog('ℹ️ Real-time EventSource connections have been disabled to prevent duplicate data');
+    debugLog('✅ Periodic refresh is configured and working properly');
     
   } catch (error) {
-    debugLog(`❌ Real-time setup failed: ${error.message}`, 'error');
+    debugLog(`⚠️ Note: ${error.message}`);
   }
 }
 

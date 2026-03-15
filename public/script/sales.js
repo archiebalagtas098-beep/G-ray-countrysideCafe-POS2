@@ -1581,134 +1581,13 @@ const MAX_RECONNECT_ATTEMPTS = 5;
 const RECONNECT_DELAY = 5000; // 5 seconds
 
 function setupSalesRealTimeUpdates() {
-    try {
-        console.log('🔗 Setting up real-time updates for sales report...');
-        
-        // Close existing connection properly
-        if (salesEventSource) {
-            try {
-                salesEventSource.close();
-            } catch (e) {
-                console.warn('⚠️ Error closing previous EventSource:', e.message);
-            }
-            salesEventSource = null;
-        }
-        
-        // Create new EventSource with timeout
-        salesEventSource = new EventSource('/api/admin/events');
-        
-        // Set a timeout to prevent hanging connections
-        const connectionTimeout = setTimeout(() => {
-            console.warn('⚠️ Real-time connection timeout, reconnecting...');
-            if (salesEventSource && salesEventSource.readyState === EventSource.OPEN) {
-                try {
-                    salesEventSource.close();
-                } catch (e) {
-                    console.warn('⚠️ Error closing timeout connection:', e.message);
-                }
-                salesEventSource = null;
-                attemptSalesReconnect();
-            }
-        }, 30000); // 30 second timeout
-        
-        salesEventSource.onmessage = (event) => {
-            try {
-                // Clear timeout on successful message
-                clearTimeout(connectionTimeout);
-                
-                // Validate event data
-                if (!event || !event.data) {
-                    console.warn('⚠️ Received empty event data');
-                    return;
-                }
-                
-                const data = JSON.parse(event.data);
-                
-                // Validate data structure
-                if (!data || typeof data !== 'object') {
-                    console.warn('⚠️ Invalid event data structure');
-                    return;
-                }
-                
-                console.log('📨 Real-time event received:', data.type);
-                
-                // Reset reconnection attempts on successful message
-                salesReconnectAttempts = 0;
-                
-                if (data.type === 'new_order') {
-                    console.log('🆕 New order detected! Refreshing sales report and revenue breakdown...');
-                    loadSalesReport();
-                    
-                    setTimeout(() => {
-                        calculateRevenueBreakdown();
-                    }, 800);
-                } else if (data.type === 'stats_update') {
-                    console.log('📊 Stats update detected! Refreshing sales report...');
-                    loadSalesReport();
-                    
-                    setTimeout(() => {
-                        calculateRevenueBreakdown();
-                    }, 800);
-                } else {
-                    console.debug('📨 Unhandled event type:', data.type);
-                }
-            } catch (error) {
-                console.error('❌ Error parsing real-time event:', error);
-            }
-        };
-        
-        salesEventSource.onerror = (error) => {
-            console.warn('⚠️ Real-time connection error:', error);
-            console.warn('   Error state:', error.type, error.message);
-            
-            // Log readyState
-            if (salesEventSource) {
-                const stateNames = ['CONNECTING', 'OPEN', 'CLOSED'];
-                console.warn(`   EventSource readyState: ${stateNames[salesEventSource.readyState] || 'UNKNOWN'}`);
-            }
-            
-            // Close the connection
-            if (salesEventSource) {
-                try {
-                    salesEventSource.close();
-                } catch (e) {
-                    console.warn('⚠️ Error closing failed connection:', e.message);
-                }
-                salesEventSource = null;
-            }
-            
-            // Attempt to reconnect with backoff
-            attemptSalesReconnect();
-        };
-        
-        salesEventSource.onopen = () => {
-            console.log('✅ Real-time connection established for sales report');
-            salesReconnectAttempts = 0;
-        };
-        
-        window.salesEventSource = salesEventSource;
-        
-    } catch (error) {
-        console.error('❌ Error setting up real-time updates:', error);
-        attemptSalesReconnect();
-    }
+    console.log('ℹ️ Real-time updates disabled - using periodic refresh only');
+    // Real-time EventSource connections disabled to prevent duplicate data
 }
 
 function attemptSalesReconnect() {
-    salesReconnectAttempts++;
-    
-    if (salesReconnectAttempts > MAX_RECONNECT_ATTEMPTS) {
-        console.error(`❌ Failed to reconnect after ${MAX_RECONNECT_ATTEMPTS} attempts. Giving up on real-time updates.`);
-        showNotification('Real-time updates unavailable. Please refresh the page.', 'warning');
-        return;
-    }
-    
-    const backoffDelay = RECONNECT_DELAY * Math.pow(1.5, salesReconnectAttempts - 1);
-    console.log(`🔄 Reconnecting to real-time updates (attempt ${salesReconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}) in ${(backoffDelay / 1000).toFixed(1)}s...`);
-    
-    setTimeout(() => {
-        setupSalesRealTimeUpdates();
-    }, backoffDelay);
+    // Reconnection disabled - real-time updates are disabled
+    console.log('ℹ️ Real-time reconnection disabled');
 }
 
 function getItemCategory(itemName) {

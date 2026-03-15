@@ -5233,14 +5233,21 @@ app.get("/api/orders/top-items", verifyToken, async (req, res) => {
         const dateRange = new Date();
         dateRange.setDate(dateRange.getDate() - days);
         
-        console.log(`📊 Fetching top items: limit=${limit}, days=${days}, dateRange=${dateRange}`);
+        console.log(`\n${'='.repeat(60)}`);
+        console.log('📊 API: /api/orders/top-items');
+        console.log(`${'='.repeat(60)}`);
+        console.log(`⚙️ Parameters: limit=${limit}, days=${days}`);
+        console.log(`📅 Date range: ${dateRange.toISOString().split('T')[0]} to today`);
         
         // First, check if there are ANY orders in the system
         const totalOrders = await Order.countDocuments();
         const completedOrders = await Order.countDocuments({ status: 'completed' });
         const recentOrders = await Order.countDocuments({ createdAt: { $gte: dateRange } });
         
-        console.log(`📋 Order counts: total=${totalOrders}, completed=${completedOrders}, recent(${days}d)=${recentOrders}`);
+        console.log(`📋 Database order counts:`);
+        console.log(`   - Total orders: ${totalOrders}`);
+        console.log(`   - Completed orders: ${completedOrders}`);
+        console.log(`   - Recent (${days}d): ${recentOrders}`);
         
         // Get all orders first (regardless of status) to ensure we get data
         const topItems = await Order.aggregate([
@@ -5272,24 +5279,34 @@ app.get("/api/orders/top-items", verifyToken, async (req, res) => {
             { $limit: limit }
         ]);
         
-        console.log(`✅ Top items aggregation returned: ${topItems.length} items`);
+        console.log(`✅ Aggregation returned: ${topItems.length} items`);
         
         if (topItems.length > 0) {
-            console.log('📋 Sample top items:', topItems.slice(0, 2).map(i => ({
-                name: i._id,
-                qty: i.totalQuantity,
-                revenue: i.totalRevenue
-            })));
+            console.log('📋 Top items found:');
+            topItems.forEach((item, idx) => {
+                console.log(`   [${idx + 1}] ${item._id}`);
+                console.log(`       - Qty: ${item.totalQuantity}, Revenue: ₱${item.totalRevenue.toFixed(2)}`);
+            });
         } else {
-            console.warn('⚠️ No items found. Checking raw order structure...');
-            const sampleOrder = await Order.findOne();
-            console.log('Sample order structure:', sampleOrder ? {
-                id: sampleOrder._id,
-                status: sampleOrder.status,
-                itemsCount: sampleOrder.items?.length,
-                firstItem: sampleOrder.items?.[0]
-            } : 'No orders in database');
+            console.warn('⚠️ No top items found in recent orders');
+            console.log('🔍 Checking database structure...');
+            
+            const sampleOrder = await Order.findOne().lean();
+            if (sampleOrder) {
+                console.log('📦 Sample order found:');
+                console.log(`   - ID: ${sampleOrder._id}`);
+                console.log(`   - Status: ${sampleOrder.status}`);
+                console.log(`   - Items count: ${sampleOrder.items?.length || 0}`);
+                if (sampleOrder.items?.length > 0) {
+                    console.log(`   - First item: ${sampleOrder.items[0].name} (qty: ${sampleOrder.items[0].quantity})`);
+                }
+            } else {
+                console.warn('❌ NO ORDERS FOUND IN DATABASE - Dashboard will show empty state');
+                console.log('💡 Tip: Create test orders first via the POS menu system');
+            }
         }
+        
+        console.log(`${'='.repeat(60)}\n`);
         
         res.json({
             success: true,
@@ -5299,6 +5316,7 @@ app.get("/api/orders/top-items", verifyToken, async (req, res) => {
         });
     } catch (error) {
         console.error('❌ Error fetching top selling items:', error);
+        console.error(`Stack: ${error.stack}`);
         res.status(500).json({
             success: false,
             message: 'Failed to fetch top selling items',

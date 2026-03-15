@@ -187,8 +187,6 @@ async function initializeDashboard() {
         updateSectionTimestamps();
         await loadDashboardData();
         setupEventListeners();
-        setupRealTimeUpdates();
-        startPeriodicRefresh();
         
         // Highlight current page in sidebar
         highlightCurrentPage();
@@ -197,26 +195,36 @@ async function initializeDashboard() {
     }
 }
 
-// Fetch all dashboard data
+// Fetch all dashboard data (on page load only)
 async function loadDashboardData() {
     try {
+        console.log('� Loading dashboard data from MongoDB Atlas (page load)...');
+        
         await loadStats();
+        console.log('✅ Stats loaded from MongoDB');
         await loadInventoryStatus();
+        console.log('✅ Inventory loaded from MongoDB');
         await loadTodayOrders();
+        console.log('✅ Orders loaded from MongoDB');
         await loadTopSellingItems();
+        console.log('✅ Top items loaded from MongoDB');
         await loadSalesChartData();
+        console.log('✅ Chart data loaded from MongoDB');
         
         const now = new Date();
         lastUpdateTimes.sales = now;
         lastUpdateTimes.inventory = now;
         lastUpdateTimes.orders = now;
         
+        console.log('🎨 Rendering dashboard UI with fresh MongoDB data...');
         updateDashboardUI();
         updateSectionTimestamps();
+        console.log('✅ Dashboard UI rendered successfully');
         
         return true;
         
     } catch (error) {
+        console.error('❌ Dashboard data load failed:', error);
         if (error.message.includes('Failed to fetch')) {
             showNotification('Cannot connect to server. Backend might be offline.', 'error');
         } else {
@@ -743,11 +751,12 @@ function animateValue(element, start, end, duration, prefix = '', suffix = '') {
 function updateInventoryTable() {
     if (!inventoryTableBody) return;
     
+    // ✅ CRITICAL: Completely clear the table body
     inventoryTableBody.innerHTML = '';
     
     const inventoryData = dashboardData.inventory || [];
     
-    console.log('🔄 Updating inventory table:', {
+    console.log('🔄 Updating inventory table from MongoDB:', {
         dataCount: inventoryData.length,
         firstItem: inventoryData[0] ? {
             name: inventoryData[0].itemName,
@@ -804,11 +813,12 @@ function updateInventoryTable() {
 function updateOrdersTable() {
     if (!ordersTableBody) return;
     
+    // ✅ CRITICAL: Completely clear the table body before rendering
     ordersTableBody.innerHTML = '';
     
     const ordersData = dashboardData.orders || [];
     
-    console.log('📊 Updating orders table with', ordersData.length, 'orders');
+    console.log('📊 Updating orders table from MongoDB with', ordersData.length, 'orders');
     
     if (ordersData.length === 0) {
         ordersTableBody.innerHTML = `
@@ -867,8 +877,9 @@ function updateOrdersTable() {
 function updateTopSellingTable() {
     if (!topItemsTableBody) return;
     
-    console.log('🔄 Updating top selling items table with', (dashboardData.topSelling || []).length, 'items');
+    console.log('🔄 Updating top selling items table from MongoDB with', (dashboardData.topSelling || []).length, 'items');
     
+    // ✅ CRITICAL: Completely clear the table body before rendering
     topItemsTableBody.innerHTML = '';
     
     const topSellingData = dashboardData.topSelling || [];
@@ -876,11 +887,16 @@ function updateTopSellingTable() {
     if (topSellingData.length === 0) {
         topItemsTableBody.innerHTML = `
             <tr>
-                <td colspan="3" class="no-data">No Top Selling Items Today</td>
+                <td colspan="3" class="no-data">
+                    <div style="text-align: center; padding: 20px;">
+                        <p style="font-size: 16px; margin: 0; color: #666;">📊 No Sales Data Available</p>
+                        <p style="font-size: 13px; margin: 8px 0 0 0; color: #999;">Create orders through the POS system to see top selling items</p>
+                    </div>
+                </td>
             </tr>
         `;
         console.warn('⚠️ No top selling data to display. dashboardData:', dashboardData);
-        console.warn('Ensure /api/orders/top-items endpoint is returning data');
+        console.log('💡 Next action: Create orders via the POS menu to populate sales data');
         return;
     }
     
@@ -1078,13 +1094,14 @@ function handleMenuSearch(event) {
     });
 }
 
-// Refresh handler
+// Refresh handler (MANUAL refresh only)
 async function handleRefresh() {
     try {
+        console.log('🔄 Manual refresh initiated by user...');
         await loadDashboardData();
-        showNotification('Dashboard refreshed successfully!', 'success');
+        showNotification('✅ Dashboard refreshed from MongoDB Atlas!', 'success');
     } catch (error) {
-        showNotification('Failed to refresh data', 'error');
+        showNotification('❌ Failed to refresh data', 'error');
     }
 }
 
@@ -1094,155 +1111,34 @@ function handleViewAllOrders(event) {
     navigateToPage(NAVIGATION_ROUTES.orderhistory);
 }
 
-// Set up real-time updates - FIXED VERSION
+// Set up real-time updates - DISABLED to prevent duplicate data
 function setupRealTimeUpdates() {
-    try {
-        // Close any existing connection first
-        if (adminEventSource) {
-            adminEventSource.close();
-            adminEventSource = null;
-        }
-        
-        adminEventSource = new EventSource('/api/admin/events');
-        
-        adminEventSource.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                handleRealTimeEvent(data);
-            } catch (error) {
-                console.error('Error parsing event data:', error);
-            }
-        };
-        
-        adminEventSource.onerror = (error) => {
-            console.error('EventSource error:', error);
-            
-            // Check if adminEventSource exists before trying to close it
-            if (adminEventSource) {
-                adminEventSource.close();
-                adminEventSource = null;
-            }
-            
-            // Attempt to reconnect after 5 seconds
-            setTimeout(() => {
-                console.log('Attempting to reconnect to real-time events...');
-                setupRealTimeUpdates();
-            }, 5000);
-        };
-        
-        adminEventSource.onopen = () => {
-            console.log('Real-time connection established');
-        };
-        
-        window.dashboardEventSource = adminEventSource;
-        
-    } catch (error) {
-        console.error('Error setting up real-time updates:', error);
-        adminEventSource = null;
-    }
+    // Real-time updates completely disabled
+    // Data is only fetched on page load and manual refresh
 }
 
-// Handle real-time events
+// Handle real-time events - DISABLED
 function handleRealTimeEvent(event) {
-    const now = new Date();
-    
-    switch (event.type) {
-        case 'new_order':
-            lastUpdateTimes.sales = now;
-            lastUpdateTimes.orders = now;
-            handleNewOrder(event.data);
-            break;
-            
-        case 'low_stock_alert':
-            lastUpdateTimes.inventory = now;
-            handleLowStockAlert(event.data);
-            break;
-            
-        case 'stats_update':
-            lastUpdateTimes.sales = now;
-            handleStatsUpdate(event.data);
-            break;
-    }
-    
-    updateSectionTimestamps();
+    // Real-time events disabled - use periodic refresh instead
+    console.log('⚠️ Real-time event received but disabled:', event.type);
 }
 
-// Handle new order event
+// Handle new order event - DISABLED (real-time disabled)
 function handleNewOrder(orderData) {
-    console.log('🆕 New order received, refreshing dashboard data...', orderData);
-    
-    showNewOrderNotification(orderData);
-    
-    setTimeout(async () => {
-        try {
-            // ✅ Load all data including top selling items
-            console.log('⏳ Loading stats...');
-            await loadStats();
-            
-            console.log('⏳ Loading orders...');
-            await loadTodayOrders();
-            
-            console.log('⏳ Loading top selling items...');
-            await loadTopSellingItems();
-            
-            // ✅ Update all UI elements
-            console.log('🔄 Updating all dashboard tables...');
-            updateStatsCards();
-            updateOrdersTable();
-            updateTopSellingTable();
-            
-            console.log('✅ Dashboard updated successfully after new order');
-            
-            // ✅ Show confirmation toast
-            showNotification('📊 Dashboard data updated with new order!', 'success');
-            
-        } catch (error) {
-            console.error('❌ Error updating after new order:', error);
-            showNotification('⚠️ Failed to update some dashboard data', 'error');
-        }
-    }, 1000);
+    console.log('⚠️ New order event received but real-time disabled:', orderData);
 }
 
-// Handle low stock alert
+// Handle low stock alert - DISABLED (real-time disabled)
 function handleLowStockAlert(stockData) {
-    showNotification(`Low stock: ${stockData.itemName} has only ${stockData.currentStock} left!`, 'warning');
-    
-    setTimeout(async () => {
-        try {
-            await loadInventoryStatus();
-            updateInventoryTable();
-        } catch (error) {
-            console.error('Error updating after low stock alert:', error);
-        }
-    }, 1000);
+    console.log('⚠️ Low stock alert received but real-time disabled:', stockData);
 }
 
-// Handle stats update event
+// Handle stats update event - DISABLED (real-time disabled)
 function handleStatsUpdate(statsData) {
-    dashboardData.stats = { ...dashboardData.stats, ...statsData };
-    updateStatsCards();
+    console.log('⚠️ Stats update received but real-time disabled:', statsData);
 }
 
-// Start periodic data refresh
-function startPeriodicRefresh() {
-    const intervalId = setInterval(async () => {
-        try {
-            await loadStats();
-            await loadTodayOrders();
-            await loadTopSellingItems();
-            updateStatsCards();
-            updateOrdersTable();
-            updateTopSellingTable();
-            updateSectionTimestamps();
-        } catch (error) {
-            console.error('Error during periodic refresh:', error);
-        }
-    }, 2 * 60 * 1000);
-    
-    // Store interval for cleanup
-    if (!window._adminIntervals) window._adminIntervals = [];
-    window._adminIntervals.push(intervalId);
-}
+// ✅ Periodic refresh DISABLED - Data fetched only on page load and manual refresh
 
 // Show new order notification
 function showNewOrderNotification(order) {
@@ -1449,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isSalesPage = window.location.pathname.includes('salesandreports');
     
     if (isDashboard) {
-        initializeDashboard();
+        await initializeDashboard();
         
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', function() {

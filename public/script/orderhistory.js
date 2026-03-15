@@ -32,69 +32,18 @@ if (window.location.pathname.includes('orderhistory')) {
             }
             
             // Setup real-time updates
-            setupRealTimeUpdates();
+            // Setup real-time updates
+            // Real-time updates disabled - using periodic refresh only (every 30 seconds)
+            // setupRealTimeUpdates();
             
-            // Refresh every 30 seconds
-            setInterval(() => {
-                console.log('🔄 Refreshing data from database...');
-                
-                topItemsBody = document.getElementById('topItemsBody');
-                inventoryStatusBody = document.getElementById('inventoryStatusBody');
-                todaysOrdersBody = document.getElementById('todaysOrdersBody');
-                
-                if (topItemsBody || inventoryStatusBody || todaysOrdersBody) {
-                    loadInventoryStatus();
-                    loadLowStockItems();
-                    loadTopItems();
-                    loadTodaysOrders();
-                }
-            }, 30000);
+            // ✅ Periodic refresh DISABLED - Data fetched only on page load and manual refresh
         }
     });
 
-    // Setup real-time updates via Server-Sent Events
+    // Setup real-time updates via Server-Sent Events - DISABLED
     function setupRealTimeUpdates() {
-        try {
-            console.log('🔗 Setting up real-time updates...');
-            
-            // Check if the endpoint exists before connecting
-            fetch('/api/admin/events', { method: 'HEAD' })
-                .then(response => {
-                    if (response.ok) {
-                        const eventSource = new EventSource('/api/admin/events');
-                        
-                        eventSource.onmessage = (event) => {
-                            try {
-                                const data = JSON.parse(event.data);
-                                handleRealTimeEvent(data);
-                            } catch (error) {
-                                console.error('❌ Error parsing event data:', error);
-                            }
-                        };
-                        
-                        eventSource.onerror = (error) => {
-                            console.warn('⚠️ Real-time connection error, reconnecting...');
-                            eventSource.close();
-                            
-                            // Retry connection after 5 seconds
-                            setTimeout(() => {
-                                setupRealTimeUpdates();
-                            }, 5000);
-                        };
-                        
-                        window.orderHistoryEventSource = eventSource;
-                        console.log('✅ Real-time updates connected');
-                    } else {
-                        console.log('ℹ️ Real-time updates not available (endpoint not found)');
-                    }
-                })
-                .catch(() => {
-                    console.log('ℹ️ Real-time updates not available');
-                });
-            
-        } catch (error) {
-            console.error('❌ Error setting up real-time updates:', error);
-        }
+        console.log('ℹ️ Real-time updates disabled');
+        // Real-time EventSource connections disabled to prevent duplicate data
     }
 
     // Handle real-time events
@@ -632,7 +581,7 @@ if (window.location.pathname.includes('orderhistory')) {
                             <div style="margin-bottom: 10px;">
                                 <i class="fas fa-chart-bar" style="font-size: 24px; color: #ccc;"></i>
                             </div>
-                            No Top Sales For Today
+                            No Top Sales Today
                         </td>
                     </tr>
                 `;

@@ -1544,39 +1544,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-// ==================== CONNECT TO NOTIFICATION SERVER ====================
+// ==================== CONNECT TO NOTIFICATION SERVER - DISABLED ====================
 function connectToNotificationServer() {
-    try {
-        if (notificationEventSource) {
-            notificationEventSource.close();
-        }
-        
-        notificationEventSource = new EventSource(`${BACKEND_URL}/api/admin/events`);
-        
-        notificationEventSource.onmessage = function(event) {
-            try {
-                const data = JSON.parse(event.data);
-                console.log('📨 Received notification:', data);
-                
-                if (data.type === 'low_stock_alert') {
-                    handleLowStockAlert(data);
-                } else if (data.type === 'stock_request') {
-                    handleStockRequest(data);
-                }
-            } catch (e) {}
-        };
-        
-        notificationEventSource.onerror = function() {
-            notificationEventSource.close();
-            notificationEventSource = null;
-        };
-        
-        notificationEventSource.onopen = function() {
-            console.log('✅ Connected to notification server');
-        };
-    } catch (error) {
-        notificationEventSource = null;
-    }
+    console.log('ℹ️ Real-time notifications disabled - using periodic refresh only');
+    // Real-time EventSource connections disabled to prevent duplicate data
 }
 
 // ==================== HANDLE STOCK REQUEST FROM STAFF ====================
