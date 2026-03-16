@@ -961,6 +961,98 @@ const productIngredientMap = {
         },
         servingware: 'pot'
     },
+    
+    'Coke Soda (1.5L)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Caramel color': 0.005,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Caffeine': 0.001,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Coke Zero (1.5L)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Caramel color': 0.005,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Caffeine': 0.001,
+            'Aspartame': 0.01,
+            'Acesulfame potassium': 0.01,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Sprite (1.5L)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Citric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Royal Tru Orange (1.5L)': {
+        ingredients: { 
+            'Carbonated Water': 1,  
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Citric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Coke Soda (500ml)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Caramel color': 0.005,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Caffeine': 0.001,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Coke Zero (500ml)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Caramel color': 0.005,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Caffeine': 0.001,
+            'Aspartame': 0.01,
+            'Acesulfame potassium': 0.01,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+    
+    'Sprite (500ml)': {
+        ingredients: {
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Citric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
 
     // ====================  PACKAGING SUPPLIES ====================
     'Plastic Cups (12oz)': {
