@@ -5154,7 +5154,6 @@ async function updateFromItemNameSelect() {
                 helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}')">❌ Cannot create "${itemName}"</strong><br><small>Click product name to see missing ingredients</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
                 
-                showToast(`❌ Cannot create "${itemName}" - Click on product name to see which ingredients are missing`, 'error');
                 // Auto-show missing ingredients modal
                 setTimeout(() => showMissingIngredientsModal(itemName), 500);
                 
