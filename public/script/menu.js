@@ -482,20 +482,58 @@ const productIngredientMap = {
     },
     'Blue Lemonade': {
         ingredients: { 
-            'lemon_juice': 0.15, 
-            'blue_syrup': 0.05, 
+            'lemon': 0.15, 
+            'Sugar': 0.08,
+            'water': 0.3, 
+            'Ice': 0.1,
+            'Blue Syrup': 0.02
+        },
+        servingware: 'glass'
+    },
+    'Red Tea': {
+        ingredients: { 
+            'Black Tea': 0.02, 
             'Sugar': 0.05, 
             'water': 0.3, 
             'Ice': 0.1 
         },
         servingware: 'glass'
     },
-    'Red Tea': {
+    'Lemon Iced Tea': {
         ingredients: { 
-            'tea': 0.02, 
-            'Sugar': 0.05, 
-            'water': 0.3, 
-            'Ice': 0.1 
+            'Black Tea': 0.02, 
+            'lemon': 0.08,
+            'Sugar': 0.05,
+            'water': 0.3,
+            'Ice': 0.1
+        },
+        servingware: 'glass'
+    },
+    'Green Tea': {
+        ingredients: { 
+            'Green Tea': 0.02,
+            'Sugar': 0.05,
+            'water': 0.3,
+            'Ice': 0.1,
+            'lemon': 0.03
+        },
+        servingware: 'glass'
+    },
+    'Mango Juice': {
+        ingredients: { 
+            'mango': 0.2,
+            'Sugar': 0.05,
+            'water': 0.2,
+            'Ice': 0.1
+        },
+        servingware: 'glass'
+    },
+    'Strawberry Juice': {
+        ingredients: { 
+            'strawberry': 0.15,
+            'Sugar': 0.05,
+            'water': 0.25,
+            'Ice': 0.1
         },
         servingware: 'glass'
     },
@@ -516,54 +554,54 @@ const productIngredientMap = {
     // ==================== ☕ COFFEE VARIETIES ====================
     'Cafe Americano': {
         ingredients: { 
-            'Espresso': 0.03, 
-            'Hot water': 0.2,
+            'coffee_beans': 0.03, 
+            'water': 0.2,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Cafe Americano Hot': {
         ingredients: { 
-            'Espresso': 0.03, 
-            'Hot water': 0.2,
+            'coffee_beans': 0.03, 
+            'water': 0.2,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Cafe Latte': {
         ingredients: { 
-            'Espresso': 0.03, 
-            'Steamed Milk': 0.25,
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Caramel Macchiato': {
         ingredients: { 
-            'Espresso': 0.03, 
+            'coffee_beans': 0.03, 
             'Milk': 0.2, 
             'Caramel Syrup': 0.03, 
-            'Vanilla Syrup': 0.01,
+            'Vanilla extract': 0.01,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Caramel Macchiato Hot': {
         ingredients: { 
-            'Espresso': 0.03, 
+            'coffee_beans': 0.03, 
             'Milk': 0.2, 
             'Caramel Syrup': 0.03, 
-            'Vanilla Syrup': 0.01,
+            'Vanilla extract': 0.01,
             'Sugar': 0.03
         },
         servingware: 'cup'
     },
     'Iced Caramel Macchiato': {
         ingredients: { 
-            'Espresso': 0.03, 
+            'coffee_beans': 0.03, 
             'Milk': 0.2, 
             'Caramel Syrup': 0.03, 
-            'Vanilla Syrup': 0.01,
+            'Vanilla extract': 0.01,
             'Sugar': 0.03,
             'Ice': 0.2
         },
@@ -575,7 +613,7 @@ const productIngredientMap = {
             'Milk': 0.2, 
             'Caramel Syrup': 0.04,
             'Sugar': 0.05, 
-            'Boba Straws': 1
+            'water': 0.15
         },
         servingware: 'cup'
     },
@@ -587,7 +625,53 @@ const productIngredientMap = {
             'Cream': 0.1,
             'Sugar': 0.05,
             'Salt': 0.003,
-            'Boba Straws': 1
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+    'Iced Americano': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'water': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Mocha': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Cappuccino': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Sugar': 0.03,
+            'Foam': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Mocha': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03
         },
         servingware: 'cup'
     },
@@ -648,10 +732,10 @@ const productIngredientMap = {
         ingredients: { 
             'Ice': 0.2, 
             'Milk': 0.2, 
-            'cookie crumbs': 0.03, 
             'Cream': 0.1,
+            'Cookie Crumbs': 0.03,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
         },
         servingware: 'cup'
     },
@@ -662,30 +746,32 @@ const productIngredientMap = {
             'Cookie Crumbs': 0.03, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'Black Tea': 0.02,
+            'water': 0.15
         },
         servingware: 'cup'
     },  
 
     'Strawberry & Cream Frappe': {
         ingredients: { 
-            'Strawberry syrup': 0.05, 
+            'strawberry': 0.08, 
             'Milk': 0.2, 
             'Ice': 0.2, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
         },
         servingware: 'cup'
     },
     'Mango Cheesecake Frappe': {
         ingredients: { 
-            'Mango syrup': 0.05, 
-            'Cream Cheese flavor': 0.03, 
+            'mango': 0.1, 
             'Milk': 0.2, 
             'Ice': 0.2,
+            'Cream': 0.08,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'Vanilla extract': 0.01,
+            'water': 0.1
         },
         servingware: 'cup'
     },
@@ -698,18 +784,18 @@ const productIngredientMap = {
             'Milk': 0.2, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
         },
         servingware: 'cup'
     },
     'Choco Fudge Frappe': {
         ingredients: { 
-            'Chocolate Fudge': 0.07, 
+            'Chocolate Syrup': 0.07, 
             'Ice': 0.2, 
             'Milk': 0.2, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
         },
         servingware: 'cup'
     },
@@ -720,30 +806,54 @@ const productIngredientMap = {
             'Milk': 0.2, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
         },
         servingware: 'cup'
     },
     'Coffee Crumble Frappe': {
         ingredients: { 
-            'Espresso': 0.03, 
+            'coffee_beans': 0.03, 
             'Coffee Crumbles': 0.03, 
             'Ice': 0.2, 
             'Milk': 0.2, 
             'Cream': 0.1,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
         },
         servingware: 'cup'
     },
     'Vanilla Cream Frappe': {
         ingredients: { 
-            'Vanilla Syrup': 0.04, 
+            'Vanilla extract': 0.04, 
             'Cream': 0.15, 
             'Ice': 0.2, 
             'Milk': 0.2,
             'Sugar': 0.05,
-            'Boba Straws': 1
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+    'Chocolate Banana Frappe': {
+        ingredients: { 
+            'Chocolate Syrup': 0.05, 
+            'mango': 0.08, 
+            'Milk': 0.2, 
+            'Ice': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+    'Mint Chocolate Frappe': {
+        ingredients: { 
+            'Chocolate Syrup': 0.05, 
+            'Cinnamon': 0.002, 
+            'Milk': 0.2, 
+            'Ice': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'water': 0.1
         },
         servingware: 'cup'
     },
@@ -1002,7 +1112,7 @@ const productIngredientMap = {
         servingware: 'bottle'
     },
 
-    'Royal Tru Orange (1.5L)': {
+    'Royal (1.5L)': {
         ingredients: { 
             'Carbonated Water': 1,  
             'Sugar': 0.05,
@@ -1447,7 +1557,7 @@ const menuDatabase = {
         { name: 'Soda 1.5L Coke', unit: 'bottle', defaultPrice: 118 },
         { name: 'Soda 1.5L Coke Zero', unit: 'bottle', defaultPrice: 118 },
         { name: 'Soda 1.5L Sprite', unit: 'bottle', defaultPrice: 118 },
-        { name: 'Soda 1.5L Royal', unit: 'bottle', defaultPrice: 118 }
+        { name: 'Soda 1.5L Royal', unit: 'bottle', defaultPrice: 118 },
     ],
     'Cafe': [
         { name: 'Espresso (Tall)', unit: 'cup', defaultPrice: 88 },
@@ -4254,6 +4364,14 @@ async function saveMenuItem(itemData) {
             isActive: true
         };
         
+        console.log('📤 Sending payload to server:', {
+            currentStock: payload.currentStock,
+            minStock: payload.minStock,
+            maxStock: payload.maxStock,
+            price: payload.price,
+            allPayload: payload
+        });
+        
         let url, method;
         
         if (isEdit) {
@@ -4287,6 +4405,12 @@ async function saveMenuItem(itemData) {
         
         if (data.success) {
             const action = isEdit ? 'updated' : 'added';
+            console.log(`✅ Product ${action} successfully!`, {
+                productName: itemData.itemName,
+                currentStock: itemData.currentStock,
+                price: itemData.price,
+                serverResponse: data
+            });
             showToast(`Product ${action} successfully!`, 'success');
             closeModal();
             await fetchMenuItems();
