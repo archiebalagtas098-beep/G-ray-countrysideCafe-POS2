@@ -470,7 +470,7 @@ const productIngredientMap = {
     },
 
     // ==================== 🥤 DRINKS & LEMONADES ====================
-    'Cucumber Lemonade': {
+    'Cucumber Lemonade (Glass)': {
         ingredients: { 
             'cucumber': 0.1, 
             'lemon': 0.1, 
@@ -480,7 +480,7 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Blue Lemonade': {
+    'Blue Lemonade (Glass)': {
         ingredients: { 
             'lemon': 0.15, 
             'Sugar': 0.08,
@@ -490,7 +490,7 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Red Tea': {
+    'Red Tea (Glass)': {
         ingredients: { 
             'Black Tea': 0.02, 
             'Sugar': 0.05, 
@@ -499,7 +499,7 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Lemon Iced Tea': {
+    'Lemon Iced Tea (Glass)': {
         ingredients: { 
             'Black Tea': 0.02, 
             'lemon': 0.08,
@@ -509,7 +509,7 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Green Tea': {
+    'Green Tea (Glass)': {
         ingredients: { 
             'Green Tea': 0.02,
             'Sugar': 0.05,
@@ -519,7 +519,7 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Mango Juice': {
+    'Mango Juice (Glass)': {
         ingredients: { 
             'mango': 0.2,
             'Sugar': 0.05,
@@ -528,7 +528,7 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Strawberry Juice': {
+    'Strawberry Juice (Glass)': {
         ingredients: { 
             'strawberry': 0.15,
             'Sugar': 0.05,
@@ -537,7 +537,8 @@ const productIngredientMap = {
         },
         servingware: 'glass'
     },
-    'Soda (Mismo / 1.5L)': {
+
+    'Soda Coke(1.5L)': {
         ingredients: { 
             'Carbonated Water': 1,
             'Sugar': 0.05,
@@ -551,8 +552,72 @@ const productIngredientMap = {
         servingware: 'bottle'
     },
 
+    'Soda Sprite (1.5L)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Sprite Syrup': 0.001,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+    
+    'Soda 1.5L Royal': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Royal Syrup': 0.001,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Soda (Mismo) Coke)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Caramel color': 0.005,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Caffeine': 0.001,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Soda (Mismo) Sprite)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
+    'Soda (Mismo) Royal)': {
+        ingredients: { 
+            'Carbonated Water': 1,
+            'Sugar': 0.05,
+            'High fructose corn syrup': 0.01,
+            'Phosphoric acid': 0.005,
+            'Natural flavors': 0.005,
+            'Plastic Bottle': 1
+        },
+        servingware: 'bottle'
+    },
+
     // ==================== ☕ COFFEE VARIETIES ====================
-    'Cafe Americano': {
+    'Cafe Americano (Grande)': {
         ingredients: { 
             'coffee_beans': 0.03, 
             'water': 0.2,
@@ -560,7 +625,16 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-    'Cafe Americano Hot': {
+    'Cafe Americano (Tall)': {
+        ingredients: {
+            'coffee_beans': 0.03,
+            'water': 0.2,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+
+    'Cafe Americano Hot (Grande)': {
         ingredients: { 
             'coffee_beans': 0.03, 
             'water': 0.2,
@@ -568,6 +642,15 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Cafe Americano Hot (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'water': 0.2,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    
     'Cafe Latte': {
         ingredients: { 
             'coffee_beans': 0.03, 
@@ -576,7 +659,43 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Cafe Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Cafe Latte (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
     'Caramel Macchiato': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Caramel Macchiato (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Caramel Macchiato (Tall)': {
         ingredients: { 
             'coffee_beans': 0.03, 
             'Milk': 0.2, 
@@ -596,7 +715,49 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Caramel Macchiato Hot (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Caramel Macchiato Hot (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
     'Iced Caramel Macchiato': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Caramel Macchiato (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Caramel Syrup': 0.03, 
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Caramel Macchiato (Tall)': {
         ingredients: { 
             'coffee_beans': 0.03, 
             'Milk': 0.2, 
@@ -638,7 +799,43 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Iced Americano (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'water': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Americano (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'water': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
     'Iced Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Latte (Tall)': {
         ingredients: { 
             'coffee_beans': 0.03, 
             'Milk': 0.2,
@@ -657,7 +854,45 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Iced Mocha (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Mocha (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
     'Cappuccino': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Sugar': 0.03,
+            'Foam': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Cappuccino (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Sugar': 0.03,
+            'Foam': 0.05
+        },
+        servingware: 'cup'
+    },
+    'Cappuccino (Tall)': {
         ingredients: { 
             'coffee_beans': 0.03, 
             'Milk': 0.25,
@@ -675,9 +910,270 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Mocha (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Mocha (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Espresso': {
+        ingredients: { 
+            'coffee_beans': 0.02, 
+            'water': 0.08,
+            'Sugar': 0.02
+        },
+        servingware: 'cup'
+    },
+    'Espresso (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'water': 0.12,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Espresso (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.025, 
+            'water': 0.1,
+            'Sugar': 0.025
+        },
+        servingware: 'cup'
+    },
+    'Vanilla Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Vanilla Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Vanilla Latte (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Mocha Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Mocha Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Mocha Latte (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'White Chocolate': {
+        ingredients: { 
+            'White Chocolate Syrup': 0.04, 
+            'Milk': 0.2,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'White Chocolate (Grande)': {
+        ingredients: { 
+            'White Chocolate Syrup': 0.05, 
+            'Milk': 0.25,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'White Chocolate (Tall)': {
+        ingredients: { 
+            'White Chocolate Syrup': 0.04, 
+            'Milk': 0.2,
+            'Sugar': 0.03
+        },
+        servingware: 'cup'
+    },
+    'Iced Mocha Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Mocha Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Mocha Latte (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2, 
+            'Cocoa powder': 0.02,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Vanilla Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Vanilla Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Vanilla Latte (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Vanilla extract': 0.01,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced White Chocolate': {
+        ingredients: { 
+            'White Chocolate Syrup': 0.04, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced White Chocolate (Grande)': {
+        ingredients: { 
+            'White Chocolate Syrup': 0.05, 
+            'Milk': 0.25,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced White Chocolate (Tall)': {
+        ingredients: { 
+            'White Chocolate Syrup': 0.04, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Café Latte': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Café Latte (Grande)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.25,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Café Latte (Tall)': {
+        ingredients: { 
+            'coffee_beans': 0.03, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Dark Chocolate': {
+        ingredients: { 
+            'Dark Chocolate Syrup': 0.04, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Dark Chocolate (Grande)': {
+        ingredients: { 
+            'Dark Chocolate Syrup': 0.05, 
+            'Milk': 0.25,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
+    'Iced Dark Chocolate (Tall)': {
+        ingredients: { 
+            'Dark Chocolate Syrup': 0.04, 
+            'Milk': 0.2,
+            'Sugar': 0.03,
+            'Ice': 0.2
+        },
+        servingware: 'cup'
+    },
 
     // ==================== 🍵 MILK TEA VARIETIES ====================
-    'Milk Tea': {
+    'Milk Tea (Regular)': {
         ingredients: { 
             'Black Tea': 0.02, 
             'Milk': 0.2, 
@@ -687,7 +1183,40 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-    'Matcha Green Tea': {
+
+    'Milk Tea (MC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Sugar': 0.05, 
+            'Tapioca Pearls': 0.03,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    
+    'Milk Tea (HC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Sugar': 0.05, 
+            'Tapioca Pearls': 0.03,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Matcha Green Tea (Regular)': {
+        ingredients: { 
+            'Matcha Powder': 0.01, 
+            'Milk': 0.25, 
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    }, 
+
+    'Matcha Green Tea (MC)': {
         ingredients: { 
             'Matcha Powder': 0.01, 
             'Milk': 0.25, 
@@ -697,17 +1226,17 @@ const productIngredientMap = {
         servingware: 'cup'
     },
 
-    'Milk Tea Regular': {
+    'Matcha Green Tea (HC)': {
         ingredients: { 
-            'Milk': 0.2, 
-            'Sugar': 0.05, 
-            'Boba Straws': 1,
-            'Tapioca Pearls': 0.03
+            'Matcha Powder': 0.01, 
+            'Milk': 0.25, 
+            'Sugar': 0.05,
+            'Boba Straws': 1
         },
         servingware: 'cup'
     },
 
-    'Okinawa Milk Tea': {
+    'Okinawa Milk Tea (Regular)': {
         ingredients: { 
             'Black Tea': 0.02, 
             'Milk': 0.2, 
@@ -717,12 +1246,293 @@ const productIngredientMap = {
         servingware: 'cup'
     },
 
-    'Wintermelon Milk Tea': {
+    'Okinawa Milk Tea (MC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Okinawa Brown Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+    
+    'Okinawa Milk Tea (HC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Okinawa Brown Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Wintermelon Milk Tea (HC)': {
         ingredients: { 
             'Black Tea': 0.02, 
             'Milk': 0.2, 
             'Wintermelon Syrup': 0.05,
             'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Wintermelon Milk Tea (MC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2, 
+            'Wintermelon Syrup': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Wintermelon Milk Tea (Regular)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2, 
+            'Wintermelon Syrup': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+
+    'Caramel Milk Tea (MC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Caramel Syrup': 0.05,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Caramel Milk Tea (HC)': {
+        ingredients: {
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Caramel Syrup': 0.05,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Caramel Milk Tea (Regular)': {
+        ingredients: {
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Caramel Syrup': 0.05,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Dark Chocolate Milk Tea (MC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Cocoa powder': 0.02,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Dark Choco Milk Tea (HC)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Cocoa powder': 0.02,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Dark Chocolate Milk Tea (Regular)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Cocoa powder': 0.02,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Strawberry Milk Tea (HC) ': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Strawberry Syrup': 0.05,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Strawberry Milk Tea (MC) ': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Strawberry Syrup': 0.05,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Strawberry Milk Tea (Regular) ': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Strawberry Syrup': 0.05,
+            'Sugar': 0.05,
+            'Boba Straws': 1
+        },
+        servingware: 'cup'
+    },
+
+    'Black Tea': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'water': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Black Tea (Grande)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'water': 0.25,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Black Tea (Tall)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'water': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Green Tea Latte': {
+        ingredients: { 
+            'Green Tea': 0.02,
+            'Milk': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Green Tea Latte (Grande)': {
+        ingredients: { 
+            'Green Tea': 0.02,
+            'Milk': 0.25,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Green Tea Latte (Tall)': {
+        ingredients: { 
+            'Green Tea': 0.02,
+            'Milk': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Green Tea Matcha': {
+        ingredients: { 
+            'Matcha Powder': 0.01,
+            'Milk': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Green Tea Matcha (Grande)': {
+        ingredients: { 
+            'Matcha Powder': 0.01,
+            'Milk': 0.25,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Green Tea Matcha (Tall)': {
+        ingredients: { 
+            'Matcha Powder': 0.01,
+            'Milk': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Lemon Tea': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'lemon': 0.05,
+            'water': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Lemon Tea (Grande)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'lemon': 0.08,
+            'water': 0.25,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Lemon Tea (Tall)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'lemon': 0.05,
+            'water': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Peppermint Tea': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Peppermint extract': 0.005,
+            'water': 0.2,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Peppermint Tea (Grande)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Peppermint extract': 0.007,
+            'water': 0.25,
+            'Sugar': 0.05
+        },
+        servingware: 'cup'
+    },
+
+    'Peppermint Tea (Tall)': {
+        ingredients: { 
+            'Black Tea': 0.02,
+            'Peppermint extract': 0.005,
+            'water': 0.2,
+            'Sugar': 0.05
         },
         servingware: 'cup'
     },
@@ -740,7 +1550,19 @@ const productIngredientMap = {
         servingware: 'cup'
     },
 
-    'Cookies & Cream Milk Tea': {
+    'Cookies & Cream Frappe Milktea (HC)': {
+        ingredients: {
+            'Black Tea': 0.02,
+            'Milk': 0.2,
+            'Cream': 0.1,
+            'Cookie Crumbs': 0.03,
+            'Sugar': 0.05,
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+
+    'Cookies & Cream Milk Tea (MC)': {
         ingredients: { 
             'Milk': 0.2, 
             'Cookie Crumbs': 0.03, 
@@ -752,7 +1574,18 @@ const productIngredientMap = {
         servingware: 'cup'
     },  
 
-    'Strawberry & Cream Frappe': {
+    'Cookies & Cream Milk Tea (Regular)': {
+        ingredients: { 
+            'Milk': 0.2,
+            'Cookie Crumbs': 0.03,
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'Black Tea': 0.02,
+            'water': 0.15
+        },
+        servingware: 'cup'
+    },
+    'Strawberry & Cream Frappe (Premium)': {
         ingredients: { 
             'strawberry': 0.08, 
             'Milk': 0.2, 
@@ -763,6 +1596,39 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+    'Strawberry & Cream Frappe (Regular)': {
+        ingredients: { 
+            'strawberry': 0.05, 
+            'Milk': 0.2, 
+            'Ice': 0.2, 
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+
+    'Strawberry Cheesecake (Premium)': {
+        ingredients: { 
+            'strawberry': 0.1, 
+            'Cream cheese': 0.1, 
+            'Milk': 0.2,
+            'Sugar': 0.05,
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+    'Strawberry Cheesecake (Regular)': {
+        ingredients: { 
+            'strawberry': 0.05, 
+            'Cream cheese': 0.1, 
+            'Milk': 0.2,
+            'Sugar': 0.05,
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+
     'Mango Cheesecake Frappe': {
         ingredients: { 
             'mango': 0.1, 
@@ -788,7 +1654,7 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
-    'Choco Fudge Frappe': {
+    'Choco Fudge Frappe (Regular)': {
         ingredients: { 
             'Chocolate Syrup': 0.07, 
             'Ice': 0.2, 
@@ -799,6 +1665,19 @@ const productIngredientMap = {
         },
         servingware: 'cup'
     },
+
+    'Choco Fudge Frappe (Premium)': {
+        ingredients: { 
+            'Chocolate Syrup': 0.1,
+            'Ice': 0.2,
+            'Milk': 0.2,
+            'Cream': 0.1,
+            'Sugar': 0.05,
+            'water': 0.1
+        },
+        servingware: 'cup'
+    },
+
     'Choco Mousse Frappe': {
         ingredients: { 
             'Chocolate Mousse': 0.06, 
@@ -1070,98 +1949,6 @@ const productIngredientMap = {
             'beef_broth': 0.4 
         },
         servingware: 'pot'
-    },
-    
-    'Coke Soda (1.5L)': {
-        ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Caramel color': 0.005,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Caffeine': 0.001,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
-    },
-
-    'Coke Zero (1.5L)': {
-        ingredients: { 
-            'Carbonated Water': 1,
-            'Caramel color': 0.005,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Caffeine': 0.001,
-            'Aspartame': 0.01,
-            'Acesulfame potassium': 0.01,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
-    },
-
-    'Sprite (1.5L)': {
-        ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Citric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
-    },
-
-    'Royal (1.5L)': {
-        ingredients: { 
-            'Carbonated Water': 1,  
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Citric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
-    },
-
-    'Coke Soda (500ml)': {
-        ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Caramel color': 0.005,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Caffeine': 0.001,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
-    },
-
-    'Coke Zero (500ml)': {
-        ingredients: { 
-            'Carbonated Water': 1,
-            'Caramel color': 0.005,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Caffeine': 0.001,
-            'Aspartame': 0.01,
-            'Acesulfame potassium': 0.01,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
-    },
-    
-    'Sprite (500ml)': {
-        ingredients: {
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Citric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Plastic Bottle': 1
-        },
-        servingware: 'bottle'
     },
 
     // ====================  PACKAGING SUPPLIES ====================
@@ -1586,17 +2373,23 @@ const menuDatabase = {
         { name: 'Lemon Tea (Grande)', unit: 'cup', defaultPrice: 108 },
         { name: 'Peppermint Tea (Tall)', unit: 'cup', defaultPrice: 78 },
         { name: 'Peppermint Tea (Grande)', unit: 'cup', defaultPrice: 108 },
-        { name: 'Iced Café Latte', unit: 'cup', defaultPrice: 108 },
-        { name: 'Iced Mocha Latte', unit: 'cup', defaultPrice: 118 },
-        { name: 'Iced Vanilla Latte', unit: 'cup', defaultPrice: 118 },
-        { name: 'Iced Caramel Macchiato', unit: 'cup', defaultPrice: 128 },
-        { name: 'Iced White Chocolate', unit: 'cup', defaultPrice: 98 },
-        { name: 'Iced Dark Chocolate', unit: 'cup', defaultPrice: 98 }
+        { name: 'Iced Café Latte (Tall)', unit: 'cup', defaultPrice: 98 },
+        { name: 'Iced Café Latte (Grande)', unit: 'cup', defaultPrice: 128 },
+        { name: 'Iced Mocha Latte (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Iced Mocha Latte (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Iced Vanilla Latte (Tall)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Iced Vanilla Latte (Grande)', unit: 'cup', defaultPrice: 138 },
+        { name: 'Iced Caramel Macchiato (Tall)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Iced Caramel Macchiato (Grande)', unit: 'cup', defaultPrice: 148 },
+        { name: 'Iced White Chocolate (Tall)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Iced White Chocolate (Grande)', unit: 'cup', defaultPrice: 118 },
+        { name: 'Iced Dark Chocolate (Tall)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Iced Dark Chocolate (Grande)', unit: 'cup', defaultPrice: 118 }
     ],
     'Milk Tea': [
-        { name: 'Regular Milk Tea (Regular)', unit: 'cup', defaultPrice: 68 },
-        { name: 'Regular Milk Tea (HC)', unit: 'cup', defaultPrice: 88 },
-        { name: 'Regular Milk Tea (MC)', unit: 'cup', defaultPrice: 108 },
+        { name: 'Milk Tea (Regular)', unit: 'cup', defaultPrice: 68 },
+        { name: 'Milk Tea (HC)', unit: 'cup', defaultPrice: 88 },
+        { name: 'Milk Tea (MC)', unit: 'cup', defaultPrice: 108 },
         { name: 'Caramel Milk Tea (Regular)', unit: 'cup', defaultPrice: 78 },
         { name: 'Caramel Milk Tea (HC)', unit: 'cup', defaultPrice: 98 },
         { name: 'Caramel Milk Tea (MC)', unit: 'cup', defaultPrice: 118 },
@@ -3144,12 +3937,13 @@ async function checkIngredientAvailability(itemName) {
                         const inventoryItems = await fetchInventoryFromMongoDB();
                         
                         if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
-                            console.error(`❌ No inventory data available from MongoDB - CANNOT VERIFY INGREDIENTS`);
+                            console.warn(`⚠️ No inventory data available from MongoDB - Assuming all ingredients are available`);
+                            // When inventory is empty, assume product is available
                             return {
-                                available: false,
-                                missingIngredients: ['Cannot verify ingredients - No inventory data available'],
-                                availableIngredients: [],
-                                allIngredientsPresent: false,
+                                available: true,
+                                missingIngredients: [],
+                                availableIngredients: recipeData.ingredients,
+                                allIngredientsPresent: true,
                                 requiredIngredients: recipeData.ingredients
                             };
                         }
@@ -3247,12 +4041,13 @@ async function checkIngredientAvailability(itemName) {
         const inventoryItems = await fetchInventoryFromMongoDB();
         
         if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
-            console.error(`❌ No inventory data available from MongoDB - CANNOT VERIFY INGREDIENTS`);
+            console.warn(`⚠️ No inventory data available from MongoDB - Assuming all ingredients are available (Inventory not yet stocked)`);
+            // When inventory is empty, assume product is available (ingredients not tracked yet)
             return {
-                available: false,
-                missingIngredients: ['Cannot verify ingredients - No inventory data available'],
-                availableIngredients: [],
-                allIngredientsPresent: false,
+                available: true,
+                missingIngredients: [],
+                availableIngredients: Object.keys(recipe.ingredients),
+                allIngredientsPresent: true,
                 requiredIngredients: Object.keys(recipe.ingredients)
             };
         }
@@ -3310,6 +4105,230 @@ async function checkIngredientAvailability(itemName) {
             availableIngredients: [],
             allIngredientsPresent: false,
             requiredIngredients: []
+        };
+    }
+}
+
+// ==================== CHECK INGREDIENT AVAILABILITY FOR UI (IMMEDIATE FEEDBACK) ====================
+// This version is specifically for UI feedback when selecting a product
+// It shows ALL ingredients as missing when inventory is empty, helping users understand what needs to be stocked
+async function checkIngredientAvailabilityForUI(itemName) {
+    try {
+        console.log(`🔍 [UI] Checking ingredient availability for: ${itemName}`);
+        
+        const recipe = productIngredientMap[itemName];
+        
+        // If no recipe found in local map - CHECK SERVER'S recipeMapping
+        if (!recipe) {
+            console.log(`⚠️ [UI] No recipe found in productIngredientMap for "${itemName}"`);
+            console.log(`   [UI] Checking if recipe exists on server...`);
+            
+            // Try to fetch from server to see if recipe is defined there
+            try {
+                const serverCheckResponse = await fetch(`/api/menu/check-recipe/${encodeURIComponent(itemName)}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'include'
+                });
+                
+                if (serverCheckResponse.ok) {
+                    const recipeData = await serverCheckResponse.json();
+                    console.log(`   [UI] Server response:`, recipeData);
+                    
+                    // Check if recipe exists on server
+                    if (recipeData.hasRecipe === true && recipeData.ingredients && recipeData.ingredients.length > 0) {
+                        console.log(`✅ [UI] Recipe found on server for "${itemName}":`, recipeData.ingredients);
+                        
+                        // Fetch inventory and check availability
+                        const inventoryItems = await fetchInventoryFromMongoDB();
+                        
+                        if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
+                            console.warn(`⚠️ [UI] No inventory data available from MongoDB - Showing ALL ingredients as missing (for UI feedback)`);
+                            // When inventory is empty, show ALL ingredients as missing for UI feedback
+                            return {
+                                available: false, // ← KEY DIFFERENCE: false instead of true
+                                missingIngredients: recipeData.ingredients.map(ing => `${ing} (NOT IN INVENTORY)`),
+                                availableIngredients: [],
+                                allIngredientsPresent: false,
+                                requiredIngredients: recipeData.ingredients,
+                                hasRecipe: true,
+                                source: 'server'
+                            };
+                        }
+                        
+                        // Check each ingredient against actual inventory
+                        const missingIngredients = [];
+                        const availableIngredients = [];
+                        
+                        for (const ingredientName of recipeData.ingredients) {
+                            const normalizedIngredientName = ingredientName.replace(/_/g, ' ');
+                            
+                            const dbInventoryItem = inventoryItems.find(item => {
+                                const itemNameToCheck = item.itemName || item.name || '';
+                                return itemNameToCheck.toLowerCase() === normalizedIngredientName.toLowerCase();
+                            });
+                            
+                            if (!dbInventoryItem) {
+                                console.warn(`   ❌ [UI] NOT FOUND in inventory: ${ingredientName}`);
+                                missingIngredients.push(`${normalizedIngredientName} (NOT IN INVENTORY)`);
+                            } else {
+                                const currentStock = parseFloat(dbInventoryItem.currentStock || 0);
+                                const unit = dbInventoryItem.unit || 'unit';
+                                
+                                if (currentStock <= 0) {
+                                    console.warn(`   ❌ [UI] OUT OF STOCK: ${ingredientName}`);
+                                    missingIngredients.push(`${ingredientName} - OUT OF STOCK (Have: ${currentStock} ${unit})`);
+                                } else {
+                                    console.log(`   ✅ [UI] SUFFICIENT STOCK: ${ingredientName} (${currentStock} ${unit})`);
+                                    availableIngredients.push(ingredientName);
+                                }
+                            }
+                        }
+                        
+                        const hasAllIngredients = missingIngredients.length === 0;
+                        return {
+                            available: hasAllIngredients,
+                            missingIngredients: missingIngredients,
+                            availableIngredients: availableIngredients,
+                            allIngredientsPresent: hasAllIngredients,
+                            requiredIngredients: recipeData.ingredients,
+                            hasRecipe: true,
+                            source: 'server'
+                        };
+                    } else {
+                        // Recipe not found on server
+                        console.warn(`❌ [UI] No recipe defined for "${itemName}" on server`);
+                        return {
+                            available: false,
+                            missingIngredients: [`No recipe defined for "${itemName}" - Add recipe mapping to server.js recipeMapping`],
+                            availableIngredients: [],
+                            allIngredientsPresent: false,
+                            requiredIngredients: [],
+                            hasRecipe: false,
+                            source: 'server'
+                        };
+                    }
+                } else {
+                    console.warn(`⚠️ [UI] Could not verify recipe on server for "${itemName}" - HTTP ${serverCheckResponse.status}`);
+                    return {
+                        available: false,
+                        missingIngredients: [`Could not verify recipe for "${itemName}" on server`],
+                        availableIngredients: [],
+                        allIngredientsPresent: false,
+                        requiredIngredients: [],
+                        hasRecipe: false,
+                        source: 'server'
+                    };
+                }
+            } catch (e) {
+                console.warn(`⚠️ [UI] Could not check server for recipe: ${e.message}`);
+                return {
+                    available: false,
+                    missingIngredients: [`Error checking recipe: ${e.message}`],
+                    availableIngredients: [],
+                    allIngredientsPresent: false,
+                    requiredIngredients: [],
+                    hasRecipe: false,
+                    source: 'server'
+                };
+            }
+        }
+        
+        // Recipe found in local productIngredientMap
+        
+        // If recipe exists but has no ingredients
+        if (!recipe.ingredients || Object.keys(recipe.ingredients).length === 0) {
+            console.log(`ℹ️ [UI] No ingredients defined for "${itemName}" - Product has no ingredient requirements`);
+            return {
+                available: true,
+                missingIngredients: [],
+                availableIngredients: [],
+                allIngredientsPresent: true,
+                requiredIngredients: [],
+                hasRecipe: true,
+                source: 'local'
+            };
+        }
+        
+        console.log(`📋 [UI] Recipe for ${itemName}:`, recipe.ingredients);
+        
+        const missingIngredients = [];
+        const availableIngredients = [];
+        
+        // Fetch inventory from MongoDB
+        const inventoryItems = await fetchInventoryFromMongoDB();
+        
+        if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
+            console.warn(`⚠️ [UI] No inventory data available from MongoDB - Showing ALL ingredients as missing`);
+            // When inventory is empty, show ALL ingredients as missing for UI feedback
+            return {
+                available: false, // ← KEY DIFFERENCE: false for UI feedback
+                missingIngredients: Object.keys(recipe.ingredients).map(ing => `${ing} (NOT IN INVENTORY)`),
+                availableIngredients: [],
+                allIngredientsPresent: false,
+                requiredIngredients: Object.keys(recipe.ingredients),
+                hasRecipe: true,
+                source: 'local'
+            };
+        }
+        
+        // Check each ingredient
+        for (const [ingredientName, requiredAmount] of Object.entries(recipe.ingredients)) {
+            console.log(`   [UI] Checking ingredient: ${ingredientName} (required: ${requiredAmount})`);
+            
+            const normalizedIngredientName = ingredientName.replace(/_/g, ' ');
+            
+            // Find in inventory
+            const dbInventoryItem = inventoryItems.find(item => {
+                const itemNameToCheck = item.itemName || item.name || '';
+                return itemNameToCheck.toLowerCase() === normalizedIngredientName.toLowerCase();
+            });
+            
+            if (!dbInventoryItem) {
+                console.warn(`   ❌ [UI] NOT FOUND in inventory: ${ingredientName}`);
+                missingIngredients.push(`${normalizedIngredientName} (NOT IN INVENTORY)`);
+                continue;
+            }
+            
+            const currentStock = parseFloat(dbInventoryItem.currentStock || 0);
+            const unit = dbInventoryItem.unit || 'unit';
+            
+            console.log(`   [UI] Found in inventory: ${ingredientName} - Current: ${currentStock} ${unit}, Required: ${requiredAmount}`);
+            
+            if (currentStock <= 0) {
+                console.warn(`   ❌ [UI] OUT OF STOCK: ${ingredientName}`);
+                missingIngredients.push(`${ingredientName} - OUT OF STOCK (Have: ${currentStock} ${unit})`);
+            } else if (currentStock < requiredAmount) {
+                console.warn(`   ⚠️ [UI] INSUFFICIENT STOCK: ${ingredientName}`);
+                missingIngredients.push(`${ingredientName} - INSUFFICIENT STOCK (Need: ${requiredAmount} ${unit}, Have: ${currentStock} ${unit})`);
+            } else {
+                console.log(`   ✅ [UI] SUFFICIENT STOCK: ${ingredientName}`);
+                availableIngredients.push(ingredientName);
+            }
+        }
+        
+        const hasAllIngredients = missingIngredients.length === 0;
+        console.log(`\n📊 [UI] Availability Result for "${itemName}": Available: ${hasAllIngredients ? '✅' : '❌'}\n`);
+        
+        return {
+            available: hasAllIngredients,
+            missingIngredients: missingIngredients,
+            availableIngredients: availableIngredients,
+            allIngredientsPresent: hasAllIngredients,
+            requiredIngredients: Object.keys(recipe.ingredients),
+            hasRecipe: true,
+            source: 'local'
+        };
+    } catch (error) {
+        console.error('❌ [UI] Error checking ingredient availability:', error);
+        return {
+            available: false,
+            missingIngredients: [`Error: ${error.message}`],
+            availableIngredients: [],
+            allIngredientsPresent: false,
+            requiredIngredients: [],
+            hasRecipe: false,
+            source: 'local'
         };
     }
 }
@@ -3684,6 +4703,171 @@ function showMissingIngredientsModal(productName, missingIngredients) {
         }
     });
 }
+
+// ==================== SHOW RECIPE NOT FOUND MODAL ====================
+function showRecipeNotFoundModal(productName) {
+    console.log(`⚠️ Displaying recipe not found modal for: ${productName}`);
+    
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('recipeNotFoundModal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'recipeNotFoundModal';
+        modal.className = 'modal';
+        modal.style.cssText = `
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        `;
+        
+        modal.innerHTML = `
+            <div class="modal-content" style="
+                background: white;
+                padding: 25px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            ">
+                <div class="modal-header" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 2px solid #f0f0f0;
+                    padding-bottom: 15px;
+                    margin-bottom: 20px;
+                ">
+                    <h2 style="margin: 0; color: #ff6b6b; font-size: 24px;">
+                        <i class="fas fa-ban"></i> Recipe Not Found
+                    </h2>
+                    <button id="closeRecipeNotFoundModal" style="
+                        background: none;
+                        border: none;
+                        font-size: 28px;
+                        cursor: pointer;
+                        color: #666;
+                    ">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 16px; margin-bottom: 15px; color: #333;">
+                        No recipe has been defined for <strong id="recipeNotFoundProductName">${productName}</strong> yet.
+                    </p>
+                    <div style="
+                        background: #fff3cd;
+                        padding: 15px;
+                        border-radius: 8px;
+                        border-left: 4px solid #ffc107;
+                        margin-bottom: 20px;
+                    ">
+                        <p style="margin: 0; color: #856404; font-size: 14px;">
+                            <i class="fas fa-info-circle"></i> <strong>Instructions:</strong> Please add ingredients to the recipe first before adding this product to inventory.
+                        </p>
+                    </div>
+                    <div style="
+                        background: #f8f9fa;
+                        padding: 15px;
+                        border-radius: 8px;
+                        border-left: 4px solid #6c757d;
+                    ">
+                        <p style="margin: 0; color: #495057; font-size: 13px;">
+                            <i class="fas fa-wrench"></i> To define the recipe, update the <code style="background: #e9ecef; padding: 2px 6px; border-radius: 3px;">recipeMapping</code> object in <code style="background: #e9ecef; padding: 2px 6px; border-radius: 3px;">server.js</code> with the required ingredients.
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="
+                    margin-top: 25px;
+                    text-align: right;
+                    border-top: 2px solid #f0f0f0;
+                    padding-top: 20px;
+                    display: flex;
+                    gap: 10px;
+                    justify-content: flex-end;
+                ">
+                    <button id="closeRecipeNotFoundBtn" class="btn btn-primary" style="
+                        padding: 12px 30px;
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+                        ✓ OK
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    // ✅ ALWAYS attach event listeners (outside the if block so they work every time modal is shown)
+    const closeBtn = document.getElementById('closeRecipeNotFoundBtn');
+    const closeModalBtn = document.getElementById('closeRecipeNotFoundModal');
+    
+    // Remove old listeners by cloning and replacing
+    if (closeBtn) {
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+        newCloseBtn.addEventListener('click', function(e) {
+            console.log('✓ OK button clicked on recipe not found modal');
+            e.preventDefault();
+            e.stopPropagation();
+            closeRecipeNotFoundModal();
+        });
+    }
+    
+    if (closeModalBtn) {
+        const newCloseModalBtn = closeModalBtn.cloneNode(true);
+        closeModalBtn.parentNode.replaceChild(newCloseModalBtn, closeModalBtn);
+        newCloseModalBtn.addEventListener('click', function(e) {
+            console.log('✕ Close button clicked on recipe not found modal');
+            e.preventDefault();
+            e.stopPropagation();
+            closeRecipeNotFoundModal();
+        });
+    }
+    
+    // Handle modal background click
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeRecipeNotFoundModal();
+        }
+    };
+    
+    // Update modal content with product name
+    document.getElementById('recipeNotFoundProductName').textContent = productName;
+    
+    // Show modal
+    console.log('📋 Showing recipe not found modal');
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+}
+
+function closeRecipeNotFoundModal() {
+    const modal = document.getElementById('recipeNotFoundModal');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 150);
+    }
+}
+
 // ==================== INITIALIZE EVENT LISTENERS ====================
 function initializeEventListeners() {
     console.log('🔌 Initializing event listeners...');
@@ -3822,8 +5006,9 @@ async function updateFromItemNameSelect() {
     if (!elements.itemId || !elements.itemId.value) {
         console.log(`\n🧮 Auto-calculating max stock for "${itemName}" based on ingredients...\n`);
         
-        // First, get detailed ingredient availability
-        const availabilityCheck = await checkIngredientAvailability(itemName);
+        // First, get detailed ingredient availability using UI-specific checking
+        // This will show ingredients as missing when inventory is empty
+        const availabilityCheck = await checkIngredientAvailabilityForUI(itemName);
         
         // Store the availability data for the modal
         if (availabilityCheck) {
@@ -4237,6 +5422,14 @@ async function handleSaveItem() {
         price: elements.itemPrice ? elements.itemPrice.value : '0'
     };
     
+    console.log('📝 FormData collected:', {
+        itemPrice_element_exists: !!elements.itemPrice,
+        itemPrice_element_id: elements.itemPrice ? elements.itemPrice.id : 'N/A',
+        itemPrice_value: formData.price,
+        itemPrice_value_type: typeof formData.price,
+        allFormData: formData
+    });
+    
     if (!formData.itemName || formData.itemName.trim() === '' || formData.itemName === 'Select Product') {
         showToast('Please select a product from the dropdown list', 'error');
         if (elements.itemName) {
@@ -4256,6 +5449,13 @@ async function handleSaveItem() {
     }
     
     const price = parseFloat(formData.price);
+    console.log('💰 Price validation:', {
+        formData_price: formData.price,
+        parsed_price: price,
+        is_NaN: isNaN(price),
+        is_greater_than_zero: price > 0
+    });
+    
     if (isNaN(price) || price <= 0) {
         showToast('Please enter a valid price (must be a number greater than 0)', 'error');
         if (elements.itemPrice) {
@@ -4317,8 +5517,17 @@ async function handleSaveItem() {
     if (!availabilityCheck.available) {
         console.warn(`❌ Cannot save product - ingredients missing or insufficient`);
         
-        // Show missing ingredients modal with detailed info
-        showMissingIngredientsModal(formData.itemName, availabilityCheck.missingIngredients);          
+        // Check if recipe exists at all
+        if (!availabilityCheck.requiredIngredients || availabilityCheck.requiredIngredients.length === 0) {
+            // No recipe found - show recipe not found modal
+            console.warn(`❌ No recipe defined for "${formData.itemName}"`);
+            showRecipeNotFoundModal(formData.itemName);
+        } else {
+            // Recipe exists but ingredients are missing - show missing ingredients modal
+            console.warn(`❌ Missing ingredients for "${formData.itemName}"`);
+            showMissingIngredientsModal(formData.itemName, availabilityCheck.missingIngredients);
+        }
+        
         return; // Stop the save process - DO NOT CREATE/UPDATE MENU ITEM
     }
     
@@ -4565,7 +5774,7 @@ function updateDashboardStats() {
     const inStockItems = allMenuItems.filter(item => (item.currentStock || 0) > (item.minStock || 0)).length;
     
     const menuValueTotal = allMenuItems.reduce((total, item) => {
-        const pRIce = item.pRIce || 0;
+        const pRIce = item.price || item.pRIce || 0;
         const stock = item.currentStock || 0;
         return total + (pRIce * stock);
     }, 0);
@@ -4694,7 +5903,7 @@ function renderMenuGrid() {
     
     const gridHTML = filteredItems.map(item => {
         const itemName = item.name || item.itemName || 'Unnamed Product';
-        const itemPRIce = item.pRIce || 0;
+        const itemPRIce = item.price || item.pRIce || 0;
         const currentStock = item.currentStock || 0;
         const maxStock = item.maxStock || 100;
         const minStock = item.minStock || 5;
@@ -4757,8 +5966,6 @@ function renderMenuGrid() {
                         <span><span class="label">Min:</span> ${minStock} ${displayUnit}</span>
                     </div>
                 </div>
-                
-                <div class="card-info"><span class="label">Stock Value:</span> ₱${itemValue.toFixed(2)}</div>
             </div>
             
             <!-- Quick Add Stock Section - FIXED: Button is NEVER disabled based on stock status -->
