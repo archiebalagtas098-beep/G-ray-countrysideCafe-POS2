@@ -1475,7 +1475,7 @@ const elements = {
     currentStock: document.getElementById('currentStock'),
     minimumStock: document.getElementById('minimumStock'),
     maximumStock: document.getElementById('maximumStock'),
-    itemPRIce: document.getElementById('itemPRIce'),
+    itemPrice: document.getElementById('itemPrice'),
     addNewItem: document.getElementById('addNewItem'),
     saveItemBtn: document.querySelector('.modal-footer .btn-primary'),
     cancelBtn: document.querySelector('.modal-footer .btn-secondary'),
@@ -3927,7 +3927,7 @@ function openAddModal() {
         elements.currentStock.title = 'Current quantity in stock';
     }
     if (elements.minimumStock) elements.minimumStock.value = '20';
-    if (elements.itemPRIce) elements.itemPRIce.value = '';
+    if (elements.itemPrice) elements.itemPrice.value = '';
     
     if (elements.itemCategory) {
         elements.itemCategory.value = '';
@@ -3984,7 +3984,7 @@ async function openEditModal(itemId) {
             }
             
             if (elements.itemUnit) elements.itemUnit.value = item.unit || '';
-            if (elements.itemPRIce) elements.itemPRIce.value = item.pRIce || '';
+            if (elements.itemPrice) elements.itemPrice.value = item.price || '';
             if (elements.currentStock) {
                 elements.currentStock.value = item.currentStock || 0;
                 elements.currentStock.readOnly = true;
@@ -4032,7 +4032,7 @@ async function handleSaveItem() {
         currentStock: elements.currentStock ? elements.currentStock.value : '0',
         minStock: elements.minimumStock ? elements.minimumStock.value : '20',
         maxStock: elements.maximumStock ? elements.maximumStock.value : '200',
-        pRIce: elements.itemPRIce ? elements.itemPRIce.value : '0'
+        price: elements.itemPrice ? elements.itemPrice.value : '0'
     };
     
     if (!formData.itemName || formData.itemName.trim() === '' || formData.itemName === 'Select Product') {
@@ -4053,12 +4053,12 @@ async function handleSaveItem() {
         return;
     }
     
-    const pRIce = parseFloat(formData.pRIce);
-    if (isNaN(pRIce) || pRIce <= 0) {
-        showToast('Please enter a valid pRIce (must be a number greater than 0)', 'error');
-        if (elements.itemPRIce) {
-            elements.itemPRIce.focus();
-            elements.itemPRIce.style.borderColor = '#dc3545';
+    const price = parseFloat(formData.price);
+    if (isNaN(price) || price <= 0) {
+        showToast('Please enter a valid price (must be a number greater than 0)', 'error');
+        if (elements.itemPrice) {
+            elements.itemPrice.focus();
+            elements.itemPrice.style.borderColor = '#dc3545';
         }
         return;
     }
@@ -4157,7 +4157,7 @@ async function saveMenuItem(itemData) {
             currentStock: Number(itemData.currentStock),
             minStock: Number(itemData.minStock),
             maxStock: Number(itemData.maxStock),
-            pRIce: Number(itemData.pRIce),
+            price: Number(itemData.price),
             itemType: 'finished',
             isActive: true
         };
