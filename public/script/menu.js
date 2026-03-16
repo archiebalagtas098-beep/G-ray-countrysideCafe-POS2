@@ -578,7 +578,7 @@ const productIngredientMap = {
         servingware: 'bottle'
     },
 
-    'Soda (Mismo) Coke)': {
+    'Soda (Mismo) Coke': {
         ingredients: { 
             'Carbonated Water': 1,
             'Sugar': 0.05,
@@ -592,7 +592,7 @@ const productIngredientMap = {
         servingware: 'bottle'
     },
 
-    'Soda (Mismo) Sprite)': {
+    'Soda (Mismo) Sprite': {
         ingredients: { 
             'Carbonated Water': 1,
             'Sugar': 0.05,
@@ -604,7 +604,7 @@ const productIngredientMap = {
         servingware: 'bottle'
     },
 
-    'Soda (Mismo) Royal)': {
+    'Soda (Mismo) Royal': {
         ingredients: { 
             'Carbonated Water': 1,
             'Sugar': 0.05,
@@ -2301,9 +2301,9 @@ const menuDatabase = {
         { name: 'Sizzling Fried Chicken', unit: 'sizzling plate', defaultPrice: 148 }
     ],
     'Party': [
-        { name: 'Pansit Bihon (S)', unit: 'tray', defaultPrice: 300 },
-        { name: 'Pansit Bihon (M)', unit: 'tray', defaultPrice: 550 },
-        { name: 'Pansit Bihon (L)', unit: 'tray', defaultPrice: 800 },
+        { name: 'Pancit Bihon (S)', unit: 'tray', defaultPrice: 300 },
+        { name: 'Pancit Bihon (M)', unit: 'tray', defaultPrice: 550 },
+        { name: 'Pancit Bihon (L)', unit: 'tray', defaultPrice: 800 },
         { name: 'Pancit Canton (S)', unit: 'tray', defaultPrice: 300 },
         { name: 'Pancit Canton (M)', unit: 'tray', defaultPrice: 550 },
         { name: 'Pancit Canton (L)', unit: 'tray', defaultPrice: 800 },
@@ -2438,7 +2438,7 @@ const menuDatabase = {
         { name: 'Cheesy Dynamite Lumpia', unit: 'piece', defaultPrice: 25 },
         { name: 'Lumpiang Shanghai', unit: 'piece', defaultPrice: 20 }
     ],
-    'Budget Meals': [
+    'Budget Meals Served with Rice': [
         { name: 'Fried Chicken', unit: 'meal', defaultPrice: 95 },
         { name: 'Buttered Honey Chicken', unit: 'meal', defaultPrice: 105 },
         { name: 'Buttered Spicy Chicken', unit: 'meal', defaultPrice: 105 },
@@ -3937,13 +3937,13 @@ async function checkIngredientAvailability(itemName) {
                         const inventoryItems = await fetchInventoryFromMongoDB();
                         
                         if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
-                            console.warn(`⚠️ No inventory data available from MongoDB - Assuming all ingredients are available`);
-                            // When inventory is empty, assume product is available
+                            console.warn(`⚠️ No inventory data available from MongoDB - Blocking product creation until inventory is set up`);
+                            // ⚠️ CHANGED: Return false when inventory is empty
                             return {
-                                available: true,
-                                missingIngredients: [],
-                                availableIngredients: recipeData.ingredients,
-                                allIngredientsPresent: true,
+                                available: false,
+                                missingIngredients: recipeData.ingredients.map(ing => `${ing} (NOT IN INVENTORY - Please add ingredients to inventory first)`),
+                                availableIngredients: [],
+                                allIngredientsPresent: false,
                                 requiredIngredients: recipeData.ingredients
                             };
                         }
@@ -4041,13 +4041,13 @@ async function checkIngredientAvailability(itemName) {
         const inventoryItems = await fetchInventoryFromMongoDB();
         
         if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
-            console.warn(`⚠️ No inventory data available from MongoDB - Assuming all ingredients are available (Inventory not yet stocked)`);
-            // When inventory is empty, assume product is available (ingredients not tracked yet)
+            console.warn(`⚠️ No inventory data available from MongoDB - Blocking product creation until inventory is set up`);
+            // ⚠️ CHANGED: Return false when inventory is empty
             return {
-                available: true,
-                missingIngredients: [],
-                availableIngredients: Object.keys(recipe.ingredients),
-                allIngredientsPresent: true,
+                available: false,
+                missingIngredients: Object.keys(recipe.ingredients).map(ing => `${ing} (NOT IN INVENTORY - Please add ingredients to inventory first)`),
+                availableIngredients: [],
+                allIngredientsPresent: false,
                 requiredIngredients: Object.keys(recipe.ingredients)
             };
         }
@@ -4607,22 +4607,35 @@ function closeMissingIngredientsModal() {
 
 // ==================== SHOW MISSING INGREDIENTS MODAL (From Error) ====================
 function showMissingIngredientsModal(productName, missingIngredients) {
+    console.log(`📦 Opening Ingredients Modal for: ${productName}`);
+    console.log(`📦 Available data in missingIngredientsData:`, Object.keys(missingIngredientsData));
+    console.log(`📦 Data for ${productName}:`, missingIngredientsData[productName]);
+    
     // If only one parameter, try to get from stored data
-    let ingredients = missingIngredients;
+    let ingredientsData = missingIngredientsData[productName];
     
-    if (!ingredients) {
-        const data = missingIngredientsData[productName];
-        if (!data) {
-            alert(`Unable to retrieve missing ingredients for ${productName}`);
-            return;
+    if (!ingredientsData) {
+        // Try to get missing ingredients if passed as parameter
+        if (missingIngredients && missingIngredients.length > 0) {
+            console.log(`📦 Using passed missingIngredients parameter`);
+            ingredientsData = {
+                missing: missingIngredients,
+                available: []
+            };
+        } else {
+            console.error(`❌ No ingredient data found for ${productName}`);
+            // Show a default message instead of alerting
+            ingredientsData = {
+                missing: [`No ingredient data available for "${productName}"`],
+                available: []
+            };
         }
-        ingredients = data.missingIngredients || data.missing || [];
     }
     
-    if (!ingredients || ingredients.length === 0) {
-        alert(`No missing ingredients data for ${productName}`);
-        return;
-    }
+    const missingIng = ingredientsData.missing || [];
+    const availableIng = ingredientsData.available || [];
+    
+    console.log(`📦 Modal data - Missing: ${missingIng.length}, Available: ${availableIng.length}`);
 
     // Create modal
     const modalOverlay = document.createElement('div');
@@ -4653,13 +4666,39 @@ function showMissingIngredientsModal(productName, missingIngredients) {
     `;
     
     let missingHTML = '';
-    if (ingredients.length > 0) {
+    if (missingIng.length > 0) {
         missingHTML = `
             <div style="margin: 20px 0;">
                 <h4 style="color: #dc3545; margin-bottom: 12px;">❌ Missing/Out of Stock:</h4>
                 <ul style="list-style: none; padding: 0;">
-                    ${ingredients.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
+                    ${missingIng.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
                 </ul>
+            </div>
+        `;
+    }
+    
+    let availableHTML = '';
+    if (availableIng.length > 0) {
+        availableHTML = `
+            <div style="margin: 20px 0;">
+                <h4 style="color: #28a745; margin-bottom: 12px;">✅ Available Ingredients:</h4>
+                <ul style="list-style: none; padding: 0;">
+                    ${availableIng.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
+    // Show a message if there are no ingredients defined at all
+    let noIngredientsHTML = '';
+    if (missingIng.length === 0 && availableIng.length === 0) {
+        noIngredientsHTML = `
+            <div style="margin: 20px 0; padding: 15px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
+                <p style="color: #e65100; margin: 0; font-weight: bold;">ℹ️ No Recipe Defined</p>
+                <small style="color: #e65100; display: block; margin-top: 8px;">
+                    No ingredient list is defined for this product in server.js. 
+                    <br/>You can still add this product manually and enter the maximum stock quantity.
+                </small>
             </div>
         `;
     }
@@ -4669,6 +4708,8 @@ function showMissingIngredientsModal(productName, missingIngredients) {
         <div>
             <h3 style="margin: 0 0 10px 0; color: #333;">📦 Ingredient Status: ${productName}</h3>
             <p style="color: #999; margin: 0 0 20px 0; font-size: 14px;">Check missing ingredients and restock if needed</p>
+            ${noIngredientsHTML}
+            ${availableHTML}
             ${missingHTML}
             <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button id="closeModalBtn_${overlayId}" style="
@@ -4693,6 +4734,7 @@ function showMissingIngredientsModal(productName, missingIngredients) {
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             modalOverlay.remove();
+            isModalOpen = false; // Reset the modal flag when closing
         });
     }
     
@@ -4700,6 +4742,7 @@ function showMissingIngredientsModal(productName, missingIngredients) {
     modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) {
             modalOverlay.remove();
+            isModalOpen = false; // Reset the modal flag when closing
         }
     });
 }
@@ -4864,6 +4907,7 @@ function closeRecipeNotFoundModal() {
         modal.classList.remove('show');
         setTimeout(() => {
             modal.style.display = 'none';
+            isModalOpen = false; // Reset the modal flag when closing
         }, 150);
     }
 }
@@ -4897,7 +4941,7 @@ function initializeEventListeners() {
             updateFromCategory();
             if (elements.itemName) elements.itemName.value = '';
             if (elements.itemUnit) elements.itemUnit.value = '';
-            if (elements.itemPRIce) elements.itemPRIce.value = '';
+            if (elements.itemPrice) elements.itemPrice.value = '';
         });
     }
     
@@ -4984,7 +5028,7 @@ function populateItemNamesByCategory(category = null) {
         option.value = item.name;
         option.textContent = item.name;
         option.dataset.unit = item.unit;
-        option.dataset.pRIce = item.defaultPRIce;
+        option.dataset.price = item.defaultPrice;
         itemNameSelect.appendChild(option);
     });
 }
@@ -4997,10 +5041,10 @@ async function updateFromItemNameSelect() {
     
     const selectedOption = elements.itemName.options[elements.itemName.selectedIndex];
     const unit = selectedOption.dataset.unit;
-    const pRIce = selectedOption.dataset.pRIce;
+    const price = selectedOption.dataset.price;
     
     if (unit && elements.itemUnit) elements.itemUnit.value = unit;
-    if (pRIce && elements.itemPRIce) elements.itemPRIce.value = pRIce;
+    if (price && elements.itemPrice) elements.itemPrice.value = price;
     
     // Calculate and set max stock based on ingredients for new products only
     if (!elements.itemId || !elements.itemId.value) {
@@ -5017,6 +5061,9 @@ async function updateFromItemNameSelect() {
                 missing: availabilityCheck.missingIngredients || [],
                 available: availabilityCheck.availableIngredients || []
             };
+            console.log(`✅ Stored ingredient data for "${itemName}":`, missingIngredientsData[itemName]);
+        } else {
+            console.warn(`⚠️ No availabilityCheck returned for "${itemName}"`);
         }
         
         const maxStock = await calculateMaxStockBasedOnIngredients(itemName);
@@ -5074,10 +5121,13 @@ async function updateFromItemNameSelect() {
                     detailsHTML += `</small>`;
                 }
                 
+                detailsHTML += `<br><small style="cursor: pointer; color: #0066cc; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}')">📦 View ingredient details</small>`;
                 helper.innerHTML = detailsHTML;
                 elements.maximumStock.parentNode.appendChild(helper);
                 
                 showToast(`✅ Max stock calculated: ${maxStock} units`, 'success');
+                // Auto-show missing ingredients modal
+                setTimeout(() => showMissingIngredientsModal(itemName), 500);
                 
             } else if (maxStock === 0) {
                 // ERROR: Missing or insufficient ingredients
@@ -5105,7 +5155,8 @@ async function updateFromItemNameSelect() {
                 elements.maximumStock.parentNode.appendChild(helper);
                 
                 showToast(`❌ Cannot create "${itemName}" - Click on product name to see which ingredients are missing`, 'error');
-                
+                // Auto-show missing ingredients modal
+                setTimeout(() => showMissingIngredientsModal(itemName), 500);
                 
             } else {
                 // No recipe or no ingredients, allow manual entry
@@ -5117,21 +5168,24 @@ async function updateFromItemNameSelect() {
                 elements.maximumStock.title = 'Enter maximum stock manually';
                 elements.maximumStock.placeholder = 'Enter maximum stock';
                 
-                // Create info helper text
+                // Create info helper text with link to view ingredients
                 const helper = document.createElement('div');
                 helper.id = 'maxStockHelper';
                 helper.style.cssText = `
                     display: block;
                     margin-top: 8px;
                     padding: 10px;
-                    background: #fff3e0;
-                    border-left: 4px solid #ff9800;
+                    background: #e3f2fd;
+                    border-left: 4px solid #2196f3;
                     border-radius: 3px;
                     font-size: 12px;
-                    color: #e65100;
+                    color: #1565c0;
                 `;
-                helper.innerHTML = `<strong>ℹ️ No recipe defined</strong><br><small>Manually enter maximum stock. Add recipe in server.js to enable auto-calculation.</small>`;
+                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}')">📦 View Missing Ingredients</strong><br><small>Click to see what ingredients are needed for this product</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
+                
+                // Auto-show missing ingredients modal even for products without recipes
+                setTimeout(() => showMissingIngredientsModal(itemName), 500);
             }
         }
     }
@@ -5143,7 +5197,7 @@ function updateFromCategory() {
     if (!category || category.trim() === '' || category === 'Select Category') {
         if (elements.itemName) elements.itemName.innerHTML = '<option value="">Select Product</option>';
         if (elements.itemUnit) elements.itemUnit.value = '';
-        if (elements.itemPRIce) elements.itemPRIce.value = '';
+        if (elements.itemPrice) elements.itemPrice.value = '';
         return;
     }
     
@@ -5152,7 +5206,7 @@ function updateFromCategory() {
     
     if (elements.itemName) elements.itemName.value = '';
     if (elements.itemUnit) elements.itemUnit.value = '';
-    if (elements.itemPRIce) elements.itemPRIce.value = '';
+    if (elements.itemPrice) elements.itemPrice.value = '';
 }
 
 function updateUnitOptions(category) {
@@ -5175,7 +5229,7 @@ function updateUnitOptions(category) {
         unitSelect.value = currentUnit;
     } else if (availableUnits.length > 0) {
         const defaultUnits = {
-            'RIce': 'plate',
+            'Rice': 'plate',
             'Sizzling': 'sizzling plate',
             'Party': 'tray',
             'Drink': 'glass',
@@ -5183,7 +5237,7 @@ function updateUnitOptions(category) {
             'Milk Tea': 'cup',
             'Frappe': 'cup',
             'Snack & Appetizer': 'serving',
-            'Budget Meals Served with RIce': 'meal',
+            'Budget Meals Served with Rice': 'meal',
             'Specialties': 'serving',
         };
         unitSelect.value = defaultUnits[category] || availableUnits[0];
@@ -5322,7 +5376,7 @@ function openAddModal() {
     }
     
     if (elements.itemName) {
-        elements.itemName.value = 'Select Product';
+        elements.itemName.value = '';
     }
     
     modal.style.display = 'flex';
@@ -5774,9 +5828,9 @@ function updateDashboardStats() {
     const inStockItems = allMenuItems.filter(item => (item.currentStock || 0) > (item.minStock || 0)).length;
     
     const menuValueTotal = allMenuItems.reduce((total, item) => {
-        const pRIce = item.price || item.pRIce || 0;
+        const price = item.price || item.price || 0;
         const stock = item.currentStock || 0;
-        return total + (pRIce * stock);
+        return total + (price * stock);
     }, 0);
     
     const totalEl = document.getElementById('totalProducts');
@@ -5797,7 +5851,7 @@ function updateCategoryCounts() {
     
     const categories = {
         'all': allMenuItems.length,
-        'RIce': allMenuItems.filter(item => item.category === 'RIce').length,
+        'Rice': allMenuItems.filter(item => item.category === 'Rice').length,
         'Sizzling': allMenuItems.filter(item => item.category === 'Sizzling').length,
         'Party': allMenuItems.filter(item => item.category === 'Party').length,
         'Drink': allMenuItems.filter(item => item.category === 'Drink').length,
@@ -5805,7 +5859,7 @@ function updateCategoryCounts() {
         'Milk Tea': allMenuItems.filter(item => item.category === 'Milk Tea').length,
         'Frappe': allMenuItems.filter(item => item.category === 'Frappe').length,
         'Snack & Appetizer': allMenuItems.filter(item => item.category === 'Snack & Appetizer').length,
-        'Budget Meals Served with RIce': allMenuItems.filter(item => item.category === 'Budget Meals Served with RIce').length,
+        'Budget Meals Served with Rice': allMenuItems.filter(item => item.category === 'Budget Meals Served with Rice').length,
         'Specialties': allMenuItems.filter(item => item.category === 'Specialties').length,
     };
     
@@ -5860,7 +5914,7 @@ function filterByCategory(category, fullname) {
     }
     
     if (elements.currentCategoryTitle) {
-        elements.currentCategoryTitle.textContent = fullname || 'Product Menu     ';
+        elements.currentCategoryTitle.textContent = fullname || 'Product Menu';
     }
     
     if (currentSection === 'menu') {
@@ -5903,13 +5957,14 @@ function renderMenuGrid() {
     
     const gridHTML = filteredItems.map(item => {
         const itemName = item.name || item.itemName || 'Unnamed Product';
-        const itemPRIce = item.price || item.pRIce || 0;
+        // Get price directly from database (field name is 'price')
+        const itemPrice = item.price;
         const currentStock = item.currentStock || 0;
         const maxStock = item.maxStock || 100;
         const minStock = item.minStock || 5;
         const unit = item.unit || 'unit';
         const displayUnit = unitDisplayLabels[unit] || unit;
-        const itemValue = itemPRIce * currentStock;
+        const itemValue = itemPrice * currentStock;
         const stockPercentage = maxStock > 0 ? ((currentStock / maxStock) * 100) : 0;
         
         let stockClass = '';
@@ -5948,7 +6003,7 @@ function renderMenuGrid() {
             </div>
             <div class="card-body">
                 <div class="card-info"><span class="label">Category:</span> ${getCategoryDisplayName(item.category)}</div>
-                <div class="card-info"><span class="label">Selling PRIce:</span> ₱${itemPRIce.toFixed(2)}</div>
+                <div class="card-info"><span class="label">Selling Price:</span> ₱${itemPrice.toFixed(2)}</div>
                 <div class="card-info"><span class="label">Unit:</span> ${displayUnit}</div>
                 
                 <div style="margin: 12px 0 8px;">
@@ -6147,7 +6202,6 @@ async function renderDashboardGrid() {
         } catch (error) {
             console.error('Error fetching stock requests from MongoDB:', error);
         }
-        
         
         // ✅ DASHBOARD GRID NOW SHOWS EMPTY
         elements.dashboardGrid.innerHTML = '';
@@ -6406,7 +6460,7 @@ async function confirmStockRequest(requestId, productName, requestedQuantity) {
         
         // First, try to find in allMenuItems if available
         if (allMenuItems && allMenuItems.length > 0) {
-            console.log(`� Using loaded allMenuItems (${allMenuItems.length} items)`);
+            console.log(`📦 Using loaded allMenuItems (${allMenuItems.length} items)`);
             
             // Strategy 1: Exact name match
             product = allMenuItems.find(p => 
@@ -6793,7 +6847,7 @@ async function updateInventoryStats() {
         }).length;
         
         const totalValue = window.allMenuItems.reduce((sum, item) => {
-            return sum + ((item.pRIce || 0) * (item.currentStock || 0));
+            return sum + ((item.price || 0) * (item.currentStock || 0));
         }, 0);
         
         // Update DOM elements
@@ -7089,7 +7143,7 @@ async function quickAddStock(itemId, itemName) {
                     name: product.name || product.itemName,
                     itemName: product.name || product.itemName,
                     category: product.category,
-                    pRIce: product.pRIce,
+                    price: product.price,
                     unit: product.unit,
                     currentStock: newStock,
                     minStock: product.minStock,
@@ -7221,4 +7275,4 @@ console.log('📡 Using actual inventory from MongoDB - No fallback data');
 console.log('🔔 Stock request notifications from staff appear in modal popup');
 console.log('⏱️ Dashboard render optimized with debouncing to prevent blinking');
 console.log('🧮 Max stock is auto-calculated based on current ingredient inventory');
-console.log('📋 Stock requests modal displays all pending requests with confirm/reject buttons');
+console.log('📋 Stock requests modal displays all pending requests with confirm/reject buttons'); 

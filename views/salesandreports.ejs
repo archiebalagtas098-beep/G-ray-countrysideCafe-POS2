@@ -7,13 +7,15 @@
 <title>Sales & Reports</title>
 <script src="/script/session-manager.js"></script>
 <script src="/script/back-button-prevention.js"></script>
+<script src="/script/settings-manager.js"></script>
+
 <!-- no inline styles – pure HTML structure, zero sample data in donuts -->
 </head>
 <body>
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="brandname">
-      <div class="logo">
+      <div class="logo" onclick="openSettingsModal()" style="cursor: pointer; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" title="Click to view settings">
         <div class="logo-img">☕</div>
       </div>
       <h2>Gray Countryside Cafe</h2>
@@ -52,6 +54,12 @@
           <div class="header-left">
             <h1>Sales Report</h1>
             <div class="report-period" id="reportPeriod">No period selected</div>
+            <!-- Time Period Tabs -->
+            <div class="period-tabs">
+              <button class="period-tab active" onclick="switchPeriod('daily')" id="dailyTab">📅 Daily</button>
+              <button class="period-tab" onclick="switchPeriod('weekly')" id="weeklyTab">📊 Weekly</button>
+              <button class="period-tab" onclick="switchPeriod('monthly')" id="monthlyTab">📈 Monthly</button>
+            </div>
           </div>
           <div class="header-right">
             <!-- Export Button -->
@@ -363,6 +371,44 @@
             initMobileMenu();
         }
     })();
+
+    // ==================== SETTINGS MODAL FUNCTIONS ====================
+    function openSettingsModal() {
+        const settingsModal = document.getElementById('settingsModal');
+        settingsModal.style.display = 'flex';
+        loadUserSettings();
+    }
+
+    function closeSettingsModal() {
+        document.getElementById('settingsModal').style.display = 'none';
+    }
+
+    async function loadUserSettings() {
+        try {
+            const response = await fetch('/api/settings', {
+                headers: { 'Accept': 'application/json' },
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.data) {
+                    document.getElementById('settingsName').textContent = data.data.name || 'Not Set';
+                    document.getElementById('settingsRole').textContent = data.data.role || 'Admin';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading user settings:', error);
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        const settingsModal = document.getElementById('settingsModal');
+        if (settingsModal && event.target === settingsModal) {
+            closeSettingsModal();
+        }
+    });
 </script>
+
+
 </body>
 </html>

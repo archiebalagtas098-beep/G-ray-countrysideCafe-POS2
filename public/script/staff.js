@@ -1394,10 +1394,11 @@ async function loadAllMenuItems() {
             
             result.data.forEach(item => {
                 const currentStock = parseInt(item.currentStock) || 0;
+                const itemPrice = parseFloat(item.price) || 0;
                 
                 const product = {
                     name: item.name || item.itemName || 'Unknown',
-                    price: item.price || 0,
+                    price: itemPrice,
                     category: item.category || 'Uncategorized',
                     image: getProductImage(item.name || item.itemName || ''),
                     stock: currentStock,
@@ -1571,17 +1572,20 @@ function addItemToOrder(name, price, product = null) {
     
     updateStockInMongoDB(product._id, product.stock);
     
+    // Ensure price is a number
+    const itemPrice = parseFloat(product.price) || 0;
+    
     if (existingItem) {
         existingItem.quantity++;
-        existingItem.subtotal = existingItem.quantity * existingItem.price;
+        existingItem.subtotal = existingItem.quantity * itemPrice;
     } else {
         currentOrder.push({
             id: product._id,
             itemName: product.itemName || product.name,
             name: product.name || product.itemName,
-            price: product.price,
+            price: itemPrice,
             quantity: 1,
-            subtotal: product.price,
+            subtotal: itemPrice,
             unit: product.unit,
             _id: product._id,
             image: product.image || '/images/default_food.png',
@@ -1614,7 +1618,8 @@ function renderOrder() {
     let subtotal = 0;
 
     currentOrder.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
+        const itemPrice = parseFloat(item.price) || 0;
+        const itemTotal = itemPrice * item.quantity;
         subtotal += itemTotal;
         
         list.innerHTML += `
@@ -1809,7 +1814,10 @@ function updatePaymentAmount() {
 }
 
 function updateChange() {
-    const total = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = currentOrder.reduce((sum, item) => {
+        const itemPrice = parseFloat(item.price) || 0;
+        return sum + (itemPrice * item.quantity);
+    }, 0);
     const changeEl = document.getElementById('changeAmount');
     
     if (!changeEl) return;
@@ -1818,8 +1826,9 @@ function updateChange() {
         changeEl.textContent = '0.00';
         changeEl.style.color = '#17a2b8';
     } else if (selectedPaymentMethod === 'cash') {
-        if (paymentAmount >= total) {
-            const change = paymentAmount - total;
+        const amountPaid = parseFloat(paymentAmount) || 0;
+        if (amountPaid >= total) {
+            const change = amountPaid - total;
             changeEl.textContent = change.toFixed(2);
             changeEl.style.color = '#28a745';
         } else {

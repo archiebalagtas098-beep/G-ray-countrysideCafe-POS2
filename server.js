@@ -23,6 +23,7 @@ import StockDeduction from "./models/StockDeduction.js";
 import StaffAssignment from "./models/staffassignModel.js";
 import StockTransfer from "./models/StocktransferModel.js";
 import Settings from "./models/SettingsModel.js";
+import { SalesData } from "./models/salesdata.js";
 
 import stockTransferRoute from "./routes/stockTransferroute.js";
 import staffRoutes from "./routes/staffroute.js";
@@ -5169,7 +5170,91 @@ app.get('/api/staff/events', verifyToken, (req, res) => {
 
 app.get("/api/dashboard/stats", verifyToken, verifyAdmin, async (req, res) => {
     try {
-        console.log('📊 API: Fetching dashboard stats...');
+        const period = req.query.period || 'daily'; // daily, weekly, or monthly
+        console.log(`📊 API: Fetching dashboard stats for period: ${period}...`);
+        
+        // If period query is provided, fetch from SalesData
+        if (req.query.period) {
+            try {
+                const now = new Date();
+                let startDate, endDate;
+                
+                if (period === 'daily') {
+                    // Get today's data - from midnight to now + 1 day
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+                } else if (period === 'weekly') {
+                    // Get this week's data (Sunday to now)
+                    const dayOfWeek = now.getDay();
+                    startDate = new Date(now);
+                    startDate.setDate(now.getDate() - dayOfWeek);
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate = new Date(now);
+                    endDate.setHours(23, 59, 59, 999);
+                } else if (period === 'monthly') {
+                    // Get this month's data
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    endDate.setHours(23, 59, 59, 999);
+                }
+                
+                console.log(`🔍 Querying ${period} sales data:`, {
+                    period: period,
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString()
+                });
+                
+                const salesDataByPeriod = await SalesData.findOne({
+                    period: period,
+                    fullDate: { $gte: startDate, $lt: endDate }
+                }).sort({ fullDate: -1 }).lean();
+                
+                if (salesDataByPeriod) {
+                    console.log(`✅ Found ${period} sales data:`, {
+                        totalOrders: salesDataByPeriod.totalOrders,
+                        totalSales: salesDataByPeriod.totalSales,
+                        totalCustomers: salesDataByPeriod.totalCustomers
+                    });
+                    return res.json({
+                        success: true,
+                        data: {
+                            totalRevenue: salesDataByPeriod.totalSales || 0,
+                            totalOrders: salesDataByPeriod.totalOrders || 0,
+                            totalCustomers: salesDataByPeriod.totalCustomers || 0,
+                            totalCosts: salesDataByPeriod.totalCosts || 0,
+                            profit: salesDataByPeriod.profit || 0,
+                            paymentBreakdown: salesDataByPeriod.paymentBreakdown || { cash: 0, gcash: 0 },
+                            orderTypes: salesDataByPeriod.orderTypes || { dineIn: 0, takeOut: 0 },
+                            topProducts: salesDataByPeriod.topProducts || [],
+                            recentOrders: []
+                        }
+                    });
+                } else {
+                    console.log(`⚠️ No ${period} sales data found, returning zeros`);
+                    return res.json({
+                        success: true,
+                        data: {
+                            totalRevenue: 0,
+                            totalOrders: 0,
+                            totalCustomers: 0,
+                            totalCosts: 0,
+                            profit: 0,
+                            paymentBreakdown: { cash: 0, gcash: 0 },
+                            orderTypes: { dineIn: 0, takeOut: 0 },
+                            topProducts: [],
+                            recentOrders: []
+                        }
+                    });
+                }
+            } catch (periodError) {
+                console.error(`❌ Error fetching ${period} sales data:`, periodError);
+                // Fallback to general stats
+            }
+        }
+        
+        // Default: Fetch general dashboard stats
         const stats = await DashboardStats.getStats();
         
         res.json({
@@ -5798,6 +5883,106 @@ app.post('/api/orders', verifyToken, async (req, res) => {
             vat: vat,
             createdAt: savedOrder.createdAt.toLocaleString('en-PH')
         });
+        
+        // 📊 Update daily sales data in MongoDB
+        try {
+            const today = new Date();
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+            
+            // Get or create daily sales record
+            let dailySalesRecord = await SalesData.findOne({
+                period: 'daily',
+                fullDate: { $gte: startOfDay, $lt: endOfDay }
+            });
+            
+            if (!dailySalesRecord) {
+                // Create new daily record
+                const dateStr = today.toLocaleDateString('en-US');
+                const dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][today.getDay()];
+                
+                dailySalesRecord = new SalesData({
+                    period: 'daily',
+                    date: dateStr,
+                    fullDate: startOfDay,
+                    dayOfWeek: dayOfWeek,
+                    totalOrders: 0,
+                    totalSales: 0,
+                    totalCosts: 0,
+                    profit: 0,
+                    totalCustomers: 0,
+                    items: new Map(),
+                    paymentBreakdown: { cash: 0, gcash: 0 },
+                    orderTypes: { dineIn: 0, takeOut: 0 },
+                    topProducts: []
+                });
+            }
+            
+            // Update daily record with new order data
+            dailySalesRecord.totalOrders += 1;
+            dailySalesRecord.totalSales += savedOrder.total;
+            // Only count if this is a new customer for the day
+            if (!dailySalesRecord.dailyCustomerIds) {
+                dailySalesRecord.dailyCustomerIds = [];
+            }
+            if (!dailySalesRecord.dailyCustomerIds.includes(customerId)) {
+                dailySalesRecord.totalCustomers += 1;
+                dailySalesRecord.dailyCustomerIds.push(customerId);
+            }
+            
+            // Update payment breakdown
+            const paymentMethod = savedOrder.payment?.method || 'cash';
+            if (paymentMethod === 'gcash' || paymentMethod === 'G-Cash') {
+                dailySalesRecord.paymentBreakdown.gcash += savedOrder.total;
+            } else {
+                dailySalesRecord.paymentBreakdown.cash += savedOrder.total;
+            }
+            
+            // Update order types
+            if (savedOrder.type === 'Take Out' || savedOrder.type === 'Takeout') {
+                dailySalesRecord.orderTypes.takeOut += 1;
+            } else {
+                dailySalesRecord.orderTypes.dineIn += 1;
+            }
+            
+            // Update items sold
+            for (const item of processedItems) {
+                const itemName = item.name;
+                if (!dailySalesRecord.items.has(itemName)) {
+                    dailySalesRecord.items.set(itemName, {
+                        quantity: 0,
+                        price: item.price,
+                        revenue: 0
+                    });
+                }
+                const itemData = dailySalesRecord.items.get(itemName);
+                itemData.quantity += item.quantity;
+                itemData.revenue += item.price * item.quantity;
+            }
+            
+            // Calculate profit (assuming 35% profit margin)
+            dailySalesRecord.profit = dailySalesRecord.totalSales * 0.35;
+            
+            // Update top products (sort by revenue)
+            const itemsArray = Array.from(dailySalesRecord.items.entries()).map(([name, data]) => ({
+                name,
+                quantity: data.quantity,
+                revenue: data.revenue
+            }));
+            dailySalesRecord.topProducts = itemsArray.sort((a, b) => b.revenue - a.revenue).slice(0, 10);
+            
+            await dailySalesRecord.save();
+            
+            console.log('📊 Daily sales data updated:', {
+                date: dailySalesRecord.date,
+                totalOrders: dailySalesRecord.totalOrders,
+                totalSales: dailySalesRecord.totalSales,
+                totalCustomers: dailySalesRecord.totalCustomers
+            });
+        } catch (err) {
+            console.error('❌ Error updating daily sales data:', err.message);
+            // Don't fail the order if daily sales update fails
+        }
         
         const receiptData = HelperFunctions.generateReceipt(savedOrder, customer);
         
@@ -6809,38 +6994,15 @@ app.get('/api/infosettings/user', verifyToken, async (req, res) => {
             });
         }
         
-        // Get user settings (email, phone, names, etc.)
-        let settings = await Settings.findOne({ userId });
-        
-        if (!settings) {
-            console.log(`ℹ️ No settings found for user, creating default settings...`);
-            // Create default settings if they don't exist
-            settings = new Settings({
-                userId: userId,
-                fullName: user.username,
-                firstName: user.firstName || user.username,
-                lastName: user.lastName || '',
-                isActive: true
-            });
-            await settings.save();
-        }
-        
         console.log(`✅ User found: ${user.username}`);
         
+        // Return only name and role
         res.json({
             success: true,
             data: {
                 _id: user._id,
-                username: user.username,
-                email: settings.email || '',
-                fullName: settings.fullName || user.username,
-                firstName: settings.firstName || '',
-                lastName: settings.lastName || '',
-                phoneNumber: settings.phone || '',
-                phone: settings.phone || '',
-                name: settings.fullName || user.username,
-                role: user.role,
-                createdAt: user.createdAt
+                name: user.fullName || user.name || user.username || '',
+                role: user.role || 'user'
             }
         });
     } catch (error) {
@@ -6848,6 +7010,52 @@ app.get('/api/infosettings/user', verifyToken, async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error fetching user data',
+            error: error.message
+        });
+    }
+});
+
+// ==================== GET SETTINGS (FOR SETTINGS MODAL) ====================
+app.get('/api/settings', verifyToken, async (req, res) => {
+    try {
+        console.log('📝 API: /api/settings - Fetching user settings');
+        
+        const userId = req.user._id || req.user.id || req.user.userId;
+        
+        if (!userId) {
+            console.error('❌ No user ID found in token');
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid token: No user ID'
+            });
+        }
+        
+        // Get user from database
+        const user = await User.findById(userId).select('fullName name username role');
+        
+        if (!user) {
+            console.warn(`⚠️ User not found with ID: ${userId}`);
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+        
+        console.log(`✅ Settings fetched for user: ${user.username}`);
+        
+        res.json({
+            success: true,
+            data: {
+                name: user.fullName || user.name || user.username || 'User',
+                role: user.role || 'user',
+                username: user.username
+            }
+        });
+    } catch (error) {
+        console.error('❌ Error fetching settings:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching settings',
             error: error.message
         });
     }
@@ -6866,29 +7074,12 @@ app.get('/api/user/profile', verifyToken, async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
         
-        // Get user settings
-        let settings = await Settings.findOne({ userId });
-        if (!settings) {
-            settings = new Settings({
-                userId: userId,
-                fullName: user.username,
-                firstName: user.firstName || user.username,
-                lastName: user.lastName || ''
-            });
-            await settings.save();
-        }
-        
         res.json({
             success: true,
             data: {
                 _id: user._id,
-                username: user.username,
-                email: settings.email || '',
-                fullName: settings.fullName || user.username,
-                firstName: settings.firstName || '',
-                lastName: settings.lastName || '',
-                phoneNumber: settings.phone || '',
-                role: user.role
+                name: user.fullName || user.name || user.username || '',
+                role: user.role || 'user'
             }
         });
     } catch (error) {
@@ -6897,7 +7088,7 @@ app.get('/api/user/profile', verifyToken, async (req, res) => {
     }
 });
 
-// Update user profile
+// Update user profile - simplified to only update name
 app.post('/api/infosettings/update', verifyToken, async (req, res) => {
     try {
         const userId = req.user._id || req.user.id || req.user.userId;
@@ -6905,111 +7096,28 @@ app.post('/api/infosettings/update', verifyToken, async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid token' });
         }
         
-        const { fullName, email, phoneNumber, firstName, lastName } = req.body;
+        const { name } = req.body;
         
-        console.log('📝 Updating settings:', { userId, fullName, email, phoneNumber, firstName, lastName });
+        console.log('📝 Updating user name:', { userId, name });
         
-        if (!fullName && !firstName && !lastName) {
+        if (!name) {
             return res.status(400).json({
                 success: false,
-                message: 'At least name information is required'
+                message: 'Name is required'
             });
         }
         
-        // Get or create settings for this user
-        let settings = await Settings.findOne({ userId });
+        // Update user in database
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { 
+                fullName: name,
+                name: name,
+                updatedAt: new Date()
+            },
+            { new: true }
+        ).select('-password');
         
-        if (!settings) {
-            // Create new settings if it doesn't exist
-            console.log('📝 Creating new settings for user:', userId);
-            settings = new Settings({
-                userId: userId,
-                fullName: fullName || '',
-                firstName: firstName || '',
-                lastName: lastName || '',
-                email: email || '',
-                phone: phoneNumber || '',
-                businessName: "G'RAY COUNTRYSIDE CAFÉ"
-            });
-        } else {
-            // Update existing settings
-            console.log('📝 Updating existing settings for user:', userId);
-            if (fullName) settings.fullName = fullName;
-            if (firstName) settings.firstName = firstName;
-            if (lastName) settings.lastName = lastName;
-            if (email) {
-                // Validate email format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (email && !emailRegex.test(email)) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Invalid email format'
-                    });
-                }
-                settings.email = email;
-            }
-            if (phoneNumber) settings.phone = phoneNumber;
-        }
-        
-        // Track who modified and when
-        settings.lastModifiedBy = userId;
-        settings.lastModified = new Date();
-        
-        // Save settings
-        await settings.save();
-        
-        console.log(`✅ User settings saved successfully`);
-        
-        res.json({
-            success: true,
-            message: 'Settings updated successfully',
-            data: {
-                _id: settings._id,
-                userId: settings.userId,
-                fullName: settings.fullName,
-                firstName: settings.firstName,
-                lastName: settings.lastName,
-                email: settings.email || '',
-                phoneNumber: settings.phone || '',
-                phone: settings.phone || '',
-                updatedAt: settings.lastModified
-            }
-        });
-    } catch (error) {
-        console.error('Error updating user settings:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error updating settings',
-            error: error.message
-        });
-    }
-});
-
-// Change password
-app.post('/api/infosettings/change-password', verifyToken, async (req, res) => {
-    try {
-        const userId = req.user._id || req.user.id || req.user.userId;
-        if (!userId) {
-            return res.status(401).json({ success: false, message: 'Invalid token' });
-        }
-        
-        const { currentPassword, newPassword } = req.body;
-        
-        if (!currentPassword || !newPassword) {
-            return res.status(400).json({
-                success: false,
-                message: 'Current password and new password are required'
-            });
-        }
-        
-        if (newPassword.length < 8) {
-            return res.status(400).json({
-                success: false,
-                message: 'New password must be at least 8 characters'
-            });
-        }
-        
-        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -7017,38 +7125,26 @@ app.post('/api/infosettings/change-password', verifyToken, async (req, res) => {
             });
         }
         
-        // Verify current password
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                success: false,
-                message: 'Current password is incorrect'
-            });
-        }
-        
-        // Hash new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        
-        // Update password
-        user.password = hashedPassword;
-        await user.save();
-        
-        console.log(`✅ Password changed for user: ${user.username}`);
+        console.log(`✅ User name updated successfully for: ${user.username}`);
         
         res.json({
             success: true,
-            message: 'Password changed successfully'
+            message: 'Name updated successfully',
+            data: {
+                _id: user._id,
+                name: user.fullName || user.name || user.username || '',
+                role: user.role || 'user'
+            }
         });
     } catch (error) {
-        console.error('Error changing password:', error);
+        console.error('Error updating user name:', error);
         res.status(500).json({
             success: false,
-            message: 'Error changing password',
+            message: 'Error updating name',
             error: error.message
         });
     }
 });
-
 app.get('/api/user', verifyToken, async (req, res) => {
     try {
         const userId = req.user._id || req.user.id || req.user.userId;

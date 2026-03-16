@@ -7,13 +7,14 @@
 <title>Admin Dashboard</title>
 <script src="/script/session-manager.js"></script>
 <script src="/script/back-button-prevention.js"></script>
+<script src="/script/settings-manager.js"></script>
 </head>
 <body>
 <!-- NAVBAR -->
 <nav class="navbar">
 <div class="brandname">
-<div class="logo">
-<img src="/logo.png" alt="Logo" class="logo-img">
+<div class="logo" onclick="openSettingsModal()" style="cursor: pointer; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<img src="/logo.png" alt="Logo" class="logo-img" title="Click to view settings">
 </div>
 <h2>Gray Countryside Cafe</h2>
 </div>
@@ -52,6 +53,7 @@
         <div class="stat-card">
           <h3>Total Orders</h3>
           <p id="totalOrders"><%= stats.totalOrders || 0 %></p>
+          <small class="daily-message" id="dailyOrders"><%= stats.todaysOrders || stats.totalOrders || 0 %> Order's today</small>
         </div>
 
         <div class="stat-card revenue-card">
@@ -60,6 +62,7 @@
             <p class="revenue-amount">
               <span id="totalRevenue" class="revenue-value"><%= stats.totalRevenue ? '₱' + stats.totalRevenue.toFixed(2) : '₱0.00' %></span>
             </p>
+            <small class="daily-message" id="dailyRevenue"><%= stats.totalRevenue ? '₱' + stats.totalRevenue.toFixed(2) : '₱0.00' %> Revenue's today</small>
             <div class="revenue-change">
               <i class="fas fa-arrow-up"></i>
             </div>
@@ -72,16 +75,19 @@
         <div class="stat-card">
           <h3>Total Customers</h3>
           <p id="totalCustomers"><%= stats.totalCustomers || 0 %></p>
+          <small class="daily-message" id="dailyCustomers"><%= stats.todaysCustomers || stats.totalCustomers || 0 %> Customer's today</small>
         </div>
 
         <div class="stat-card">
         <h3>Total Inventory</h3>
         <p id="totalInventory"><%= stats.totalInventoryItems || stats.totalInventory || 0 %></p>
+        <small class="daily-message" id="dailyInventory">1 Inventory today</small>
         </div>
 
         <div class="stat-card">
           <h3>Total Menu</h3>
          <h2 id="totalMenuItems"><%= stats.totalMenuItems || 0 %></h2>
+         <small class="daily-message" id="dailyMenu">1 Menu's today</small>
         </div>
       </section>
 
@@ -179,6 +185,7 @@
       </div>
     </div>
   </div>
+
 </body>
 </html>
 <!-- Load external scripts -->
@@ -187,6 +194,59 @@
 
 <!-- Initialize session role for admin dashboard -->
 <script>
+  // ==================== SETTINGS MODAL FUNCTIONS ====================
+  function openSettingsModal() {
+      const settingsModal = document.getElementById('settingsModal');
+      settingsModal.style.display = 'flex';
+      
+      // Load user settings from server
+      loadUserSettings();
+  }
+
+  function closeSettingsModal() {
+      document.getElementById('settingsModal').style.display = 'none';
+  }
+
+  async function loadUserSettings() {
+      try {
+          const response = await fetch('/api/settings', {
+              headers: {
+                  'Accept': 'application/json'
+              },
+              credentials: 'include'
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              
+              if (data.success && data.data) {
+                  // Display user name and role
+                  document.getElementById('settingsName').textContent = data.data.name || 'Not Set';
+                  document.getElementById('settingsRole').textContent = data.data.role || 'Admin';
+              } else {
+                  document.getElementById('settingsName').textContent = 'Unable to load';
+                  document.getElementById('settingsRole').textContent = 'Admin';
+              }
+          } else {
+              document.getElementById('settingsName').textContent = 'Error loading';
+              document.getElementById('settingsRole').textContent = 'Admin';
+          }
+      } catch (error) {
+          console.error('Error loading user settings:', error);
+          document.getElementById('settingsName').textContent = 'Error';
+          document.getElementById('settingsRole').textContent = 'Admin';
+      }
+  }
+
+  // Close settings modal when clicking outside of it
+  document.addEventListener('click', function(event) {
+      const settingsModal = document.getElementById('settingsModal');
+      if (settingsModal && event.target === settingsModal) {
+          closeSettingsModal();
+      }
+  });
+
+  // Initialize session manager
   document.addEventListener('DOMContentLoaded', function() {
     const sessionManager = new SessionManager();
     sessionManager.initializeRoleFromData('admin');

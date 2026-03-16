@@ -240,6 +240,7 @@ async function loadDashboardData() {
 async function loadStats() {
     try {
         console.log('📊 Loading dashboard stats...');
+        // Fetch general stats first
         const response = await fetch('/api/dashboard/stats', {
             headers: {
                 'Accept': 'application/json'
@@ -264,6 +265,29 @@ async function loadStats() {
             });
         } else {
             throw new Error(result.message || 'Failed to load stats');
+        }
+        
+        // Also fetch daily data from MongoDB
+        console.log('📅 Fetching today\'s daily data from MongoDB...');
+        const dailyResponse = await fetch('/api/dashboard/stats?period=daily', {
+            headers: {
+                'Accept': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (dailyResponse.ok) {
+            const dailyResult = await dailyResponse.json();
+            if (dailyResult.success && dailyResult.data) {
+                // Update daily stats from MongoDB - use database values for orders and customers
+                dashboardData.stats.todaysOrders = dailyResult.data.totalOrders || dashboardData.stats.totalOrders || 0;
+                dashboardData.stats.todaysCustomers = dailyResult.data.totalCustomers || dashboardData.stats.totalCustomers || 0;
+                // Don't use todaysRevenue from database - we manage it ourselves with increments
+                console.log('✅ Daily data from MongoDB:', {
+                    todaysOrders: dashboardData.stats.todaysOrders,
+                    todaysCustomers: dashboardData.stats.todaysCustomers
+                });
+            }
         }
     } catch (error) {
         console.error('❌ Error loading stats:', error);
@@ -577,6 +601,63 @@ function updateStatsCards() {
             console.warn(`⚠️ Element not found: ${id}`);
         }
     });
+
+    // ✅ FETCH ALL DAILY VALUES FROM DATABASE - NO LOCAL STORAGE
+    // Get today's date
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    
+    // Use database values for all daily stats
+    let dailyOrdersValue = stats.todaysOrders || 0; // From database
+    let dailyCustomersValue = stats.todaysCustomers || 0; // From database
+    let dailyRevenueValue = stats.todaysRevenue || stats.totalRevenue || 0; // From database
+    let dailyInventoryValue = stats.totalInventoryItems || 0; // From database (total inventory items)
+    let dailyMenuValue = stats.totalMenuItems || 0; // From database (total menu items)
+    
+    console.log('📊 Daily stats from database:', {
+        dailyOrders: dailyOrdersValue,
+        dailyCustomers: dailyCustomersValue,
+        dailyRevenue: dailyRevenueValue,
+        dailyInventory: dailyInventoryValue,
+        dailyMenu: dailyMenuValue
+    });
+    
+    const dailyUpdates = [
+        { id: 'dailyOrders', value: dailyOrdersValue, suffix: " Order's today" },
+        { id: 'dailyCustomers', value: dailyCustomersValue, suffix: " Customer's today" },
+        { id: 'dailyRevenue', value: dailyRevenueValue, prefix: '₱', suffix: " Revenue's today", isCurrency: true },
+        { id: 'dailyInventory', value: dailyInventoryValue, suffix: " Inventory today" },
+        { id: 'dailyMenu', value: dailyMenuValue, suffix: " Menu's today" }
+    ];
+
+    // Update all daily metrics with database values
+    dailyUpdates.forEach(({ id, value, prefix = '', suffix = '', isCurrency = false }) => {
+        const element = document.getElementById(id);
+        if (element) {
+            if (id === 'dailyRevenue') {
+                // Get previous value from element (not localStorage)
+                const prevValue = parseFloat(element.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                
+                if (prevValue !== value) {
+                    animateValue(element, prevValue, value, 1000, prefix, suffix);
+                } else {
+                    element.textContent = `${prefix}${value.toFixed(2)}${suffix}`;
+                }
+            } else if (id === 'dailyOrders' || id === 'dailyCustomers') {
+                // Get current value from element
+                const prevValue = parseInt(element.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                
+                if (prevValue !== value) {
+                    animateValue(element, prevValue, value, 800, '', suffix);
+                } else {
+                    element.textContent = value + suffix;
+                }
+            } else {
+                // For inventory and menu - just set the values from database
+                element.textContent = value + suffix;
+            }
+            console.log(`  ✅ ${id}: ${element.textContent || 'N/A'} (database value: ${value})`);
+        }
+    });
 }
 
 // UPDATE SALES CHART WITH ANIMATION
@@ -729,11 +810,11 @@ function animateValue(element, start, end, duration, prefix = '', suffix = '') {
             currentValue = start + (end - start) * easeOut;
             
             if (isCurrency) {
-                element.textContent = `${prefix}${currentValue.toFixed(2)}`;
+                element.textContent = `${prefix}${currentValue.toFixed(2)}${suffix}`;
             } else if (suffix === '%') {
                 element.textContent = `${currentValue.toFixed(1)}${suffix}`;
             } else {
-                element.textContent = Math.round(currentValue);
+                element.textContent = Math.round(currentValue) + suffix;
             }
         } else {
             element.textContent = end;

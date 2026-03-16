@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 // Sales Data Schema (for dashboard and analytics)
 const salesDataSchema = new mongoose.Schema({
+  period: {
+    type: String,
+    enum: ['daily', 'weekly', 'monthly'],
+    default: 'daily',
+    required: true
+  },
   date: {
     type: String,
     required: true
@@ -87,9 +93,10 @@ const salesDataSchema = new mongoose.Schema({
 });
 
 // Index for efficient queries
-salesDataSchema.index({ fullDate: 1 });
 salesDataSchema.index({ fullDate: -1 });
 salesDataSchema.index({ fullDate: 1, dayOfWeek: 1 });
+salesDataSchema.index({ period: 1, fullDate: 1 });
+salesDataSchema.index({ period: 1 });
 
 export const SalesData = mongoose.model("SalesData", salesDataSchema);
 export default SalesData;

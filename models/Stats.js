@@ -1,7 +1,18 @@
 import mongoose from "mongoose";
 
 const statsSchema = new mongoose.Schema({
+  period: {
+    type: String,
+    enum: ['daily', 'weekly', 'monthly'],
+    default: 'daily',
+    required: true,
+    index: true
+  },
   date: {
+    type: String,
+    required: true
+  },
+  fullDate: {
     type: Date,
     required: true,
     unique: true,
@@ -12,31 +23,26 @@ const statsSchema = new mongoose.Schema({
       return today;
     }
   },
+  dayOfWeek: {
+    type: String,
+    required: true
+  },
   totalOrders: {
     type: Number,
     default: 0,
     min: 0
   },
-  totalRevenue: {
+  totalSales: {
     type: Number,
     default: 0,
     min: 0
   },
-  totalProfit: {
-    type: Number,
-    default: 0
-  },
-  todayOrders: {
+  totalCosts: {
     type: Number,
     default: 0,
     min: 0
   },
-  todayRevenue: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  todayProfit: {
+  profit: {
     type: Number,
     default: 0
   },
@@ -50,12 +56,21 @@ const statsSchema = new mongoose.Schema({
     default: 0,
     min: 0
   },
-  topProduct: String,
-  topProductQuantity: {
-    type: Number,
-    default: 0
+  items: {
+    type: Map,
+    of: {
+      quantity: Number,
+      price: Number,
+      revenue: Number
+    },
+    default: {}
   },
-  paymentMethods: {
+  topProducts: [{
+    name: String,
+    quantity: Number,
+    revenue: Number
+  }],
+  paymentBreakdown: {
     cash: {
       type: Number,
       default: 0,
@@ -91,7 +106,7 @@ const statsSchema = new mongoose.Schema({
 });
 
 // Index for efficient queries
-statsSchema.index({ date: 1 });
-statsSchema.index({ status: 1, date: -1 });
+statsSchema.index({ period: 1, fullDate: 1 });
+statsSchema.index({ status: 1, fullDate: -1 });
 
 export default mongoose.models.Stats || mongoose.model('Stats', statsSchema);

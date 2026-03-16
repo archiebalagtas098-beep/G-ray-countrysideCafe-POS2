@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/settings.css">
     <script src="/script/session-manager.js"></script>
     <script src="/script/back-button-prevention.js"></script>
+    <script src="/script/settings-manager.js"></script>
+
 </head>
 <body>
     <div id="toastContainer"></div>
@@ -14,8 +16,8 @@
     <div class="dashboard-container">
         <nav class="navbar">
             <div class="brandname">
-                <div class="logo">
-                    <img src="/logo.png" alt="Logo" class="logo-img">
+                <div class="logo" onclick="openSettingsModal()" style="cursor: pointer; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <img src="/logo.png" alt="Logo" class="logo-img" title="Click to view settings">
                 </div>
                 <h2>Gray Countryside Cafe</h2>
             </div>
@@ -51,78 +53,27 @@
                     </div>
 
                    <div class="personal-info-section">
-    <h2><i class="fas fa-user"></i> Personal Information</h2>
+    <h2><i class="fas fa-user"></i> User Information</h2>
     <div class="info-grid">
         <div class="info-item">
             <label>Full Name</label>
             <input type="text" class="info-value" id="fullNameDisplay" placeholder="Your full name">
         </div>
         <div class="info-item">
-            <label>Username</label>
-            <input type="text" class="info-value" id="usernameDisplay" placeholder="Your username" readonly>
-        </div>
-        <div class="info-item">
-            <label>Email Address</label>
-            <input type="email" class="info-value" id="emailDisplay" placeholder="@gmail.com">
-        </div>
-        <div class="info-item">
-            <label>Phone Number</label>
-            <input type="text" class="info-value" id="phoneDisplay" placeholder="(+63) XXX-XXX-XXXX">
+            <label>Role</label>
+            <input type="text" class="info-value" id="roleDisplay" placeholder="Your role" readonly>
         </div>
     </div>
     
-    <button class="btn btn-edit" id="editPersonalInfoBtn" style="margin-top: 15px;">
-        <i class="fas fa-edit"></i> Update Info
-    </button>
+    <div class="settings-actions">
+        <button class="btn btn-primary" id="saveBtn">
+            <i class="fas fa-save"></i> Save Changes
+        </button>
+        <button class="btn btn-secondary" id="cancelBtn">
+            <i class="fas fa-times"></i> Cancel
+        </button>
+    </div>
 </div>
-
-                    <!-- Password Change Section -->
-                    <div class="settings-section password-section">
-                        <h2><i class="fas fa-lock"></i> Security & Password</h2>
-                        
-                        <div class="password-form-container" id="passwordFormContainer" style="display: none;">
-                            <form id="passwordChangeForm">
-                                <div class="form-group">
-                                    <label for="currentPassword">Current Password</label>
-                                    <input type="password" id="currentPassword" class="form-control" placeholder="Enter your current password" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="newPassword">New Password</label>
-                                    <input type="password" id="newPassword" class="form-control" placeholder="Enter new password" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="confirmPassword">Confirm New Password</label>
-                                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password" required>
-                                </div>
-                                
-                                <div class="password-form-actions">
-                                    <button type="button" class="btn btn-secondary" id="cancelPasswordChangeBtn">
-                                        <i class="fas fa-times"></i> Cancel
-                                    </button>
-                                    <button type="submit" class="btn btn-primary" id="passwordChangeBtn">
-                                        <i class="fas fa-check"></i>Change Password
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <div class="password-action-container" id="passwordActionContainer">
-                            <button class="btn btn-warning" id="changePasswordModalBtn">
-                                <i class="fas fa-key"></i> Update Password
-                            </button>
-                        </div>
-                    </div>
-                        
-                    <div class="settings-actions">
-                        <button class="btn btn-primary btn-save" id="saveBtn">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                        <button class="btn btn-secondary" id="cancelBtn">
-                            <i class="fas fa-times"></i> Cancel
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

@@ -10,6 +10,169 @@ let salesData = {
     recentOrders: []
 };
 
+// Period management
+let currentPeriod = 'daily';
+let periodData = {
+    daily: { label: 'Today', data: null },
+    weekly: { label: 'This Week', data: null },
+    monthly: { label: 'This Month', data: null }
+};
+
+function switchPeriod(period) {
+    console.log(`📅 Switching to ${period} view...`);
+    currentPeriod = period;
+    
+    // Update active tab
+    document.querySelectorAll('.period-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.getElementById(period + 'Tab').classList.add('active');
+    
+    // For weekly and monthly, reset to 0 first
+    if (period === 'weekly' || period === 'monthly') {
+        console.log(`🔄 Resetting ${period} data to 0...`);
+        resetSalesDataToZero();
+    } else if (period === 'daily') {
+        // Fetch immediately for daily
+        console.log(`📊 Fetching daily data from database...`);
+        loadSalesReportByPeriod(period);
+    }
+}
+
+function resetSalesDataToZero() {
+    console.log('🔄 Resetting all sales data to 0...');
+    
+    // Store old data for animation
+    const oldData = { ...salesData };
+    
+    // Reset all values to 0
+    salesData.totalRevenue = 0;
+    salesData.grossSalesRevenue = 0;
+    salesData.totalOrders = 0;
+    salesData.totalCustomers = 0;
+    salesData.avgOrderValue = 0;
+    salesData.grossProfit = 0;
+    salesData.margin = 0;
+    salesData.dailySales = [];
+    salesData.recentOrders = [];
+    
+    // Update period display
+    const periodEl = document.getElementById('reportPeriod');
+    if (periodEl) {
+        periodEl.textContent = formatPeriodLabel(currentPeriod);
+    }
+    
+    // Update displays with animation
+    updateSalesReportDisplay(oldData);
+    
+    console.log('✅ All sales data reset to 0');
+    
+    // Schedule automatic data fetch after the period completes
+    scheduleDataFetch(currentPeriod);
+}
+
+function scheduleDataFetch(period) {
+    console.log(`⏰ Scheduling data fetch for ${period}...`);
+    
+    const now = new Date();
+    let nextFetchDate;
+    
+    if (period === 'weekly') {
+        // Fetch after 7 days from now
+        nextFetchDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        console.log(`📅 Next fetch scheduled for: ${nextFetchDate.toLocaleString()}`);
+    } else if (period === 'monthly') {
+        // Fetch after 30 days from now
+        nextFetchDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        console.log(`📅 Next fetch scheduled for: ${nextFetchDate.toLocaleString()}`);
+    } else {
+        return; // Don't schedule for daily
+    }
+    
+    // Calculate time until next fetch
+    const timeUntilFetch = nextFetchDate.getTime() - now.getTime();
+    
+    // Set timeout to fetch data after the period
+    setTimeout(() => {
+        console.log(`⏳ ${period.charAt(0).toUpperCase() + period.slice(1)} period completed! Fetching data...`);
+        
+        // Only fetch if user is still viewing this period
+        if (currentPeriod === period) {
+            loadSalesReportByPeriod(period);
+        }
+    }, timeUntilFetch);
+}
+
+function formatPeriodLabel(period) {
+    const now = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    
+    switch(period) {
+        case 'daily':
+            return `Today - ${now.toLocaleDateString('en-US', options)}`;
+        case 'weekly':
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            return `Week: ${weekStart.toLocaleDateString('en-US', {month: 'short', day: 'numeric'})} - ${weekEnd.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})}`;
+        case 'monthly':
+            return `Month: ${now.toLocaleDateString('en-US', {month: 'long', year: 'numeric'})}`;
+        default:
+            return 'Sales Report';
+    }
+}
+
+async function loadSalesReportByPeriod(period) {
+    try {
+        console.log(`📊 Loading ${period} sales data...`);
+        
+        const response = await fetch(`/api/dashboard/stats?period=${period}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        const stats = result.success ? result.data : result;
+        
+        console.log(`✅ ${period} data loaded:`, stats);
+        
+        // Update period display
+        const periodEl = document.getElementById('reportPeriod');
+        if (periodEl) {
+            periodEl.textContent = formatPeriodLabel(period);
+        }
+        
+        // Store period data
+        periodData[period].data = stats;
+        
+        // Update displays
+        const oldData = { ...salesData };
+        
+        salesData.totalRevenue = Math.max(0, parseFloat(stats.totalRevenue) || 0);
+        salesData.grossSalesRevenue = salesData.totalRevenue;
+        salesData.grossProfit = salesData.totalRevenue * 0.65;
+        salesData.margin = salesData.totalRevenue > 0 ? (salesData.grossProfit / salesData.totalRevenue) * 100 : 0;
+        salesData.totalOrders = Math.max(0, parseInt(stats.totalOrders) || 0);
+        salesData.totalCustomers = Math.max(0, parseInt(stats.totalCustomers) || 0);
+        salesData.avgOrderValue = salesData.totalOrders > 0 ? salesData.totalRevenue / salesData.totalOrders : 0;
+        
+        if (Array.isArray(stats.recentOrders) && stats.recentOrders.length > 0) {
+            salesData.recentOrders = stats.recentOrders;
+        } else {
+            salesData.recentOrders = [];
+        }
+        
+        updateSalesReportDisplay(oldData);
+        calculateRevenueBreakdown();
+        
+    } catch (error) {
+        console.error(`❌ Error loading ${period} sales data:`, error);
+        showNotification(`Failed to load ${period} data. Please try again.`, 'error');
+    }
+}
+
+
 function formatCurrency(amount) {
     if (!amount || isNaN(amount)) return '₱0.00';
     return '₱' + parseFloat(amount).toFixed(2);
@@ -855,7 +1018,7 @@ function updateSalesReportDisplay(oldData = null) {
     const today = new Date();
     const periodEl = document.getElementById('reportPeriod');
     if (periodEl) {
-        periodEl.textContent = `Today's Report - ${today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+        periodEl.textContent = formatPeriodLabel(currentPeriod);
         fadeInElement(periodEl, 100);
     }
     
@@ -877,7 +1040,8 @@ function updateSalesReportDisplay(oldData = null) {
     
     const ordersChangeEl = document.getElementById('ordersChange');
     if (ordersChangeEl) {
-        ordersChangeEl.textContent = `${salesData.totalOrders} orders today`;
+        const periodText = currentPeriod === 'daily' ? 'today' : currentPeriod === 'weekly' ? 'this week' : 'this month';
+        ordersChangeEl.textContent = `${salesData.totalOrders} orders ${periodText}`;
         fadeInElement(ordersChangeEl, 400);
     }
     
@@ -890,7 +1054,8 @@ function updateSalesReportDisplay(oldData = null) {
     
     const customersChangeEl = document.getElementById('customersChange');
     if (customersChangeEl) {
-        customersChangeEl.textContent = `${salesData.totalCustomers} customers today`;
+        const periodText = currentPeriod === 'daily' ? 'today' : currentPeriod === 'weekly' ? 'this week' : 'this month';
+        customersChangeEl.textContent = `${salesData.totalCustomers} customers ${periodText}`;
         fadeInElement(customersChangeEl, 500);
     }
     
@@ -926,10 +1091,11 @@ function updateSalesReportDisplay(oldData = null) {
     
     const graphStatusEl = document.getElementById('graphStatus');
     if (graphStatusEl) {
+        const periodText = currentPeriod === 'daily' ? 'today' : currentPeriod === 'weekly' ? 'this week' : 'this month';
         if (salesData.totalOrders > 0) {
-            graphStatusEl.textContent = `${salesData.totalOrders} orders - ₱${salesData.totalRevenue.toFixed(2)} revenue`;
+            graphStatusEl.textContent = `${salesData.totalOrders} orders - ₱${salesData.totalRevenue.toFixed(2)} revenue ${periodText}`;
         } else {
-            graphStatusEl.textContent = 'No sales data for today';
+            graphStatusEl.textContent = `No sales data for ${periodText}`;
         }
         fadeInElement(graphStatusEl, 900);
     }
