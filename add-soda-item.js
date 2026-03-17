@@ -22,7 +22,7 @@ async function addAllSodaItems() {
             },
             {
                 itemName: 'Soda 1.5L Coke Zero',
-                category: 'beverage',
+                category: 'Beverages',
                 currentStock: 30,
                 minStock: 5,
                 maxStock: 80,
