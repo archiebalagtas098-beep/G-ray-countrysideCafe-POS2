@@ -3121,6 +3121,281 @@ document.addEventListener('DOMContentLoaded', async function() {
 setInterval(saveInventoryToStorage, 30000);
 setInterval(saveActiveStockRequests, 10000);
 
+// Settings modal function
+function openSettingsModal() {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('settingsModal');
+    if (existingModal) existingModal.remove();
+    
+    // Create modal overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'settingsModal';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    // Create modal content
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    `;
+    
+    // Modal header
+    const header = document.createElement('h2');
+    header.textContent = '⚙️ Settings';
+    header.style.cssText = `
+        margin: 0 0 20px 0;
+        color: #333;
+        font-size: 24px;
+    `;
+    
+    // User info section
+    const userInfoSection = document.createElement('div');
+    userInfoSection.style.cssText = `
+        margin-bottom: 30px;
+        text-align: left;
+    `;
+    
+    // Name field
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Full Name:';
+    nameLabel.style.cssText = `
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    `;
+    
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Loading...';
+    nameInput.style.cssText = `
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+    `;
+    
+    // Role field (read-only)
+    const roleLabel = document.createElement('label');
+    roleLabel.textContent = 'Role:';
+    roleLabel.style.cssText = `
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    `;
+    
+    const roleInput = document.createElement('input');
+    roleInput.type = 'text';
+    roleInput.readOnly = true;
+    roleInput.placeholder = 'Loading...';
+    roleInput.style.cssText = `
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: #f5f5f5;
+        box-sizing: border-box;
+    `;
+    
+    userInfoSection.appendChild(nameLabel);
+    userInfoSection.appendChild(nameInput);
+    userInfoSection.appendChild(roleLabel);
+    userInfoSection.appendChild(roleInput);
+    
+    // Buttons container
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.style.cssText = `
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    `;
+    
+    // Save button
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = '💾 Save Changes';
+    saveBtn.disabled = true;
+    saveBtn.style.cssText = `
+        padding: 12px 20px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+        flex: 1;
+    `;
+    saveBtn.onmouseover = () => {
+        if (!saveBtn.disabled) saveBtn.style.background = '#388E3C';
+    };
+    saveBtn.onmouseout = () => {
+        if (!saveBtn.disabled) saveBtn.style.background = '#4CAF50';
+    };
+    
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕ Close';
+    closeBtn.style.cssText = `
+        padding: 12px 20px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+        flex: 1;
+    `;
+    closeBtn.onmouseover = () => closeBtn.style.background = '#d32f2f';
+    closeBtn.onmouseout = () => closeBtn.style.background = '#f44336';
+    closeBtn.onclick = () => overlay.remove();
+    
+    buttonsContainer.appendChild(saveBtn);
+    buttonsContainer.appendChild(closeBtn);
+    
+    // Assemble modal
+    modal.appendChild(header);
+    modal.appendChild(userInfoSection);
+    modal.appendChild(buttonsContainer);
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Load user data
+    loadUserDataForModal(nameInput, roleInput, saveBtn);
+    
+    // Handle escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            overlay.remove();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
+// Load user data for the modal
+async function loadUserDataForModal(nameInput, roleInput, saveBtn) {
+    try {
+        const response = await fetch('/api/infosettings/user', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.message || 'Failed to load user data');
+        }
+        
+        const userData = result.data || result.user || result;
+        const fullName = userData.fullName || userData.name || userData.username || '';
+        const role = userData.role || 'User';
+        
+        nameInput.value = fullName;
+        roleInput.value = role;
+        nameInput.placeholder = '';
+        roleInput.placeholder = '';
+        
+        // Enable save button and add change detection
+        let originalName = fullName;
+        saveBtn.disabled = false;
+        
+        nameInput.addEventListener('input', () => {
+            const hasChanges = nameInput.value.trim() !== originalName;
+            saveBtn.disabled = !hasChanges;
+        });
+        
+        // Save functionality
+        saveBtn.onclick = async () => {
+            const newName = nameInput.value.trim();
+            
+            if (!newName) {
+                showToast('Name cannot be empty', 'error');
+                return;
+            }
+            
+            if (newName === originalName) {
+                showToast('No changes made', 'info');
+                return;
+            }
+            
+            try {
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving...';
+                
+                const response = await fetch('/api/infosettings/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        name: newName
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.message || `HTTP ${response.status}`);
+                }
+                
+                originalName = newName;
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Save Changes';
+                
+                showToast('✅ Name updated successfully!', 'success');
+                
+                // Close modal after successful save
+                setTimeout(() => {
+                    const modal = document.getElementById('settingsModal');
+                    if (modal) modal.remove();
+                }, 1500);
+                
+            } catch (error) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Changes';
+                showToast('Error: ' + error.message, 'error');
+            }
+        };
+        
+    } catch (error) {
+        nameInput.placeholder = 'Error loading data';
+        roleInput.placeholder = 'Error loading data';
+        showToast('Failed to load user data', 'error');
+    }
+}
+
 window.requestStock = requestStock;
 window.showStockRequestModal = showStockRequestModal;
 window.closeStockRequestModal = closeStockRequestModal;
@@ -3136,4 +3411,5 @@ window.searchFood = searchFood;
 window.handleLogout = handleLogout;
 window.productCatalog = productCatalog;
 window.pendingStockRequests = pendingStockRequests;
-window.checkFulfilledStockRequests = checkFulfilledStockRequests; 
+window.checkFulfilledStockRequests = checkFulfilledStockRequests;
+window.openSettingsModal = openSettingsModal; 

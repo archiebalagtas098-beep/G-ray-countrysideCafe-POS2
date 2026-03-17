@@ -114,6 +114,22 @@ router.post('/add-stock', async (req, res) => {
   }
 });
 
+// Add new inventory item
+router.post('/add-item', async (req, res) => {
+  try {
+    const itemData = req.body;
+    
+    if (!itemData.itemName) {
+      return res.status(400).json({ success: false, error: 'Item name is required' });
+    }
+    
+    const result = await mongoDBInventoryService.addItem(itemData);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Set stock to exact amount
 router.post('/set-stock', async (req, res) => {
   try {

@@ -160,7 +160,7 @@ async function saveUserData() {
             },
             credentials: 'include',
             body: JSON.stringify({
-                fullName: fullName  // Send as fullName to match backend
+                name: fullName  // Send as name to match backend expectation
             })
         });
         

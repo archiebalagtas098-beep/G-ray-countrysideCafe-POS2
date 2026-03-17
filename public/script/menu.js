@@ -133,7 +133,10 @@ const ingredientInventory = {
     'Vanilla extract': { name: 'Vanilla Extract', current: 5, max: 10, unit: 'liter', minThreshold: 1 },
 
     // ====================== THICKENING AGENTS (MISSING) ======================
-    'Starch': { name: 'Starch', current: 10, max: 20, unit: 'kg', minThreshold: 3 }
+    'Starch': { name: 'Starch', current: 10, max: 20, unit: 'kg', minThreshold: 3 },
+    'Soda 1.5L Coke': { name: 'Soda 1.5L Coke', current: 5, max: 10, unit: 'liter', minThreshold: 1 },
+    'Soda 1.5L Coke Zero': { name: 'Soda 1.5L Coke Zero', current: 5, max: 10, unit: 'liter', minThreshold: 1 },
+    'Soda 1.5L Royal': { name: 'Soda 1.5L Royal', current: 5, max: 10, unit: 'liter', minThreshold: 1 }
 };
 
 // ==================== SERVINGWARE INVENTORY ====================
@@ -538,80 +541,50 @@ const productIngredientMap = {
         servingware: 'glass'
     },
 
-    'Soda Coke(1.5L)': {
+    'Soda 1.5L Coke': {
         ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Caramel color': 0.005,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Caffeine': 0.001,
-            'Plastic Bottle': 1
+            'Soda 1.5L Coke ': 0.1,
         },
         servingware: 'bottle'
     },
 
-    'Soda Sprite (1.5L)': {
+    'Soda 1.5L Coke Zero': {
+        ingredients: {
+            'Soda 1.5L Coke Zero': 0.1,
+        },
+    },
+
+    'Soda 1.5L Sprite': {
         ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Sprite Syrup': 0.001,
-            'Plastic Bottle': 1
+            'Soda 1.5L Sprite': 0.1,
         },
         servingware: 'bottle'
     },
     
     'Soda 1.5L Royal': {
         ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Royal Syrup': 0.001,
-            'Plastic Bottle': 1
+           'Soda 1.5L Royal': 0.1,
         },
         servingware: 'bottle'
     },
 
     'Soda (Mismo) Coke': {
         ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Caramel color': 0.005,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Caffeine': 0.001,
-            'Plastic Bottle': 1
+            'Soda (Mismo) Coke': 0.1,
         },
         servingware: 'bottle'
     },
 
     'Soda (Mismo) Sprite': {
         ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Plastic Bottle': 1
+            'Soda (Mismo) Sprite': 0.1,
         },
         servingware: 'bottle'
     },
 
     'Soda (Mismo) Royal': {
         ingredients: { 
-            'Carbonated Water': 1,
-            'Sugar': 0.05,
-            'High fructose corn syrup': 0.01,
-            'Phosphoric acid': 0.005,
-            'Natural flavors': 0.005,
-            'Plastic Bottle': 1
+            'Soda (Mismo) Royal': 0.1,
         },
         servingware: 'bottle'
     },
@@ -3962,7 +3935,14 @@ async function checkIngredientAvailability(itemName) {
                             
                             if (!dbInventoryItem) {
                                 console.warn(`   ❌ NOT FOUND in inventory: ${ingredientName}`);
-                                missingIngredients.push(`${normalizedIngredientName} (NOT IN INVENTORY)`);
+                                
+                                // Check if this is a soda item and auto-add it
+                                if (await autoAddMissingSodaItem(normalizedIngredientName)) {
+                                    console.log(`   ✅ Auto-added missing soda: ${normalizedIngredientName}`);
+                                    availableIngredients.push(ingredientName);
+                                } else {
+                                    missingIngredients.push(`${normalizedIngredientName} (NOT IN INVENTORY)`);
+                                }
                             } else {
                                 const currentStock = parseFloat(dbInventoryItem.currentStock || 0);
                                 const unit = dbInventoryItem.unit || 'unit';
@@ -7218,6 +7198,78 @@ function quickAddStockForRequest(productName, quantity, unit) {
             inputElement.style.borderColor = '#28a745';
         }
     }, 300);
+}
+
+// ==================== AUTO ADD MISSING SODA ITEMS ====================
+async function autoAddMissingSodaItem(ingredientName) {
+    // Check if this is a soda item that should be auto-added
+    const sodaPatterns = [
+        /^soda.*1\.5l.*coke$/i,
+        /^soda.*1\.5l.*coke zero$/i,
+        /^soda.*1\.5l.*sprite$/i,
+        /^soda.*1\.5l.*royal$/i,
+        /^soda.*\(mismo\).*coke$/i,
+        /^soda.*\(mismo\).*sprite$/i,
+        /^soda.*\(mismo\).*royal$/i
+    ];
+    
+    const isSoda = sodaPatterns.some(pattern => pattern.test(ingredientName));
+    
+    if (!isSoda) {
+        return false; // Not a soda, don't auto-add
+    }
+    
+    console.log(`🧊 Auto-adding missing soda item: ${ingredientName}`);
+    
+    // Determine soda details based on name
+    let sodaData = {
+        itemName: ingredientName,
+        category: 'Beverages',
+        currentStock: 50,
+        minStock: 10,
+        maxStock: 100,
+        unit: 'bottles',
+        description: `${ingredientName} bottle`
+    };
+    
+    // Adjust for 1.5L vs Mismo
+    if (ingredientName.toLowerCase().includes('1.5l')) {
+        sodaData.unit = 'bottles';
+        sodaData.description = `1.5L ${ingredientName.replace('Soda 1.5L ', '')} bottle`;
+    } else if (ingredientName.toLowerCase().includes('(mismo)')) {
+        sodaData.unit = 'bottles';
+        sodaData.currentStock = 100;
+        sodaData.maxStock = 200;
+        sodaData.description = `${ingredientName} bottle`;
+    }
+    
+    try {
+        const response = await fetch('/api/inventory/add-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(sodaData)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log(`✅ Successfully auto-added soda: ${ingredientName}`, result);
+            
+            // Show notification
+            addNotification(`Auto-added missing soda: ${ingredientName}`, 'success');
+            
+            return true;
+        } else {
+            const error = await response.json();
+            console.error(`❌ Failed to auto-add soda ${ingredientName}:`, error);
+            return false;
+        }
+    } catch (error) {
+        console.error(`❌ Error auto-adding soda ${ingredientName}:`, error);
+        return false;
+    }
 }
 
 // ==================== LOGOUT ====================

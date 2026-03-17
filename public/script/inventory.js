@@ -214,10 +214,7 @@ const validRawIngredients = {
     'Espresso': 'beverage',
     'Hot Water': 'beverage',
     'Steamed Milk': 'beverage',
-    'Carbonated Water': 'beverage',
     'Milk Tea Base': 'beverage',
-    'High Fructose Corn Syrup': 'beverage',
-    'Caramel Color': 'beverage',
     'Coffee Beans': 'dry',
     'Matcha Powder': 'dry',
     'Matcha Green Tea Powder': 'dry',
@@ -239,6 +236,13 @@ const validRawIngredients = {
     'Sweetener': 'dry',
     'Okinawa Syrup': 'beverage',
     'Wintermelon Syrup': 'beverage',
+    'Soda 1.5L Coke': 'beverage',
+    'Soda 1.5L Coke Zero': 'beverage',
+    'Soda 1.5L Sprite': 'beverage',
+    'Soda 1.5L Royal': 'beverage',
+    'Soda (Mismo) Coke': 'beverage',
+    'Soda (Mismo) Sprite': 'beverage',
+    'Soda (Mismo) Royal': 'beverage',
     'Marshmallows': 'snacks',
     'Nuts': 'dry',
     'Graham Crumbs': 'dry',
@@ -1095,39 +1099,6 @@ const recipeMapping = {
         'Strawberry & Cream MC',
         'All Frappe drinks'
     ],
-    'Carbonated soft drink': [
-        'Soda (Mismo) Coke',
-        'Soda (Mismo) Sprite',
-        'Soda (Mismo) Royal',
-        'Soda 1.5L Coke',
-        'Soda 1.5L Coke Zero',
-        'Soda 1.5L Sprite',
-        'Soda 1.5L Royal'
-    ],
-    'Coke syrup': [
-        'Soda (Mismo) Coke',
-        'Soda 1.5L Coke'
-    ],
-    'Coke zero syrup': [
-        'Soda 1.5L Coke Zero'
-    ],
-    'Sprite syrup': [
-        'Soda (Mismo) Sprite',
-        'Soda 1.5L Sprite'
-    ],
-    'Royal syrup': [
-        'Soda (Mismo) Royal',
-        'Soda 1.5L Royal'
-    ],
-    'Carbonated water': [
-        'Soda (Mismo) Coke',
-        'Soda (Mismo) Sprite',
-        'Soda (Mismo) Royal',
-        'Soda 1.5L Coke',
-        'Soda 1.5L Coke Zero',
-        'Soda 1.5L Sprite',
-        'Soda 1.5L Royal'
-    ],
     
     // ================ SNACKS & SIDES ================
     'Nacho chips': [
@@ -1262,32 +1233,21 @@ const recipeMapping = {
         'All takeout orders'
     ],
 
-    'High Fructose Corn Syrup': [
-        'All carbonated beverages'
+    'Soda 1.5L Coke Zero': [
+        'Soda 1.5L Coke'
     ],
-    'Caramel color': [
-        'All carbonated beverages'
+
+    'Soda 1.5L Sprite': [
+        'Soda 1.5L Sprite'
     ],
-    'Phosphoric acid': [
-        'All carbonated beverages'
-    ],
-    'Natural flavors': [
-        'All carbonated beverages'
-    ],
-    'Caffeine': [
-        'All carbonated beverages'
-    ],
-    'Plastic Bottle (1.5)': [
-        'Soda 1.5L Coke',
-        'Soda 1.5L Coke Zero',
-        'Soda 1.5L Sprite',
+
+    'Soda 1.5L Royal': [
         'Soda 1.5L Royal'
     ],
-    'Plastic Bottle (500ml)': [
-        'Soda (Mismo) Coke',
-        'Soda (Mismo) Sprite',
-        'Soda (Mismo) Royal'
+    'Soda 1.5L Coke ': [
+        'Soda 1.5L Coke'
     ]
+
 };
 
 // ==================== IN STOCK FUNCTIONS ====================

@@ -4137,6 +4137,7 @@ app.set('views', path.join(__dirname, 'views'));
 // Routes that DON'T need auth
 app.use('/api/stock-transfers', stockTransferRoute);
 app.use('/api/staff', staffRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 // PDF routes can be used without token for listing, but need token for upload/delete
 app.get('/api/list-pdfs', async (req, res) => {

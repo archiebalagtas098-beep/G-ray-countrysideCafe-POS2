@@ -187,6 +187,39 @@ class MongoDBInventoryService {
     }
   }
 
+  async addItem(itemData) {
+    try {
+      const existingItem = await this.getInventoryItem(itemData.itemName);
+      
+      if (existingItem) {
+        return { success: false, error: 'Item already exists' };
+      }
+      
+      const newItem = new InventoryItem({
+        itemName: itemData.itemName,
+        category: itemData.category || 'Beverages',
+        currentStock: itemData.currentStock || 50,
+        minStock: itemData.minStock || 10,
+        maxStock: itemData.maxStock || 100,
+        unit: itemData.unit || 'bottles',
+        description: itemData.description || '',
+        status: 'in_stock'
+      });
+      
+      await newItem.save();
+      
+      console.log(`✅ New item added: ${itemData.itemName}`);
+      
+      return {
+        success: true,
+        item: newItem
+      };
+    } catch (error) {
+      console.error(`❌ Error adding item ${itemData.itemName}:`, error.message);
+      return { success: false, error: error.message };
+    }
+  }
+
   async setStock(ingredientName, quantity) {
     try {
       const item = await this.getInventoryItem(ingredientName);
