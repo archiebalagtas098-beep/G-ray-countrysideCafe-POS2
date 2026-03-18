@@ -99,6 +99,8 @@ async function loadUserData() {
         };
         
         console.log('✅ User data loaded:', currentUser);
+        console.log('   Full Name:', currentUser.fullName);
+        console.log('   Role:', currentUser.role);
         
         originalUserData = JSON.parse(JSON.stringify(currentUser));
         
@@ -182,6 +184,9 @@ async function saveUserData() {
         // Update current user
         currentUser.fullName = fullName;
         originalUserData = JSON.parse(JSON.stringify(currentUser));
+        
+        // Reload user data from database to confirm persistence
+        await loadUserData();
         
         showToast('✅ Name updated successfully!', 'success');
         
