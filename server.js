@@ -3509,20 +3509,16 @@ class HelperFunctions {
     }
 
     static getTodayDateRange() {
-        // Philippine Time is UTC+8
-        // Get current UTC time, add 8 hours to get PHT
+        
         const now = new Date();
-        const phtOffset = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+        const phtOffset = 8 * 60 * 60 * 1000; 
         const phtNow = new Date(now.getTime() + phtOffset);
         
-        // Get year, month, day in UTC (which represents PHT after offset)
+       
         const year = phtNow.getUTCFullYear();
         const month = phtNow.getUTCMonth();
         const date = phtNow.getUTCDate();
         
-        // Create date range in UTC representing PHT dates
-        // 00:00 PHT = UTC-8 hours
-        // 23:59 PHT = UTC-8 hours + 23:59
         const startOfDay = new Date(Date.UTC(year, month, date, 0, 0, 0, 0));
         const endOfDay = new Date(Date.UTC(year, month, date, 23, 59, 59, 999));
         
@@ -3975,7 +3971,6 @@ class RealTimeManager {
             }
         });
         
-        // Clean up dead clients
         deadClients.forEach(client => {
             this.staffClients.delete(client);
         });
@@ -4138,7 +4133,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 await connectDB();
-// await initializeDatabase(); // DISABLED: Database auto-population removed to prevent rebuilding cleared data
 
 await mongoDBInventoryService.initialize();
 
@@ -4156,12 +4150,11 @@ app.get('/favicon.ico', (req, res) => {
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
 
-// Routes that DON'T need auth
+
 app.use('/api/stock-transfers', stockTransferRoute);
 app.use('/api/staff', staffRoutes);
 app.use('/api/inventory', inventoryRoutes);
 
-// PDF routes can be used without token for listing, but need token for upload/delete
 app.get('/api/list-pdfs', async (req, res) => {
     // Public access to list PDFs
     try {
@@ -7240,6 +7233,12 @@ app.get("/admindashboard/settings", verifyToken, verifyAdmin, (req, res) => {
 
 app.get("/admindashboard/pdfviewer", verifyToken, (req, res) => {
     res.render("pdfviewer", {
+        user: req.user
+    });
+});
+
+app.get("/admindashboard/pdf-viewer", verifyToken, (req, res) => {
+    res.render("pdf-viewer", {
         user: req.user
     });
 });

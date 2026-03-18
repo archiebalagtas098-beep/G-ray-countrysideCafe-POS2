@@ -275,6 +275,142 @@ function animateProgressBar(bar, targetHeight, duration = 1000) {
     requestAnimationFrame(updateBar);
 }
 
+// Generate report HTML content
+function generateReportHTML(reportData, dateStr, timeStr) {
+    const formatCurrency = (amount) => {
+        return '₱' + parseFloat(amount || 0).toFixed(2);
+    };
+    
+    const formatPercent = (value) => {
+        return parseFloat(value || 0).toFixed(1) + '%';
+    };
+    
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>${reportData.title}</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 900px; margin: 0 auto; padding: 40px; background: white; }
+                .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+                .header h1 { font-size: 28px; color: #000; margin-bottom: 8px; }
+                .header .subtitle { font-size: 14px; color: #666; margin: 5px 0; }
+                .cafe-name { font-size: 18px; font-weight: bold; color: #333; margin: 10px 0; }
+                h2 { font-size: 18px; color: #000; margin-top: 25px; margin-bottom: 15px; border-left: 3px solid #000; padding-left: 10px; }
+                .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
+                .summary-card { border: 1px solid #ccc; padding: 15px; background: #f9f9f9; }
+                .summary-card h3 { font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+                .summary-card .value { font-size: 24px; font-weight: bold; color: #000; margin-bottom: 5px; }
+                .summary-card .change { font-size: 12px; color: #999; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th { background: #000; color: white; padding: 12px; text-align: left; font-weight: bold; }
+                td { padding: 10px 12px; border-bottom: 1px solid #e0e0e0; }
+                tr:nth-child(even) { background: #f9f9f9; }
+                .total-row { background: #f0f0f0 !important; font-weight: bold; border-top: 2px solid #000; }
+                .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center; font-size: 11px; color: #999; }
+                .footer p { margin: 5px 0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>📊 ${reportData.title}</h1>
+                    <div class="cafe-name">${reportData.cafeName}</div>
+                    <div class="subtitle">Generated on ${new Date(reportData.generated).toLocaleString()}</div>
+                    <div class="subtitle">Report Period: Today</div>
+                </div>
+                
+                <h2>💰 Performance Summary</h2>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h3>Total Revenue</h3>
+                        <div class="value">${formatCurrency(reportData.summary.totalRevenue)}</div>
+                        <div class="change">Primary Income</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Total Orders</h3>
+                        <div class="value">${reportData.summary.totalOrders}</div>
+                        <div class="change">Transactions Today</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Total Customers</h3>
+                        <div class="value">${reportData.summary.totalCustomers}</div>
+                        <div class="change">Unique Visitors</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Average Order Value</h3>
+                        <div class="value">${formatCurrency(reportData.summary.averageOrderValue)}</div>
+                        <div class="change">Per Transaction</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Gross Profit</h3>
+                        <div class="value">${formatCurrency(reportData.summary.grossProfit)}</div>
+                        <div class="change">Total Profit</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Profit Margin</h3>
+                        <div class="value">${formatPercent(reportData.summary.profitMargin)}</div>
+                        <div class="change">Profit %</div>
+                    </div>
+                </div>
+                
+                <h2>📈 Financial Summary</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th style="text-align: right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Revenue</td>
+                            <td style="text-align: right;">${formatCurrency(reportData.summary.totalRevenue)}</td>
+                        </tr>
+                        <tr>
+                            <td>Cost of Goods (35%)</td>
+                            <td style="text-align: right;">${formatCurrency(reportData.summary.totalRevenue * 0.35)}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>Gross Profit (65%)</td>
+                            <td style="text-align: right;">${formatCurrency(reportData.summary.grossProfit)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="footer">
+                    <p><strong>Generated by Gray Countryside Café POS System</strong></p>
+                    <div style="background: #f0f0f0; padding: 8px 12px; border-radius: 4px; font-family: monospace; margin: 5px 0;">Report ID: ${dateStr}-${timeStr}</div>
+                    <p>© ${new Date().getFullYear()} Gray Countryside Café | For Business Purposes</p>
+                    <p>⚠️ This is a confidential business document</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+}
+
+// Open PDF viewer directly with report
+function openPDFViewerDirectly() {
+    try {
+        console.log('📄 Opening PDF Viewer directly with report...');
+        const pdfWindow = window.open('/admindashboard/pdf-viewer', 'PDF_Viewer', 'width=1400,height=800,scrollbars=yes,resizable=yes');
+        
+        if (pdfWindow) {
+            pdfWindow.focus();
+            showNotification('✅ PDF Viewer opened!', 'success');
+        } else {
+            showNotification('⚠️ Could not open PDF Viewer. Please check your popup blocker.', 'warning');
+        }
+    } catch (error) {
+        console.error('❌ Error opening PDF Viewer:', error);
+        showNotification('Failed to open PDF Viewer. Please try again.', 'error');
+    }
+}
+
 function exportSalesReport(format = 'pdf') {
     console.log(`📤 Exporting sales report as ${format.toUpperCase()}...`);
     
@@ -321,7 +457,15 @@ function exportSalesReport(format = 'pdf') {
     
     switch(format.toLowerCase()) {
     case 'pdf':
-        exportToPDF(reportData, dateStr, timeStr);
+        // Store report data and go directly to PDF viewer
+        const reportHTML = generateReportHTML(reportData, dateStr, timeStr);
+        window.lastExportedReport = {
+            html: reportHTML,
+            data: reportData,
+            dateStr: dateStr,
+            timeStr: timeStr
+        };
+        openPDFViewerDirectly();
         break;
     case 'excel':
         exportToExcel(reportData, dateStr, timeStr);
@@ -2244,7 +2388,7 @@ function populateSingleDonut(donutNumber, categories, breakdown, categoryColors,
  */
 function viewPDFInViewer(reportId) {
     try {
-        console.log('📄 Opening PDF Viewer for report:', reportId);
+        console.log('📄 Opening Professional PDF Viewer for report:', reportId);
         
         // Store the report data in sessionStorage for the PDF Viewer to access
         if (window.lastExportedReport) {
@@ -2256,10 +2400,16 @@ function viewPDFInViewer(reportId) {
             }));
         }
         
-        // Open the PDF Viewer
-        window.open('/admindashboard/pdfviewer', 'PDF_Viewer', 'width=1200,height=700');
+        // Open the professional PDF Viewer with optimal sizing
+        const pdfWindow = window.open('/admindashboard/pdf-viewer', 'PDF_Viewer', 'width=1400,height=800,scrollbars=yes,resizable=yes');
         
-        showNotification('🔗 Opening PDF Viewer...', 'info');
+        // Focus on the PDF viewer window
+        if (pdfWindow) {
+            pdfWindow.focus();
+            showNotification('✅ Professional PDF Viewer opened!', 'success');
+        } else {
+            showNotification('⚠️ Could not open PDF Viewer. Please check your popup blocker.', 'warning');
+        }
         
     } catch (error) {
         console.error('❌ Error opening PDF Viewer:', error);

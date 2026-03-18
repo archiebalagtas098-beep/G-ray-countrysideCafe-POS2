@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Report Viewer - Gray Countryside Café</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .pdf-viewer-container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* BLACK NAVBAR HEADER */
+        .pdf-header {
+            background-color: #000000;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            min-height: 50px;
+        }
+
+        .pdf-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-logo {
+            font-size: 24px;
+        }
+
+        .pdf-header-title h1 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .pdf-header-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pdf-header-actions button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .pdf-header-actions button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .pdf-header-actions .btn-close {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        .pdf-header-actions .btn-close:hover {
+            background-color: #cc0000;
+        }
+
+        /* WHITE CONTENT AREA */
+        .pdf-content-area {
+            flex: 1;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .pdf-document {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        /* Scrollbar styling */
+        .pdf-content-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .pdf-content-area::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        .pdf-content-area::-webkit-scrollbar-thumb {
+            background: #cccccc;
+            border-radius: 4px;
+        }
+
+        .pdf-content-area::-webkit-scrollbar-thumb:hover {
+            background: #999999;
+        }
+
+        /* Print styles */
+        @media print {
+            .pdf-header {
+                display: none;
+            }
+            .pdf-content-area {
+                padding: 0;
+                background: white;
+                overflow: visible;
+                height: auto;
+            }
+            .pdf-document {
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+            @page {
+                margin: 20mm;
+            }
+        }
+
+        /* Document styling */
+        .pdf-header-section {
+            text-align: center;
+            border-bottom: 2px solid #cccccc;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .pdf-header-section h1 {
+            font-size: 26px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .pdf-header-section .subtitle {
+            font-size: 12px;
+            color: #777;
+            margin: 4px 0;
+        }
+
+        .pdf-cafe-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin: 8px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            border-left: 3px solid #cccccc;
+            padding-left: 10px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .summary-card {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 4px;
+            background: #fafafa;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 11px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-card .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th {
+            background: #f0f0f0;
+            color: #333;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #cccccc;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .total-row {
+            background: #f5f5f5 !important;
+            font-weight: bold;
+            border-top: 2px solid #cccccc;
+        }
+
+        .pdf-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 11px;
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            color: #999;
+        }
+
+        .pdf-footer p {
+            margin: 3px 0;
+        }
+
+        /* Loading state */
+        .pdf-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #333;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .pdf-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+                min-height: auto;
+                padding: 10px 16px;
+            }
+            .pdf-header-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .pdf-content-area {
+                padding: 12px;
+            }
+            .pdf-document {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pdf-viewer-container">
+        <!-- BLACK NAVBAR HEADER -->
+        <div class="pdf-header">
+            <div class="pdf-header-left">
+                <div class="pdf-logo">☕</div>
+                <div class="pdf-header-title">
+                    <h1>Sales Report</h1>
+                </div>
+            </div>
+            <div class="pdf-header-right">
+                <button onclick="printPDF()" title="Print report">🖨️ Print</button>
+                <button class="btn-close" onclick="closePDFViewer()" title="Close viewer">✕</button>
+            </div>
+        </div>
+
+        <!-- WHITE BORDERED CONTENT AREA -->
+        <div class="pdf-content-area">
+            <div class="pdf-document" id="pdfContent">
+                <div class="pdf-loading">
+                    <div class="spinner"></div>
+                    <span>Loading report...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize PDF viewer
+        function initPDFViewer() {
+            console.log('📄 Initializing PDF Viewer...');
+            
+            // Get report data from parent window
+            const reportData = window.opener?.lastExportedReport;
+            
+            if (reportData && reportData.html) {
+                // Extract just the content from the HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = reportData.html;
+                const container = tempDiv.querySelector('.container');
+                
+                if (container) {
+                    document.getElementById('pdfContent').innerHTML = container.innerHTML;
+                    console.log('✅ PDF content loaded successfully');
+                } else {
+                    showError('Failed to parse report content');
+                }
+            } else {
+                showError('No report data available. Please generate a report first.');
+            }
+        }
+
+        function printPDF() {
+            console.log('🖨️ Printing PDF...');
+            window.print();
+        }
+
+        function closePDFViewer() {
+            window.close();
+        }
+
+        function showError(message) {
+            document.getElementById('pdfContent').innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #f44336;">
+                    <h2>⚠️ Error</h2>
+                    <p>${message}</p>
+                    <button onclick="window.close()" style="
+                        margin-top: 20px;
+                        padding: 10px 20px;
+                        background-color: #f44336;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    ">Close</button>
+                </div>
+            `;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initPDFViewer);
+    </script>
+</body>
+</html>
