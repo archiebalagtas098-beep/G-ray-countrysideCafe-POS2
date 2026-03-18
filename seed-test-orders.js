@@ -15,11 +15,9 @@ async function seedTestOrders() {
     
     console.log('✅ Connected to MongoDB');
     
-    // Clear existing orders (optional - comment out to keep existing data)
     const deleteResult = await Order.deleteMany({});
     console.log(`🗑️  Deleted ${deleteResult.deletedCount} existing orders`);
     
-    // Create test orders
     const testOrders = [
       {
         items: [
@@ -138,7 +136,6 @@ async function seedTestOrders() {
       console.log(`    Items: ${order.items.map(i => `${i.name} (x${i.quantity})`).join(', ')}`);
     });
     
-    // Verify by fetching
     const count = await Order.countDocuments();
     console.log(`\n🔍 Total orders in database: ${count}`);
     

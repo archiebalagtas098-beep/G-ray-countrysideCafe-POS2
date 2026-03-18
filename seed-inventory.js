@@ -18,7 +18,6 @@ async function seedInventory() {
     const existingCount = await InventoryItem.countDocuments();
     console.log(`📊 Current inventory items: ${existingCount}`);
     
-    // Check if inventory exists and has stock
     const zeroStockCount = await InventoryItem.countDocuments({ currentStock: 0 });
     
     if (existingCount > 0 && zeroStockCount === 0) {
@@ -31,7 +30,6 @@ async function seedInventory() {
     } else if (existingCount > 0 && zeroStockCount > 0) {
       console.log(`⚠️  Found ${zeroStockCount} items with zero stock. Restocking...\n`);
       
-      // Restock existing items
       const restockData = {
         'Banana Flower Bud': 50,
         'Ground Peanuts': 30,
