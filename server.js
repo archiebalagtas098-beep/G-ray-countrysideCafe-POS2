@@ -7231,14 +7231,14 @@ app.get("/admindashboard/settings", verifyToken, verifyAdmin, (req, res) => {
     res.redirect("/admindashboard/infosettings");
 });
 
-app.get("/admindashboard/pdfviewer", verifyToken, (req, res) => {
-    res.render("pdfviewer", {
+app.get("/admindashboard/pdf", verifyToken, (req, res) => {
+    res.render("pdf", {
         user: req.user
     });
 });
 
-app.get("/admindashboard/pdf-viewer", verifyToken, (req, res) => {
-    res.render("pdf-viewer", {
+app.get("/admindashboard/pdf", verifyToken, (req, res) => {
+    res.render("pdf", {
         user: req.user
     });
 });

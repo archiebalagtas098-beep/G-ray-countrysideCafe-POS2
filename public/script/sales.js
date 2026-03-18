@@ -278,11 +278,13 @@ function animateProgressBar(bar, targetHeight, duration = 1000) {
 // Generate report HTML content
 function generateReportHTML(reportData, dateStr, timeStr) {
     const formatCurrency = (amount) => {
-        return '₱' + parseFloat(amount || 0).toFixed(2);
+        const num = parseFloat(amount) || 0;
+        return isNaN(num) ? '₱0.00' : '₱' + num.toFixed(2);
     };
     
     const formatPercent = (value) => {
-        return parseFloat(value || 0).toFixed(1) + '%';
+        const num = parseFloat(value) || 0;
+        return isNaN(num) ? '0.0%' : num.toFixed(1) + '%';
     };
     
     return `
@@ -293,25 +295,31 @@ function generateReportHTML(reportData, dateStr, timeStr) {
             <title>${reportData.title}</title>
             <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 900px; margin: 0 auto; padding: 40px; background: white; }
-                .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
-                .header h1 { font-size: 28px; color: #000; margin-bottom: 8px; }
-                .header .subtitle { font-size: 14px; color: #666; margin: 5px 0; }
-                .cafe-name { font-size: 18px; font-weight: bold; color: #333; margin: 10px 0; }
-                h2 { font-size: 18px; color: #000; margin-top: 25px; margin-bottom: 15px; border-left: 3px solid #000; padding-left: 10px; }
-                .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
-                .summary-card { border: 1px solid #ccc; padding: 15px; background: #f9f9f9; }
-                .summary-card h3 { font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 10px; }
-                .summary-card .value { font-size: 24px; font-weight: bold; color: #000; margin-bottom: 5px; }
-                .summary-card .change { font-size: 12px; color: #999; }
-                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                th { background: #000; color: white; padding: 12px; text-align: left; font-weight: bold; }
-                td { padding: 10px 12px; border-bottom: 1px solid #e0e0e0; }
-                tr:nth-child(even) { background: #f9f9f9; }
-                .total-row { background: #f0f0f0 !important; font-weight: bold; border-top: 2px solid #000; }
-                .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center; font-size: 11px; color: #999; }
-                .footer p { margin: 5px 0; }
+                html, body { height: 100%; }
+                body { font-family: 'Arial', sans-serif; color: #333; line-height: 1.4; overflow: hidden; }
+                .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; background: white; height: 100vh; overflow-y: auto; }
+                .container::-webkit-scrollbar { width: 8px; }
+                .container::-webkit-scrollbar-track { background: #f1f1f1; }
+                .container::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+                .container::-webkit-scrollbar-thumb:hover { background: #555; }
+                .header { text-align: center; margin-bottom: 20px; }
+                .header h1 { font-size: 22px; font-weight: bold; margin: 8px 0; }
+                .cafe-name { font-size: 15px; font-weight: bold; margin: 3px 0; }
+                .header p { font-size: 11px; color: #666; margin: 2px 0; }
+                h2 { font-size: 13px; font-weight: bold; margin: 15px 0 10px; color: #2c3e50; }
+                .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 15px 0; }
+                .summary-card { padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; }
+                .summary-card h3 { font-size: 10px; color: #666; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
+                .summary-card .value { font-size: 17px; font-weight: bold; color: #2c3e50; margin-bottom: 3px; }
+                .summary-card .change { font-size: 9px; color: #999; }
+                table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; border: 1px solid #ddd; }
+                th { background: #f5f5f5; padding: 8px 10px; text-align: left; font-size: 11px; font-weight: bold; border-bottom: 2px solid #ddd; }
+                td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
+                th:nth-child(2), th:nth-child(3), td:nth-child(2), td:nth-child(3) { text-align: right; }
+                tr:nth-child(even) { background: #fafafa; }
+                tr:hover { background: #f5f5f5; }
+                .footer { margin: 20px 0 10px; padding: 15px 0; border-top: 2px solid #ddd; text-align: center; font-size: 10px; color: #666; }
+                .footer p { margin: 3px 0; }
             </style>
         </head>
         <body>
@@ -319,8 +327,8 @@ function generateReportHTML(reportData, dateStr, timeStr) {
                 <div class="header">
                     <h1>📊 ${reportData.title}</h1>
                     <div class="cafe-name">${reportData.cafeName}</div>
-                    <div class="subtitle">Generated on ${new Date(reportData.generated).toLocaleString()}</div>
-                    <div class="subtitle">Report Period: Today</div>
+                    <p>Generated on ${new Date(reportData.generated).toLocaleString()}</p>
+                    <p>Report Period: Today</p>
                 </div>
                 
                 <h2>💰 Performance Summary</h2>
@@ -357,35 +365,62 @@ function generateReportHTML(reportData, dateStr, timeStr) {
                     </div>
                 </div>
                 
+                ${reportData.revenueBreakdown && Object.keys(reportData.revenueBreakdown).length > 0 ? `
+                <h2>📊 Revenue Breakdown</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Revenue</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(reportData.revenueBreakdown).map(([category, data]) => {
+                            const amount = typeof data === 'object' && data.total ? parseFloat(data.total) : parseFloat(data) || 0;
+                            const percentage = reportData.summary.totalRevenue > 0 && !isNaN(amount)
+                                ? ((amount / reportData.summary.totalRevenue) * 100).toFixed(1)
+                                : '0.0';
+                            return `
+                                <tr>
+                                    <td>${category}</td>
+                                    <td>${formatCurrency(amount)}</td>
+                                    <td>${percentage}%</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+                ` : ''}
+                
                 <h2>📈 Financial Summary</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>Description</th>
-                            <th style="text-align: right;">Amount</th>
+                            <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Total Revenue</td>
-                            <td style="text-align: right;">${formatCurrency(reportData.summary.totalRevenue)}</td>
+                            <td>${formatCurrency(reportData.summary.totalRevenue)}</td>
                         </tr>
                         <tr>
                             <td>Cost of Goods (35%)</td>
-                            <td style="text-align: right;">${formatCurrency(reportData.summary.totalRevenue * 0.35)}</td>
+                            <td>${formatCurrency(reportData.summary.totalRevenue * 0.35)}</td>
                         </tr>
-                        <tr class="total-row">
+                        <tr>
                             <td>Gross Profit (65%)</td>
-                            <td style="text-align: right;">${formatCurrency(reportData.summary.grossProfit)}</td>
+                            <td>${formatCurrency(reportData.summary.grossProfit)}</td>
                         </tr>
                     </tbody>
                 </table>
                 
                 <div class="footer">
-                    <p><strong>Generated by Gray Countryside Café POS System</strong></p>
-                    <div style="background: #f0f0f0; padding: 8px 12px; border-radius: 4px; font-family: monospace; margin: 5px 0;">Report ID: ${dateStr}-${timeStr}</div>
-                    <p>© ${new Date().getFullYear()} Gray Countryside Café | For Business Purposes</p>
-                    <p>⚠️ This is a confidential business document</p>
+                    <p>Generated by Gray Countryside Café POS System</p>
+                    <p>Report ID: ${dateStr}-${timeStr}</p>
+                    <p>© ${new Date().getFullYear()} For School Purposes Only</p>
                 </div>
             </div>
         </body>
@@ -397,7 +432,7 @@ function generateReportHTML(reportData, dateStr, timeStr) {
 function openPDFViewerDirectly() {
     try {
         console.log('📄 Opening PDF Viewer directly with report...');
-        const pdfWindow = window.open('/admindashboard/pdf-viewer', 'PDF_Viewer', 'width=1400,height=800,scrollbars=yes,resizable=yes');
+        const pdfWindow = window.open('/admindashboard/pdf', 'PDF_Viewer', 'width=1400,height=800,scrollbars=yes,resizable=yes');
         
         if (pdfWindow) {
             pdfWindow.focus();
@@ -411,7 +446,7 @@ function openPDFViewerDirectly() {
     }
 }
 
-function exportSalesReport(format = 'pdf') {
+async function exportSalesReport(format = 'pdf') {
     console.log(`📤 Exporting sales report as ${format.toUpperCase()}...`);
     
     const today = new Date();
@@ -435,6 +470,20 @@ function exportSalesReport(format = 'pdf') {
         }, 1500);
     }
     
+    // Fetch revenue breakdown data
+    let revenueBreakdown = {};
+    try {
+        const response = await fetch('/api/revenue/breakdown');
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success && result.data && result.data.breakdown) {
+                revenueBreakdown = result.data.breakdown;
+            }
+        }
+    } catch (error) {
+        console.log('ℹ️ Revenue breakdown not available for export');
+    }
+    
     const reportData = {
         title: `Sales Report - ${today.toLocaleDateString('en-US', { 
             year: 'numeric', 
@@ -452,7 +501,8 @@ function exportSalesReport(format = 'pdf') {
             profitMargin: salesData.margin
         },
         dailyData: salesData.dailySales || [],
-        recentOrders: salesData.recentOrders || []
+        recentOrders: salesData.recentOrders || [],
+        revenueBreakdown: revenueBreakdown
     };
     
     switch(format.toLowerCase()) {
@@ -798,13 +848,13 @@ function exportToPDF(reportData, dateStr, timeStr) {
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>📊 ${reportData.title}</h1>
+                        <h1>${reportData.title}</h1>
                         <div class="cafe-name">${reportData.cafeName}</div>
                         <div class="subtitle">Generated on ${new Date(reportData.generated).toLocaleString()}</div>
                         <div class="subtitle">Report Period: Today</div>
                     </div>
                     
-                    <h2>💰 Performance Summary</h2>
+                    <h2>Performance Summary</h2>
                     <div class="summary-grid">
                         <div class="summary-card">
                             <h3>Total Revenue</h3>
@@ -891,8 +941,7 @@ function exportToPDF(reportData, dateStr, timeStr) {
                     <div class="footer">
                         <p><strong>Generated by Gray Countryside Café POS System</strong></p>
                         <div class="report-id">Report ID: ${dateStr}-${timeStr}</div>
-                        <p>© ${new Date().getFullYear()} Gray Countryside Café | For Business Purposes</p>
-                        <p>⚠️ This is a confidential business document</p>
+                        <p>© ${new Date().getFullYear()} Gray Countryside Café | For School Purposes Only</p>
                     </div>
                     
                     <div class="no-print">
@@ -2401,7 +2450,7 @@ function viewPDFInViewer(reportId) {
         }
         
         // Open the professional PDF Viewer with optimal sizing
-        const pdfWindow = window.open('/admindashboard/pdf-viewer', 'PDF_Viewer', 'width=1400,height=800,scrollbars=yes,resizable=yes');
+        const pdfWindow = window.open('/admindashboard/pdf', 'PDF_Viewer', 'width=1400,height=800,scrollbars=yes,resizable=yes');
         
         // Focus on the PDF viewer window
         if (pdfWindow) {
