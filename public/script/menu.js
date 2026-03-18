@@ -4992,7 +4992,15 @@ async function updateFromItemNameSelect() {
     const unit = selectedOption.dataset.unit;
     const price = selectedOption.dataset.price;
     
-    if (unit && elements.itemUnit) elements.itemUnit.value = unit;
+    // For Sodas and Mismo beverages, always use plastic_bottle unit
+    if (itemName.includes('Soda') || itemName.includes('Mismo')) {
+        if (elements.itemUnit) {
+            elements.itemUnit.value = 'plastic_bottle';
+        }
+    } else if (unit && elements.itemUnit) {
+        elements.itemUnit.value = unit;
+    }
+    
     if (price && elements.itemPrice) elements.itemPrice.value = price;
     
     // Calculate and set max stock based on ingredients for new products only
@@ -5513,7 +5521,7 @@ async function handleSaveItem() {
     const currentStock = parseInt(formData.currentStock);
     
     if (isNaN(maxStock) || maxStock <= 0) {
-        showToast('Maximum stock must be a positive number', 'error');
+        showToast('Please click "View Missing Ingredients" first', 'warning');
         if (elements.maximumStock) elements.maximumStock.focus();
         return;
     }
