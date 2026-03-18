@@ -3443,8 +3443,30 @@ const recipeMapping = {
         'Strawberry & Cream (Glass)',
         'Blue Lemonade (Glass)',
         'Cucumber Lemonade (Glass)'
-    ]
+    ],
 
+    // ================ SODAS & MISMO BEVERAGES ================
+    'Soda 1.5L Coke': [
+        'Soda 1.5L Coke'
+    ],
+    'Soda 1.5L Coke Zero': [
+        'Soda 1.5L Coke Zero'
+    ],
+    'Soda 1.5L Sprite': [
+        'Soda 1.5L Sprite'
+    ],
+    'Soda 1.5L Royal': [
+        'Soda 1.5L Royal'
+    ],
+    'Soda (Mismo) Coke': [
+        'Soda (Mismo) Coke'
+    ],
+    'Soda (Mismo) Sprite': [
+        'Soda (Mismo) Sprite'
+    ],
+    'Soda (Mismo) Royal': [
+        'Soda (Mismo) Royal'
+    ],
 };
 
 const reverseRecipeMapping = {};

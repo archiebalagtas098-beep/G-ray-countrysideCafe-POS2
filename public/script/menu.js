@@ -543,7 +543,7 @@ const productIngredientMap = {
 
     'Soda 1.5L Coke': {
         ingredients: { 
-            'Soda 1.5L Coke ': 0.1,
+            'Soda 1.5L Coke': 0.1,
         },
         servingware: 'bottle'
     },
@@ -3711,7 +3711,8 @@ async function fetchInventoryFromMongoDB() {
     try {
         console.log('🔍 Fetching inventory from MongoDB...');
         
-        const response = await fetch('/api/inventory', {
+        // Try the main API endpoint
+        const response = await fetch(`${BACKEND_URL}/api/inventory`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
@@ -3719,6 +3720,22 @@ async function fetchInventoryFromMongoDB() {
         
         if (!response.ok) {
             console.warn(`⚠️ Inventory API error ${response.status}`);
+            // Try fallback endpoint if main one fails
+            console.log('   📌 Trying fallback inventory endpoint...');
+            try {
+                const fallbackResponse = await fetch(`${BACKEND_URL}/api/menu/recipes`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+                if (fallbackResponse.ok) {
+                    const fallbackData = await fallbackResponse.json();
+                    console.log('   ✅ Using fallback endpoint');
+                    return fallbackData.inventory || [];
+                }
+            } catch (fallbackError) {
+                console.warn('   ❌ Fallback endpoint also failed');
+            }
             return [];
         }
         
@@ -3738,6 +3755,8 @@ async function fetchInventoryFromMongoDB() {
         return inventoryItems;
     } catch (error) {
         console.error('❌ Error fetching inventory from MongoDB:', error.message);
+        console.warn('   📌 Will use local ingredientInventory as fallback');
+        // Return empty array, local ingredient inventory will be used as fallback
         return [];
     }
 }
@@ -3795,7 +3814,22 @@ async function calculateMaxStockBasedOnIngredients(itemName) {
         
         // Get current inventory
         const inventoryItems = await fetchInventoryFromMongoDB();
-        if (!inventoryItems || inventoryItems.length === 0) {
+        let actualInventory = inventoryItems;
+        
+        // If database fetch failed, use local ingredientInventory as fallback
+        if (!actualInventory || actualInventory.length === 0) {
+            console.log(`⚠️ No inventory data from MongoDB - Using local ingredientInventory fallback`);
+            // Convert local ingredientInventory object to array format
+            actualInventory = Object.values(ingredientInventory).map(ing => ({
+                itemName: ing.name,
+                name: ing.name,
+                currentStock: ing.current,
+                unit: ing.unit
+            }));
+            console.log(`✅ Using ${actualInventory.length} ingredients from local cache`);
+        }
+        
+        if (!actualInventory || actualInventory.length === 0) {
             console.log(`⚠️ No inventory data available`);
             return null;
         }
@@ -3809,7 +3843,7 @@ async function calculateMaxStockBasedOnIngredients(itemName) {
             // Find ingredient in inventory - normalize the name for matching
             const normalizedIngredientName = ingredientName.replace(/_/g, ' ').toLowerCase();
             
-            const inventoryItem = inventoryItems.find(item => {
+            const inventoryItem = actualInventory.find(item => {
                 const itemNameLower = (item.itemName || item.name || '').toLowerCase();
                 return itemNameLower === normalizedIngredientName;
             });
@@ -4120,10 +4154,22 @@ async function checkIngredientAvailabilityForUI(itemName) {
                         console.log(`✅ [UI] Recipe found on server for "${itemName}":`, recipeData.ingredients);
                         
                         // Fetch inventory and check availability
-                        const inventoryItems = await fetchInventoryFromMongoDB();
+                        let inventoryItems = await fetchInventoryFromMongoDB();
+                        
+                        // If database fetch failed, use local ingredientInventory as fallback
+                        if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
+                            console.warn(`⚠️ [UI] No inventory from MongoDB - Using local ingredientInventory fallback`);
+                            inventoryItems = Object.values(ingredientInventory).map(ing => ({
+                                itemName: ing.name,
+                                name: ing.name,
+                                currentStock: ing.current,
+                                unit: ing.unit
+                            }));
+                            console.log(`✅ [UI] Using ${inventoryItems.length} ingredients from local cache`);
+                        }
                         
                         if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
-                            console.warn(`⚠️ [UI] No inventory data available from MongoDB - Showing ALL ingredients as missing (for UI feedback)`);
+                            console.warn(`⚠️ [UI] Still no inventory data available - Showing ALL ingredients as missing (for UI feedback)`);
                             // When inventory is empty, show ALL ingredients as missing for UI feedback
                             return {
                                 available: false, // ← KEY DIFFERENCE: false instead of true
@@ -4140,12 +4186,21 @@ async function checkIngredientAvailabilityForUI(itemName) {
                         const missingIngredients = [];
                         const availableIngredients = [];
                         
+                        console.log(`📦 [UI] Checking ${recipeData.ingredients.length} ingredients against ${inventoryItems.length} inventory items`);
+                        console.log(`   Available inventory items:`, inventoryItems.map(i => ({ name: i.itemName || i.name, stock: i.currentStock })));
+                        
                         for (const ingredientName of recipeData.ingredients) {
                             const normalizedIngredientName = ingredientName.replace(/_/g, ' ');
                             
+                            console.log(`   🔍 Looking for ingredient: "${ingredientName}" (normalized: "${normalizedIngredientName}")`);
+                            
                             const dbInventoryItem = inventoryItems.find(item => {
                                 const itemNameToCheck = item.itemName || item.name || '';
-                                return itemNameToCheck.toLowerCase() === normalizedIngredientName.toLowerCase();
+                                const isMatch = itemNameToCheck.toLowerCase() === normalizedIngredientName.toLowerCase();
+                                if (!isMatch) {
+                                    console.log(`      ❌ No match with: "${itemNameToCheck}"`);
+                                }
+                                return isMatch;
                             });
                             
                             if (!dbInventoryItem) {
@@ -4236,10 +4291,23 @@ async function checkIngredientAvailabilityForUI(itemName) {
         const availableIngredients = [];
         
         // Fetch inventory from MongoDB
-        const inventoryItems = await fetchInventoryFromMongoDB();
+        let inventoryItems = await fetchInventoryFromMongoDB();
+        
+        // If database fetch failed, use local ingredientInventory as fallback
+        if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
+            console.warn(`⚠️ [UI] No inventory data from MongoDB - Using local ingredientInventory fallback`);
+            // Convert local ingredientInventory object to array format
+            inventoryItems = Object.values(ingredientInventory).map(ing => ({
+                itemName: ing.name,
+                name: ing.name,
+                currentStock: ing.current,
+                unit: ing.unit
+            }));
+            console.log(`✅ [UI] Using ${inventoryItems.length} ingredients from local cache`);
+        }
         
         if (!Array.isArray(inventoryItems) || inventoryItems.length === 0) {
-            console.warn(`⚠️ [UI] No inventory data available from MongoDB - Showing ALL ingredients as missing`);
+            console.warn(`⚠️ [UI] Still no inventory data available - Showing ALL ingredients as missing`);
             // When inventory is empty, show ALL ingredients as missing for UI feedback
             return {
                 available: false, // ← KEY DIFFERENCE: false for UI feedback
@@ -4380,6 +4448,7 @@ function showToast(message, type = 'success', duration = 5000) {
 // ==================== SHOW MISSING INGREDIENTS MODAL ====================
 function showMissingIngredientsModal(productName, missingIngredients) {
     console.log(`🍽️ Displaying missing ingredients modal for: ${productName}`);
+    console.log(`📦 Missing ingredients:`, missingIngredients);
     
     // Ensure missingIngredients is an array
     if (!Array.isArray(missingIngredients)) {
@@ -4397,7 +4466,7 @@ function showMissingIngredientsModal(productName, missingIngredients) {
         modal.style.cssText = `
             display: none;
             position: fixed;
-            z-index: 1001;
+            z-index: 9999;
             left: 0;
             top: 0;
             width: 100%;
@@ -4405,6 +4474,7 @@ function showMissingIngredientsModal(productName, missingIngredients) {
             background-color: rgba(0,0,0,0.5);
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         `;
         
         modal.innerHTML = `
@@ -4417,6 +4487,8 @@ function showMissingIngredientsModal(productName, missingIngredients) {
                 max-height: 80vh;
                 overflow-y: auto;
                 box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                position: relative;
+                z-index: 10000;
             ">
                 <div class="modal-header" style="
                     display: flex;
@@ -4552,32 +4624,65 @@ function showMissingIngredientsModal(productName, missingIngredients) {
     };
     
     // Update modal content
-    document.getElementById('missingProductName').textContent = productName;
+    const productNameEl = document.getElementById('missingProductName');
+    if (productNameEl) {
+        productNameEl.textContent = productName;
+    }
     
     const listElement = document.getElementById('missingIngredientsList');
-    listElement.innerHTML = '';
-    
-    missingIngredients.forEach(ingredient => {
-        const listItem = document.createElement('li');
-        listItem.style.cssText = `
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            background: #fff8f8;
-            border-left: 4px solid #dc3545;
-            border-radius: 4px;
-            color: #721c24;
-            font-size: 14px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        `;
-        listItem.innerHTML = `<span style="font-weight: 600;">❌</span> ${ingredient}`;
-        listElement.appendChild(listItem);
-    });
+    if (listElement) {
+        listElement.innerHTML = '';
+        
+        console.log(`📋 Adding ${missingIngredients.length} missing ingredients to modal`);
+        
+        if (missingIngredients.length === 0) {
+            const noItemsLi = document.createElement('li');
+            noItemsLi.style.cssText = `
+                padding: 12px 15px;
+                margin-bottom: 8px;
+                background: #f0f0f0;
+                border-left: 4px solid #999;
+                border-radius: 4px;
+                color: #666;
+                font-size: 14px;
+            `;
+            noItemsLi.innerHTML = `<span style="font-weight: 600;">ℹ️</span> No missing ingredients`;
+            listElement.appendChild(noItemsLi);
+        } else {
+            missingIngredients.forEach(ingredient => {
+                const listItem = document.createElement('li');
+                listItem.style.cssText = `
+                    padding: 12px 15px;
+                    margin-bottom: 8px;
+                    background: #fff8f8;
+                    border-left: 4px solid #dc3545;
+                    border-radius: 4px;
+                    color: #721c24;
+                    font-size: 14px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                `;
+                listItem.innerHTML = `<span style="font-weight: 600;">❌</span> ${ingredient}`;
+                listElement.appendChild(listItem);
+            });
+        }
+    }
     
     // Show modal
     console.log('📋 Showing missing ingredients modal');
-    modal.style.display = 'flex';
+    console.log('   Modal element:', modal);
+    console.log('   Modal parent:', modal.parentElement);
+    console.log('   Modal display before:', window.getComputedStyle(modal).display);
+    
+    modal.style.setProperty('display', 'flex', 'important');
+    modal.style.setProperty('visibility', 'visible', 'important');
+    modal.style.setProperty('opacity', '1', 'important');
+    modal.style.setProperty('z-index', '9999', 'important');
+    
+    console.log('   Modal display after:', window.getComputedStyle(modal).display);
+    
     setTimeout(() => {
         modal.classList.add('show');
+        console.log('   ✅ Modal shown with display:', window.getComputedStyle(modal).display);
     }, 10);
 }
 
@@ -4989,15 +5094,29 @@ async function updateFromItemNameSelect() {
                     display: block;
                     margin-top: 8px;
                     padding: 10px;
-                    background: #ffebee;
-                    border-left: 4px solid #dc3545;
+                    background: #e3f2fd;
+                    border-left: 4px solid #2196f3;
                     border-radius: 3px;
                     font-size: 12px;
-                    color: #c62828;
+                    color: #1565c0;
                 `;
-                const encodedName = itemName.replace(/'/g, "\\'");
-                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${encodedName}', missingIngredientsData['${encodedName}']?.missing || [])">❌ Cannot create "${itemName}"</strong><br><small>Click product name to see missing ingredients</small>`;
+                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" class="viewMissingIngredientsLink">📦 View Missing Ingredients</strong><br><small>Click to see what ingredients are needed for this product</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
+                
+                // Add event listener to the link
+                const linkElement = helper.querySelector('.viewMissingIngredientsLink');
+                if (linkElement) {
+                    linkElement.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log(`🔗 Missing ingredients link clicked for: ${itemName}`);
+                        console.log(`   Available data:`, missingIngredientsData[itemName]);
+                        const missingData = missingIngredientsData[itemName];
+                        showMissingIngredientsModal(itemName, missingData?.missing || []);
+                    });
+                } else {
+                    console.warn(`⚠️ Could not find link element for: ${itemName}`);
+                }
                 
                 // Auto-show missing ingredients modal
                 const missingData = missingIngredientsData[itemName];
@@ -5026,8 +5145,23 @@ async function updateFromItemNameSelect() {
                     font-size: 12px;
                     color: #1565c0;
                 `;
-                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}', missingIngredientsData['${itemName}']?.missing || [])">📦 View Missing Ingredients</strong><br><small>Click to see what ingredients are needed for this product</small>`;
+                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" class="viewMissingIngredientsLink">📦 View Missing Ingredients</strong><br><small>Click to see what ingredients are needed for this product</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
+                
+                // Add event listener to the link
+                const linkElement = helper.querySelector('.viewMissingIngredientsLink');
+                if (linkElement) {
+                    linkElement.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log(`🔗 View missing ingredients link clicked for: ${itemName}`);
+                        console.log(`   Available data:`, missingIngredientsData[itemName]);
+                        const missingData = missingIngredientsData[itemName];
+                        showMissingIngredientsModal(itemName, missingData?.missing || []);
+                    });
+                } else {
+                    console.warn(`⚠️ Could not find link element for: ${itemName}`);
+                }
                 
                 // Auto-show missing ingredients modal even for products without recipes
                 const missingData = missingIngredientsData[itemName];
