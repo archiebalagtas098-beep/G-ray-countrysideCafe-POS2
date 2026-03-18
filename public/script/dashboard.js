@@ -849,7 +849,7 @@ function updateInventoryTable() {
     if (inventoryData.length === 0) {
         inventoryTableBody.innerHTML = `
             <tr>
-                <td colspan="3" class="no-data">No inventory data available</td>
+                <td colspan="3" class="no-data">No Inventory Raw Ingredients</td>
             </tr>
         `;
         return;
