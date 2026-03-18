@@ -4381,6 +4381,12 @@ function showToast(message, type = 'success', duration = 5000) {
 function showMissingIngredientsModal(productName, missingIngredients) {
     console.log(`🍽️ Displaying missing ingredients modal for: ${productName}`);
     
+    // Ensure missingIngredients is an array
+    if (!Array.isArray(missingIngredients)) {
+        console.warn(`⚠️ Missing ingredients not provided, using empty array`);
+        missingIngredients = [];
+    }
+    
     // Create modal if it doesn't exist
     let modal = document.getElementById('missingIngredientsModal');
     
@@ -4989,11 +4995,13 @@ async function updateFromItemNameSelect() {
                     font-size: 12px;
                     color: #c62828;
                 `;
-                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}')">❌ Cannot create "${itemName}"</strong><br><small>Click product name to see missing ingredients</small>`;
+                const encodedName = itemName.replace(/'/g, "\\'");
+                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${encodedName}', missingIngredientsData['${encodedName}']?.missing || [])">❌ Cannot create "${itemName}"</strong><br><small>Click product name to see missing ingredients</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
                 
                 // Auto-show missing ingredients modal
-                setTimeout(() => showMissingIngredientsModal(itemName), 500);
+                const missingData = missingIngredientsData[itemName];
+                setTimeout(() => showMissingIngredientsModal(itemName, missingData?.missing || []), 500);
                 
             } else {
                 // No recipe or no ingredients, allow manual entry
@@ -5018,11 +5026,12 @@ async function updateFromItemNameSelect() {
                     font-size: 12px;
                     color: #1565c0;
                 `;
-                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}')">📦 View Missing Ingredients</strong><br><small>Click to see what ingredients are needed for this product</small>`;
+                helper.innerHTML = `<strong style="cursor: pointer; text-decoration: underline;" onclick="showMissingIngredientsModal('${itemName}', missingIngredientsData['${itemName}']?.missing || [])">📦 View Missing Ingredients</strong><br><small>Click to see what ingredients are needed for this product</small>`;
                 elements.maximumStock.parentNode.appendChild(helper);
                 
                 // Auto-show missing ingredients modal even for products without recipes
-                setTimeout(() => showMissingIngredientsModal(itemName), 500);
+                const missingData = missingIngredientsData[itemName];
+                setTimeout(() => showMissingIngredientsModal(itemName, missingData?.missing || []), 500);
             }
         }
     }
