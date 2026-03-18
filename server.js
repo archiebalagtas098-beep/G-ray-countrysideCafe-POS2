@@ -8052,12 +8052,12 @@ app.put("/api/stock-requests/:id/confirm", verifyToken, verifyAdmin, async (req,
         console.log(`Quantity: ${stockRequest.requestedQuantity}`);
         
         // Update the stock request status
-        stockRequest.status = 'confirmed';
+        stockRequest.status = 'approved';
         stockRequest.confirmedDate = new Date();
         stockRequest.confirmedBy = req.user._id;
         await stockRequest.save();
         
-        console.log(`✅ Stock request status updated to confirmed`);
+        console.log(`✅ Stock request status updated to approved`);
         
         // Try to update the actual product stock
         try {

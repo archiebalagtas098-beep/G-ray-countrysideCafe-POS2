@@ -2541,96 +2541,56 @@ function hasPendingRequest(productName) {
     return activeStockRequests.has(productName);
 }
 
-function requestStock(productId) {
-    const stocksData = [
-        { id: 1, name: "Korean Spicy Bulgogi (Pork)" },
-        { id: 2, name: "Korean Salt and Pepper (Pork)" },
-        { id: 3, name: "Crispy Pork Lechon Kawali" },
-        { id: 4, name: "Cream Dory Fish Fillet" },
-        { id: 5, name: "Buttered Honey Chicken" },
-        { id: 6, name: "Buttered Spicy Chicken" },
-        { id: 7, name: "Chicken Adobo" },
-        { id: 8, name: "Pork Shanghai" },
-        { id: 9, name: "Sizzling Pork Sisig" },
-        { id: 10, name: "Sizzling Liempo" },
-        { id: 11, name: "Sizzling Porkchop" },
-        { id: 12, name: "Sizzling Fried Chicken" },
-        { id: 13, name: "Pansit Bihon (S)" },
-        { id: 14, name: "Pansit Bihon (M)" },
-        { id: 15, name: "Pansit Bihon (L)" },
-        { id: 16, name: "Spaghetti (S)" },
-        { id: 17, name: "Spaghetti (M)" },
-        { id: 18, name: "Spaghetti (L)" },
-        { id: 19, name: "Creamy Carbonara" },
-        { id: 20, name: "Lumpia Shanghai" },
-        { id: 21, name: "Chicken Buffalo Wings" },
-        { id: 28, name: "Cheesy Nachos" },
-        { id: 29, name: "Nachos Supreme" },
-        { id: 30, name: "French Fries" },
-        { id: 31, name: "Cheesy Dynamite Lumpia" },
-        { id: 32, name: "Clubhouse Sandwich" },
-        { id: 33, name: "Fish and Fries" },
-        { id: 34, name: "Cucumber Lemonade (Glass)" },
-        { id: 35, name: "Cucumber Lemonade (Pitcher)" },
-        { id: 36, name: "Blue Lemonade (Glass)" },
-        { id: 37, name: "Blue Lemonade (Pitcher)" },
-        { id: 38, name: "Red Tea (Glass)" },
-        { id: 39, name: "Calamansi Juice (Glass)" },
-        { id: 40, name: "Calamansi Juice (Pitcher)" },
-        { id: 41, name: "Soda (Mismo)" },
-        { id: 42, name: "Soda 1.5L Coke" },
-        { id: 43, name: "Soda 1.5L Sprite" },
-        { id: 44, name: "Soda 1.5L Royal" },
-        { id: 45, name: "Cafe Americano" },
-        { id: 46, name: "Cafe Americano Tall" },
-        { id: 47, name: "Cafe Americano Grande" },
-        { id: 48, name: "Cafe Latte" },
-        { id: 49, name: "Cafe Latte Tall" },
-        { id: 50, name: "Cafe Latte Grande" },
-        { id: 51, name: "Caramel Macchiato" },
-        { id: 52, name: "Caramel Macchiato Tall" },
-        { id: 53, name: "Caramel Macchiato Grande" },
-        { id: 54, name: "Espresso Hot" },
-        { id: 55, name: "Cappuccino Hot" },
-        { id: 56, name: "Mocha Latte Hot" },
-        { id: 57, name: "Milk Tea Regular HC" },
-        { id: 58, name: "Milk Tea Regular MC" },
-        { id: 59, name: "Caramel Milk Tea" },
-        { id: 60, name: "Cookies & Cream Milk Tea" },
-        { id: 61, name: "Dark Choco Milk Tea" },
-        { id: 62, name: "Okinawa Milk Tea" },
-        { id: 63, name: "Wintermelon Milk Tea" },
-        { id: 64, name: "Matcha Green Tea HC" },
-        { id: 65, name: "Matcha Green Tea MC" },
-        { id: 66, name: "Matcha Green Tea Frappe" },
-        { id: 67, name: "Salted Caramel Frappe" },
-        { id: 68, name: "Strawberry Cheesecake Frappe" },
-        { id: 69, name: "Mango Cheesecake Frappe" },
-        { id: 70, name: "Strawberry Cream Frappe" },
-        { id: 71, name: "Cookies & Cream Frappe" },
-        { id: 72, name: "Rocky Road Frappe" },
-        { id: 73, name: "Choco Fudge Frappe" },
-        { id: 74, name: "Choco Mousse Frappe" },
-        { id: 75, name: "Coffee Crumble Frappe" },
-        { id: 76, name: "Vanilla Cream Frappe" },
-        { id: 81, name: "Fried Chicken" },
-        { id: 82, name: "Budget Fried Chicken" },
-        { id: 83, name: "Tinapa Rice" },
-        { id: 84, name: "Tuyo Pesto" },
-        { id: 85, name: "Fried Rice" },
-        { id: 86, name: "Plain Rice" },
-        { id: 87, name: "Sinigang (Pork)" },
-        { id: 88, name: "Sinigang (Shrimp)" },
-        { id: 89, name: "Paknet (Pakbet w/ Bagnet)" },
-        { id: 90, name: "Buttered Shrimp" },
-        { id: 91, name: "Special Bulalo (good for 2-3 Persons)" },
-        { id: 92, name: "Special Bulalo Buy 1 Take 1 (good for 6-8 Persons)" }
-    ];
+function requestStock(productNameOrId) {
+    console.log(`📦 requestStock called with: ${productNameOrId}`);
     
-    const stockItem = stocksData.find(item => item.id === productId);
-    const productName = stockItem ? stockItem.name : null;
+    // Check if it's a product name (string) or ID
+    let productName = null;
+    let unit = 'unit';
+    
+    // First, try to find by name if it's a string
+    if (typeof productNameOrId === 'string' && productNameOrId.length > 3) {
+        // It's likely a product name
+        let product = productCatalog.find(p => 
+            p.name === productNameOrId || 
+            (p.name && p.name.toLowerCase() === productNameOrId.toLowerCase())
+        );
+        
+        if (product) {
+            productName = product.name;
+            unit = product.unit || 'unit';
+            console.log(`📦 Found product by name from catalog: ${productName}`);
+        } else {
+            // Try to find in stocksData
+            const stockItem = stocksData.find(item => 
+                item.name === productNameOrId || 
+                (item.name && item.name.toLowerCase() === productNameOrId.toLowerCase())
+            );
+            if (stockItem) {
+                productName = stockItem.name;
+                console.log(`📦 Found product from fallback list: ${productName}`);
+            }
+        }
+    } else {
+        // It's likely an ID - try to find by ID
+        let product = productCatalog.find(p => p._id === productNameOrId || p.id === productNameOrId);
+        
+        if (product) {
+            productName = product.name;
+            unit = product.unit || 'unit';
+            console.log(`📦 Found product by ID from catalog: ${productName}`);
+        } else {
+            // Fallback to hardcoded list
+            const stockItem = stocksData.find(item => item.id === productNameOrId);
+            if (stockItem) {
+                productName = stockItem.name;
+                console.log(`📦 Found product by ID from fallback list: ${productName}`);
+            }
+        }
+    }
     
     if (!productName) {
+        console.error(`❌ Product not found: ${productNameOrId}`);
         showToast('❌ Product not found', 'error', 3000);
         return;
     }
@@ -2640,7 +2600,7 @@ function requestStock(productId) {
         return;
     }
     
-    showStockRequestModal(productName);
+    showStockRequestModal(productName, unit);
 }
 
 function showPendingRequestAlert(productName) {

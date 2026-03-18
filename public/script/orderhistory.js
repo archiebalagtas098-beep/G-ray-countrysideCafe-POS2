@@ -581,7 +581,7 @@ if (window.location.pathname.includes('orderhistory')) {
                             <div style="margin-bottom: 10px;">
                                 <i class="fas fa-chart-bar" style="font-size: 24px; color: #ccc;"></i>
                             </div>
-                            No Top Sales Today
+                            No Top Sales
                         </td>
                     </tr>
                 `;
@@ -675,7 +675,7 @@ if (window.location.pathname.includes('orderhistory')) {
                 body.innerHTML = `
                     <tr>
                         <td colspan="4" style="text-align: center; color: #999; padding: 20px;">
-                            No orders today
+                            No orders
                         </td>
                     </tr>
                 `;

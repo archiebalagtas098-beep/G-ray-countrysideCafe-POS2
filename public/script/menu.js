@@ -4585,148 +4585,6 @@ function closeMissingIngredientsModal() {
     }
 }
 
-// ==================== SHOW MISSING INGREDIENTS MODAL (From Error) ====================
-function showMissingIngredientsModal(productName, missingIngredients) {
-    console.log(`📦 Opening Ingredients Modal for: ${productName}`);
-    console.log(`📦 Available data in missingIngredientsData:`, Object.keys(missingIngredientsData));
-    console.log(`📦 Data for ${productName}:`, missingIngredientsData[productName]);
-    
-    // If only one parameter, try to get from stored data
-    let ingredientsData = missingIngredientsData[productName];
-    
-    if (!ingredientsData) {
-        // Try to get missing ingredients if passed as parameter
-        if (missingIngredients && missingIngredients.length > 0) {
-            console.log(`📦 Using passed missingIngredients parameter`);
-            ingredientsData = {
-                missing: missingIngredients,
-                available: []
-            };
-        } else {
-            console.error(`❌ No ingredient data found for ${productName}`);
-            // Show a default message instead of alerting
-            ingredientsData = {
-                missing: [`No ingredient data available for "${productName}"`],
-                available: []
-            };
-        }
-    }
-    
-    const missingIng = ingredientsData.missing || [];
-    const availableIng = ingredientsData.available || [];
-    
-    console.log(`📦 Modal data - Missing: ${missingIng.length}, Available: ${availableIng.length}`);
-
-    // Create modal
-    const modalOverlay = document.createElement('div');
-    modalOverlay.id = 'missingIngredientsOverlay_' + Date.now();
-    modalOverlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-    `;
-    
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        background: white;
-        border-radius: 12px;
-        padding: 30px;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        max-height: 80vh;
-        overflow-y: auto;
-    `;
-    
-    let missingHTML = '';
-    if (missingIng.length > 0) {
-        missingHTML = `
-            <div style="margin: 20px 0;">
-                <h4 style="color: #dc3545; margin-bottom: 12px;">❌ Missing/Out of Stock:</h4>
-                <ul style="list-style: none; padding: 0;">
-                    ${missingIng.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-    
-    let availableHTML = '';
-    if (availableIng.length > 0) {
-        availableHTML = `
-            <div style="margin: 20px 0;">
-                <h4 style="color: #28a745; margin-bottom: 12px;">✅ Available Ingredients:</h4>
-                <ul style="list-style: none; padding: 0;">
-                    ${availableIng.map(ing => `<li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">• ${ing}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-    
-    // Show a message if there are no ingredients defined at all
-    let noIngredientsHTML = '';
-    if (missingIng.length === 0 && availableIng.length === 0) {
-        noIngredientsHTML = `
-            <div style="margin: 20px 0; padding: 15px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
-                <p style="color: #e65100; margin: 0; font-weight: bold;">ℹ️ No Recipe Defined</p>
-                <small style="color: #e65100; display: block; margin-top: 8px;">
-                    No ingredient list is defined for this product in server.js. 
-                    <br/>You can still add this product manually and enter the maximum stock quantity.
-                </small>
-            </div>
-        `;
-    }
-
-    const overlayId = modalOverlay.id;
-    modal.innerHTML = `
-        <div>
-            <h3 style="margin: 0 0 10px 0; color: #333;">📦 Ingredient Status: ${productName}</h3>
-            <p style="color: #999; margin: 0 0 20px 0; font-size: 14px;">Check missing ingredients and restock if needed</p>
-            ${noIngredientsHTML}
-            ${availableHTML}
-            ${missingHTML}
-            <div style="margin-top: 20px; display: flex; gap: 10px;">
-                <button id="closeModalBtn_${overlayId}" style="
-                    flex: 1;
-                    padding: 10px;
-                    background: #28a745;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    font-weight: bold;
-                ">Close</button>
-            </div>
-        </div>
-    `;
-    
-    modalOverlay.appendChild(modal);
-    document.body.appendChild(modalOverlay);
-    
-    // Close on button click
-    const closeBtn = document.getElementById(`closeModalBtn_${overlayId}`);
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            modalOverlay.remove();
-            isModalOpen = false; // Reset the modal flag when closing
-        });
-    }
-    
-    // Close on backdrop click
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) {
-            modalOverlay.remove();
-            isModalOpen = false; // Reset the modal flag when closing
-        }
-    });
-}
-
 // ==================== SHOW RECIPE NOT FOUND MODAL ====================
 function showRecipeNotFoundModal(productName) {
     console.log(`⚠️ Displaying recipe not found modal for: ${productName}`);
@@ -6338,7 +6196,7 @@ function showStockRequestsModal(pendingRequests) {
                     ${notes}
                     
                     <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
-                        <button onclick="confirmStockRequest('${request._id}', '${escapeHtml(productName).replace(/'/g, "\\'")}', ${quantity})" style="
+                        <button class="confirm-btn" data-request-id="${request._id}" data-product-name="${escapeHtml(productName)}" data-quantity="${quantity}" style="
                             background: #4caf50;
                             border: none;
                             color: white;
@@ -6348,10 +6206,10 @@ function showStockRequestsModal(pendingRequests) {
                             cursor: pointer;
                             font-weight: 600;
                             transition: all 0.3s ease;
-                        " onmouseover="this.style.background='#45a049'" onmouseout="this.style.background='#4caf50'" title="Approve this stock request">
+                        " title="Approve this stock request">
                             ✓ Confirm
                         </button>
-                        <button onclick="rejectStockRequest('${request._id}')" style="
+                        <button class="reject-btn" data-request-id="${request._id}" style="
                             background: #f44336;
                             border: none;
                             color: white;
@@ -6361,7 +6219,7 @@ function showStockRequestsModal(pendingRequests) {
                             cursor: pointer;
                             font-weight: 600;
                             transition: all 0.3s ease;
-                        " onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#f44336'" title="Reject this stock request">
+                        " title="Reject this stock request">
                             ✕ Reject
                         </button>
                     </div>
@@ -6372,6 +6230,49 @@ function showStockRequestsModal(pendingRequests) {
     }).join('');
     
     container.innerHTML = requestsHTML;
+    
+    // Attach confirm button listeners
+    setTimeout(() => {
+        document.querySelectorAll('.confirm-btn').forEach((btn, index) => {
+            const requestId = btn.dataset.requestId;
+            const productName = btn.dataset.productName;
+            const quantity = parseInt(btn.dataset.quantity);
+            
+            console.log(`Setting up confirm button ${index}:`, {requestId, productName, quantity});
+            
+            btn.addEventListener('mouseover', function() {
+                this.style.background = '#45a049';
+            });
+            btn.addEventListener('mouseout', function() {
+                this.style.background = '#4caf50';
+            });
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('✅ Confirm button clicked:', {requestId, productName, quantity});
+                await confirmStockRequest(requestId, productName, quantity);
+            });
+        });
+
+        // Attach reject button listeners
+        document.querySelectorAll('.reject-btn').forEach((btn, index) => {
+            const requestId = btn.dataset.requestId;
+            console.log(`Setting up reject button ${index}:`, {requestId});
+            
+            btn.addEventListener('mouseover', function() {
+                this.style.background = '#d32f2f';
+            });
+            btn.addEventListener('mouseout', function() {
+                this.style.background = '#f44336';
+            });
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('✕ Reject button clicked:', {requestId});
+                await rejectStockRequest(requestId);
+            });
+        });
+    }, 100);
     
     // Attach event listeners
     const closeBtn = document.getElementById('closeStockRequestsBtn');
@@ -6435,131 +6336,7 @@ async function confirmStockRequest(requestId, productName, requestedQuantity) {
             requestId
         });
         
-        let product = null;
-        
-        // First, try to find in allMenuItems if available
-        if (allMenuItems && allMenuItems.length > 0) {
-            console.log(`📦 Using loaded allMenuItems (${allMenuItems.length} items)`);
-            
-            // Strategy 1: Exact name match
-            product = allMenuItems.find(p => 
-                (p.name && p.name === productName) ||
-                (p.itemName && p.itemName === productName)
-            );
-            
-            // Strategy 2: Case-insensitive match
-            if (!product) {
-                product = allMenuItems.find(p => 
-                    (p.name && p.name.toLowerCase() === productName.toLowerCase()) ||
-                    (p.itemName && p.itemName.toLowerCase() === productName.toLowerCase())
-                );
-            }
-            
-            // Strategy 3: Partial match
-            if (!product) {
-                product = allMenuItems.find(p => 
-                    (p.name && p.name.includes(productName)) ||
-                    (p.itemName && p.itemName.includes(productName))
-                );
-            }
-        }
-        
-        // If not found in allMenuItems, fetch all products from API
-        if (!product) {
-            console.log('📥 Product not in memory, fetching from API...');
-            
-            const response = await fetch('/api/menu', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                const products = data.data || [];
-                console.log(`📊 Fetched ${products.length} products from API`);
-                
-                // Update allMenuItems for future use
-                if (products.length > 0) {
-                    allMenuItems = products;
-                }
-                
-                // Strategy 1: Exact name match
-                product = products.find(p => 
-                    (p.name && p.name === productName) ||
-                    (p.itemName && p.itemName === productName)
-                );
-                
-                // Strategy 2: Case-insensitive match
-                if (!product) {
-                    product = products.find(p => 
-                        (p.name && p.name.toLowerCase() === productName.toLowerCase()) ||
-                        (p.itemName && p.itemName.toLowerCase() === productName.toLowerCase())
-                    );
-                }
-                
-                // Strategy 3: Partial match
-                if (!product) {
-                    product = products.find(p => 
-                        (p.name && p.name.includes(productName)) ||
-                        (p.itemName && p.itemName.includes(productName))
-                    );
-                }
-            }
-        }
-        
-        if (!product) {
-            console.error(`❌ Product not found. Looking for: "${productName}"`);
-            throw new Error(`Product "${productName}" not found in inventory`);
-        }
-        
-        console.log(`✅ Found product:`, {
-            id: product._id,
-            name: product.name || product.itemName,
-            currentStock: product.currentStock
-        });
-        
-        const currentStock = product.currentStock || 0;
-        const maxStock = product.maxStock || 100;
-        const newStock = currentStock + requestedQuantity;
-        
-        console.log(`📊 Stock calculation:`, {
-            productName,
-            currentStock,
-            requestedQuantity,
-            newStock,
-            maxStock
-        });
-        
-        // Check if would exceed max stock
-        if (newStock > maxStock) {
-            showToast(`❌ Adding ${requestedQuantity} units would exceed max stock (${maxStock})`, 'error');
-            return;
-        }
-        
-        // Update the product stock via API
-        const updateResponse = await fetch(`/api/menu/${product._id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                currentStock: newStock
-            }),
-            credentials: 'include'
-        });
-        
-        if (!updateResponse.ok) {
-            const error = await updateResponse.text();
-            throw new Error(`Failed to update stock: ${error}`);
-        }
-        
-        console.log('✅ Stock updated in inventory');
-        
-        // Now confirm the request in the database
+        // Simply confirm the request in the database
         const confirmResponse = await fetch(`/api/stock-requests/${requestId}/confirm`, {
             method: 'PUT',
             headers: {
@@ -6572,19 +6349,46 @@ async function confirmStockRequest(requestId, productName, requestedQuantity) {
             const result = await confirmResponse.json();
             console.log('✅ Stock request confirmed:', result);
             
-            // Update local allMenuItems
-            const idx = allMenuItems.findIndex(p => p._id === product._id);
-            if (idx >= 0) {
-                allMenuItems[idx].currentStock = newStock;
+            // Show success message
+            showToast(`✅ Stock request for ${productName} confirmed successfully!`, 'success');
+            
+            // Close the modal immediately
+            closeStockRequestsModal();
+            // Remove the modal from DOM completely
+            const modal = document.getElementById('stockRequestsModal');
+            if (modal) {
+                modal.remove();
             }
             
-            // Show success message
-            showToast(`✅ Added ${requestedQuantity} units to ${productName}! Stock is now ${newStock}`, 'success');
+            // Reload pending requests to show updated list
+            console.log('🔄 Reloading pending stock requests...');
+            try {
+                const pendingResponse = await fetch('/api/stock-requests/pending', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+                
+                if (pendingResponse.ok) {
+                    const pendingData = await pendingResponse.json();
+                    const pendingRequests = Array.isArray(pendingData) ? pendingData : pendingData.data || [];
+                    console.log(`📋 Fetched ${pendingRequests.length} pending requests`);
+                    
+                    // If there are more pending requests, show the modal again
+                    if (pendingRequests.length > 0) {
+                        console.log('📋 Showing updated pending requests modal');
+                        showStockRequestsModal(pendingRequests);
+                    }
+                }
+            } catch (pendingError) {
+                console.warn('⚠️ Error fetching pending requests:', pendingError.message);
+            }
             
-            // Close the modal and refresh
-            closeStockRequestsModal();
-            lastDashboardLoadTime = 0; // Reset the throttle
-            await renderDashboardGrid();
+            // Force refresh dashboard
+            lastDashboardLoadTime = 0;
+            renderDashboardGrid();
         } else {
             const error = await confirmResponse.text();
             throw new Error(`Failed to confirm: ${error}`);
@@ -6602,155 +6406,69 @@ async function rejectStockRequest(requestId) {
         return;
     }
     
-    // Show custom confirmation dialog
-    return new Promise((resolve) => {
-        // Create overlay
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10001;
-        `;
+    try {
+        console.log('❌ Rejecting stock request:', requestId);
         
-        // Create modal
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            font-family: Arial, sans-serif;
-        `;
+        const response = await fetch(`/api/stock-requests/${requestId}/reject`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
         
-        // Title
-        const title = document.createElement('h2');
-        title.textContent = '⚠️ Confirm Rejection';
-        title.style.cssText = `
-            margin: 0 0 20px 0;
-            color: #d32f2f;
-            text-align: center;
-            font-size: 20px;
-        `;
-        
-        // Message
-        const message = document.createElement('p');
-        message.textContent = 'Are you sure you want to reject this stock request? This action cannot be undone.';
-        message.style.cssText = `
-            margin: 0 0 25px 0;
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-            text-align: center;
-        `;
-        
-        // Buttons container
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.style.cssText = `
-            display: flex;
-            gap: 10px;
-            justify-content: space-between;
-        `;
-        
-        // Cancel button
-        const cancelBtn = document.createElement('button');
-        cancelBtn.textContent = '✕ Cancel';
-        cancelBtn.style.cssText = `
-            flex: 1;
-            padding: 12px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        `;
-        cancelBtn.onmouseover = () => cancelBtn.style.background = '#5a6268';
-        cancelBtn.onmouseout = () => cancelBtn.style.background = '#6c757d';
-        cancelBtn.onclick = () => {
-            overlay.remove();
-            resolve(false);
-        };
-        
-        // Reject button
-        const rejectBtn = document.createElement('button');
-        rejectBtn.textContent = '⚠️ Reject';
-        rejectBtn.style.cssText = `
-            flex: 1;
-            padding: 12px;
-            background: #d32f2f;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        `;
-        rejectBtn.onmouseover = () => rejectBtn.style.background = '#c62828';
-        rejectBtn.onmouseout = () => rejectBtn.style.background = '#d32f2f';
-        rejectBtn.onclick = async () => {
-            overlay.remove();
-            resolve(true);
+        if (response.ok) {
+            const result = await response.json();
+            console.log('❌ Stock request rejected:', result);
             
-            // Proceed with rejection
+            // Show success message
+            showToast('✅ Stock request rejected successfully.', 'success');
+            
+            // Close the modal immediately
+            closeStockRequestsModal();
+            // Remove the modal from DOM completely
+            const modal = document.getElementById('stockRequestsModal');
+            if (modal) {
+                modal.remove();
+            }
+            
+            // Reload pending requests to show updated list
+            console.log('🔄 Reloading pending stock requests...');
             try {
-                console.log('❌ Rejecting stock request:', requestId);
-                
-                const response = await fetch(`/api/stock-requests/${requestId}/reject`, {
-                    method: 'PUT',
+                const pendingResponse = await fetch('/api/stock-requests/pending', {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     credentials: 'include'
                 });
                 
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('❌ Stock request rejected:', result);
+                if (pendingResponse.ok) {
+                    const pendingData = await pendingResponse.json();
+                    const pendingRequests = Array.isArray(pendingData) ? pendingData : pendingData.data || [];
+                    console.log(`📋 Fetched ${pendingRequests.length} pending requests`);
                     
-                    // Show success message
-                    showToast('✅ Stock request rejected successfully.', 'success');
-                    
-                    // Close the modal and refresh
-                    closeStockRequestsModal();
-                    lastDashboardLoadTime = 0; // Reset the throttle
-                    await renderDashboardGrid();
-                } else {
-                    const error = await response.text();
-                    console.error('❌ Failed to reject stock request:', error);
-                    showToast(`❌ Failed: ${error || 'Unknown error'}`, 'error');
+                    // If there are more pending requests, show the modal again
+                    if (pendingRequests.length > 0) {
+                        console.log('📋 Showing updated pending requests modal');
+                        showStockRequestsModal(pendingRequests);
+                    }
                 }
-            } catch (error) {
-                console.error('❌ Error rejecting stock request:', error);
-                showToast(`❌ Error: ${error.message}`, 'error');
+            } catch (pendingError) {
+                console.warn('⚠️ Error fetching pending requests:', pendingError.message);
             }
-        };
-        
-        // Assemble
-        buttonsContainer.appendChild(cancelBtn);
-        buttonsContainer.appendChild(rejectBtn);
-        
-        modal.appendChild(title);
-        modal.appendChild(message);
-        modal.appendChild(buttonsContainer);
-        
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-        
-        // Focus reject button
-        rejectBtn.focus();
-    });
+            
+            // Force refresh
+            lastDashboardLoadTime = 0;
+            renderDashboardGrid();
+        } else {
+            const error = await response.text();
+            throw new Error(`Failed to reject: ${error}`);
+        }
+    } catch (error) {
+        console.error('❌ Error rejecting stock request:', error);
+        showToast(`❌ Error: ${error.message}`, 'error');
+    }
 }
 
 // Function to show notifications

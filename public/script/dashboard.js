@@ -904,7 +904,7 @@ function updateOrdersTable() {
     if (ordersData.length === 0) {
         ordersTableBody.innerHTML = `
             <tr>
-                <td colspan="4" class="no-data">No orders today</td>
+                <td colspan="4" class="no-data">No orders</td>
             </tr>
         `;
         return;
@@ -970,8 +970,7 @@ function updateTopSellingTable() {
             <tr>
                 <td colspan="3" class="no-data">
                     <div style="text-align: center; padding: 20px;">
-                        <p style="font-size: 16px; margin: 0; color: #666;">📊 No Sales Data Available</p>
-                        <p style="font-size: 13px; margin: 8px 0 0 0; color: #999;">Create orders through the POS system to see top selling items</p>
+                        <p style="font-size: 16px; margin: 0; color: #666;">No Top Sales</p>
                     </div>
                 </td>
             </tr>
