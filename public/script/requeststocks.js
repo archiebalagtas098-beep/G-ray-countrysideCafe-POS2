@@ -4,15 +4,51 @@ const BACKEND_URL = window.location.origin;
 
 let allProducts = [];
 let selectedRequests = {};
+let pendingStockRequests = new Map(); // Track pending stock requests
 
 // Initialize page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadPendingRequests(); // Load pending requests first
     loadProducts();
     
     // Add event listeners
     document.getElementById('searchInput').addEventListener('input', filterProducts);
     document.getElementById('categoryFilter').addEventListener('change', filterProducts);
 });
+
+// Load pending stock requests from server
+async function loadPendingRequests() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/stock-requests/pending`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            const requests = Array.isArray(result.data) ? result.data : result || [];
+            
+            // Build a map of pending requests by product name
+            pendingStockRequests.clear();
+            requests.forEach(req => {
+                if (req.status === 'pending') {
+                    pendingStockRequests.set(req.productName, {
+                        quantity: req.requestedQuantity,
+                        unit: req.unit,
+                        requestDate: req.requestDate
+                    });
+                }
+            });
+            
+            console.log('✅ Loaded pending stock requests:', Array.from(pendingStockRequests.keys()));
+        }
+    } catch (error) {
+        console.warn('⚠️ Could not load pending requests:', error.message);
+    }
+}
 
 // Load all products from the database
 async function loadProducts() {
@@ -204,7 +240,15 @@ function renderProductsTable(products) {
         let statusBadge = '';
         let statusClass = '';
         
-        if (currentStock === 0) {
+        // Check if there's a pending request for this product
+        const hasPendingRequest = pendingStockRequests.has(product.name);
+        
+        if (hasPendingRequest) {
+            // Show pending status if a request is already submitted
+            const pendingInfo = pendingStockRequests.get(product.name);
+            statusBadge = `⏳ Pending (${pendingInfo.quantity} ${pendingInfo.unit || 'units'})`;
+            statusClass = 'status-pending';
+        } else if (currentStock === 0) {
             statusBadge = 'Out of Stock';
             statusClass = 'status-out';
         } else if (currentStock <= 20) {
@@ -236,15 +280,15 @@ function renderProductsTable(products) {
                            onchange="updateQuantity('${key}', this.value)">
                 </td>
                 <td>
-                    <select class="priority-select" data-key="${key}" onchange="updatePriority('${key}', this.value)">
+                    <select class="priority-select" data-key="${key}" onchange="updatePriority('${key}', this.value)" ${hasPendingRequest ? 'disabled' : ''}>
                         <option value="low" ${isSelected && selectedRequests[key].priority === 'low' ? 'selected' : ''}>🟢 Low</option>
                         <option value="medium" ${isSelected && selectedRequests[key].priority === 'medium' ? 'selected' : ''} selected>🟡 Medium</option>
                         <option value="high" ${isSelected && selectedRequests[key].priority === 'high' ? 'selected' : ''}>🔴 High</option>
                     </select>
                 </td>
                 <td>
-                    <button class="btn-request" onclick="submitSingleRequest('${key}')" ${quantity > 0 ? '' : 'disabled'}>
-                        Request
+                    <button class="btn-request" onclick="submitSingleRequest('${key}')" ${hasPendingRequest ? 'disabled title="Request already pending"' : (quantity > 0 ? '' : 'disabled')}>
+                        ${hasPendingRequest ? '⏳ Pending' : 'Request'}
                     </button>
                 </td>
             </tr>
@@ -675,5 +719,51 @@ style.textContent = `
             opacity: 0;
         }
     }
+    
+    /* Status badge styles for request stocks page */
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    
+    .status-out {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    
+    .status-low {
+        background: #fed7aa;
+        color: #92400e;
+        border: 1px solid #fdba74;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    
+    .status-good {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
 `;
 document.head.appendChild(style);
+
+// Periodically sync pending requests to update statuses
+setInterval(async function() {
+    await loadPendingRequests();
+    // Refresh the product table if it's already loaded
+    if (allProducts.length > 0) {
+        renderProductsTable(allProducts);
+    }
+}, 5000); // Check every 5 seconds

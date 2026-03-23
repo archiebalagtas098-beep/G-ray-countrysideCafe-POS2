@@ -20,6 +20,154 @@ let stockEventSource = null;
 
 const MAX_STOCK_PER_ITEM = 100;
 
+// Table Occupancy Status - Tracks which tables are taken/occupied
+let tableOccupancyStatus = new Map(); // { tableNum: { status: 'available'|'paid'|'waiting'|'left', orderId: null } }
+
+// Initialize table occupancy system on load
+function initializeTableOccupancy() {
+    // Load from localStorage or initialize empty
+    const saved = localStorage.getItem('tableOccupancy');
+    if (saved) {
+        try {
+            const data = JSON.parse(saved);
+            tableOccupancyStatus = new Map(data);
+        } catch (e) {
+            console.log('Could not load table occupancy, initializing fresh');
+            tableOccupancyStatus = new Map();
+        }
+    }
+    // Initialize default tables
+    for (let i = 1; i <= 5; i++) {
+        if (!tableOccupancyStatus.has(String(i))) {
+            tableOccupancyStatus.set(String(i), { status: 'available', orderId: null });
+        }
+    }
+    saveTableOccupancy();
+}
+
+// Save table occupancy to localStorage
+function saveTableOccupancy() {
+    localStorage.setItem('tableOccupancy', JSON.stringify(Array.from(tableOccupancyStatus.entries())));
+}
+
+// Save table occupancy to localStorage
+function saveTableOccupancy() {
+    localStorage.setItem('tableOccupancy', JSON.stringify(Array.from(tableOccupancyStatus.entries())));
+}
+
+// Get table status
+function getTableStatus(tableNum) {
+    const status = tableOccupancyStatus.get(String(tableNum));
+    return status ? status.status : 'available';
+}
+
+// Check if table is available for ordering
+function isTableAvailable(tableNum) {
+    const status = getTableStatus(tableNum);
+    return status === 'available';
+}
+
+// Update table status
+function updateTableStatus(tableNum, newStatus) {
+    tableOccupancyStatus.set(String(tableNum), { 
+        status: newStatus, 
+        orderId: null 
+    });
+    saveTableOccupancy();
+    renderActiveDineInCustomers();
+}
+
+// Render Active Dine In Customers in sidebar
+function renderActiveDineInCustomers() {
+    const container = document.getElementById('activeDineInCustomers');
+    if (!container) return;
+
+    let html = '';
+    let hasActiveTables = false;
+
+    // Loop through all 5 tables
+    for (let i = 1; i <= 5; i++) {
+        const tableNum = String(i);
+        const tableData = tableOccupancyStatus.get(tableNum);
+        const status = tableData ? tableData.status : 'available';
+
+        // Only show tables that are not available (paid, waiting, or left)
+        if (status !== 'available') {
+            hasActiveTables = true;
+
+            let statusLabel = '';
+            let statusClass = '';
+            let buttons = '';
+
+            if (status === 'paid') {
+                statusLabel = 'PAID';
+                statusClass = 'status-paid';
+                buttons = `
+                    <button class="dine-in-btn btn-wait-for-left" onclick="handleTableWaiting(${i})">⏳ Wait for Left</button>
+                    <button class="dine-in-btn btn-left" onclick="handleTableLeft(${i})">👋 LEFT</button>
+                `;
+            } else if (status === 'waiting') {
+                statusLabel = 'WAITING';
+                statusClass = 'status-waiting';
+                buttons = `
+                    <button class="dine-in-btn btn-left" onclick="handleTableLeft(${i})">👋 LEFT</button>
+                `;
+            } else if (status === 'left') {
+                statusLabel = 'LEFT';
+                statusClass = 'status-left';
+                buttons = `
+                    <button class="dine-in-btn btn-next-order" onclick="handleNextOrder(${i})">✅ Next Order</button>
+                `;
+            }
+
+            html += `
+                <div class="dine-in-customer-item">
+                    <div class="dine-in-customer-header">
+                        <strong>Table #${i}</strong>
+                        <span class="dine-in-customer-status ${statusClass}">${statusLabel}</span>
+                    </div>
+                    <div class="dine-in-customer-buttons">
+                        ${buttons}
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    if (!hasActiveTables) {
+        html = `
+            <div class="dine-in-empty-state">
+                <p>✅ No active tables</p>
+            </div>
+        `;
+    }
+
+    container.innerHTML = html;
+}
+
+// Handle Table Waiting status
+function handleTableWaiting(tableNum) {
+    updateTableStatus(tableNum, 'waiting');
+    showToast(`⏳ Table #${tableNum} is waiting...`, 'warning', 2000);
+}
+
+// Handle Table Left status
+function handleTableLeft(tableNum) {
+    updateTableStatus(tableNum, 'left');
+    showToast(`👋 Table #${tableNum} - Customer left`, 'info', 2000);
+}
+
+// Handle Next Order status
+function handleNextOrder(tableNum) {
+    updateTableStatus(tableNum, 'available');
+    showToast(`✅ Table #${tableNum} is now available for next order`, 'success', 2000);
+}
+
+// Set table as paid (when order is completed)
+function markTableAsPaid(tableNum) {
+    updateTableStatus(tableNum, 'paid');
+}
+
 let servingwareInventory = {
     'plate': { name: 'Plate', current: 100, max: 100, unit: 'piece', minThreshold: 20 },
     'tray': { name: 'Party Tray', current: 100, max: 100, unit: 'piece', minThreshold: 15 },
@@ -1188,6 +1336,236 @@ function showToast(message, type = 'success', duration = 3000) {
     return toast;
 }
 
+// Success Alert Modal for table order completion
+function showSuccessModal(tableNumber) {
+    return new Promise((resolve) => {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('successAlertModal');
+        if (existingModal) existingModal.remove();
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'successAlertModal';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100000;
+            animation: fadeIn 0.3s ease-in-out;
+        `;
+        
+        // Create modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            animation: scaleIn 0.4s ease-in-out;
+        `;
+        
+        modal.innerHTML = `
+            <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+            <h2 style="color: #2c3e50; margin-bottom: 10px; font-size: 24px;">Table Taken!</h2>
+            <p style="color: #666; margin-bottom: 30px; font-size: 16px;">
+                Table <strong>#${tableNumber}</strong> has been assigned<br>
+                <span style="font-size: 14px; color: #999;">Waiting for customer to leave...</span>
+            </p>
+            <button id="customerLeftBtn" style="
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 12px 40px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                width: 100%;
+            " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                Customer Left
+            </button>
+        `;
+        
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        // Mark table as occupied
+        setTableOccupied(tableNumber);
+        
+        // Add customer left button event
+        document.getElementById('customerLeftBtn').addEventListener('click', async () => {
+            // Mark table as available
+            setTableAvailable(tableNumber);
+            
+            // Close current modal
+            overlay.style.animation = 'fadeOut 0.3s ease-in-out';
+            setTimeout(() => {
+                overlay.remove();
+            }, 300);
+            
+            // Show table available alert
+            setTimeout(() => {
+                showTableAvailableModal(tableNumber);
+            }, 100);
+            
+            resolve();
+        });
+        
+        // Add keyboard close (only customer left, not escape)
+    });
+}
+
+// Alert modal when table becomes available
+function showTableAvailableModal(tableNumber) {
+    return new Promise((resolve) => {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('tableAvailableModal');
+        if (existingModal) existingModal.remove();
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'tableAvailableModal';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100000;
+            animation: fadeIn 0.3s ease-in-out;
+        `;
+        
+        // Create modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            animation: scaleIn 0.4s ease-in-out;
+        `;
+        
+        modal.innerHTML = `
+            <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
+            <h2 style="color: #28a745; margin-bottom: 10px; font-size: 24px;">Table Available!</h2>
+            <p style="color: #666; margin-bottom: 30px; font-size: 16px;">
+                Table <strong>#${tableNumber}</strong> is now available<br>
+                <span style="font-size: 14px; color: #28a745;">Ready for new order</span>
+            </p>
+            <button id="tableAvailableCloseBtn" style="
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 12px 40px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                width: 100%;
+            " onmouseover="this.style.background='#218838'" onmouseout="this.style.background='#28a745'">
+                OK
+            </button>
+        `;
+        
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        // Add close button event
+        document.getElementById('tableAvailableCloseBtn').addEventListener('click', () => {
+            overlay.style.animation = 'fadeOut 0.3s ease-in-out';
+            setTimeout(() => {
+                overlay.remove();
+                resolve();
+            }, 300);
+        });
+        
+        // Add keyboard close
+        const closeOnEscape = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', closeOnEscape);
+                resolve();
+            }
+        };
+        document.addEventListener('keydown', closeOnEscape);
+    });
+}
+
+// Waiting Modal for order processing
+function showWaitingModal(message = 'Processing your order...') {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('waitingModal');
+    if (existingModal) existingModal.remove();
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'waitingModal';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100001;
+    `;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        "></div>
+        <h2 style="color: #2c3e50; margin-bottom: 10px; font-size: 20px;">Processing</h2>
+        <p style="color: #666; margin-bottom: 10px;">${message}</p>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    return overlay;
+}
+
+// Close waiting modal
+function closeWaitingModal() {
+    const modal = document.getElementById('waitingModal');
+    if (modal) modal.remove();
+}
+
 async function getCurrentUser() {
     try {
         const response = await fetch('/api/user/me', {
@@ -1276,9 +1654,29 @@ function showLogoutConfirmation(onConfirm, onCancel) {
                 from { opacity: 0; }
                 to { opacity: 1; }
             }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
             @keyframes slideIn {
                 from { transform: translateY(-20px); opacity: 0; }
                 to { transform: translateY(0); opacity: 1; }
+            }
+            @keyframes slideInRight {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes scaleIn {
+                from { transform: scale(0.8); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
             }
         `;
         document.head.appendChild(style);
@@ -1447,14 +1845,8 @@ function renderMenu() {
                 min-height: 300px;
                 color: #666;
             ">
-                <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
+                <div style="font-size: 48px; margin-bottom: 20px;"></div>
                 <h3 style="margin: 10px 0; font-size: 20px; color: #333;">No Products Found</h3>
-                <p style="margin: 10px 0; font-size: 14px; color: #999;">
-                    No items available in this category at the moment.
-                </p>
-                <p style="margin: 10px 0; font-size: 13px; color: #bbb;">
-                    Please try another category or check back later.
-                </p>
             </div>
         `;
         return;
@@ -1485,14 +1877,24 @@ function createProductCard(product) {
         }
     };
     
-    const stockStatus = product.stock > 0 
-        ? `✅ In Stock: ${product.stock}`
-        : `🚫 OUT OF STOCK`;
-    
-    const stockColor = product.stock > 0 ? '#28a745' : '#dc3545';
-    
     const hasPendingRequest = activeStockRequests.has(product.name);
-    const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">Request Pending (Waiting for Admin)</span>' : '';
+    
+    // Determine status display
+    let stockStatus = '';
+    let stockColor = '';
+    
+    if (hasPendingRequest) {
+        stockStatus = '⏳ pending';
+        stockColor = '#ff9800';
+    } else if (product.stock <= 0) {
+        stockStatus = '🚫 out of stock';
+        stockColor = '#dc3545';
+    } else {
+        stockStatus = `✅ In Stock: ${product.stock}`;
+        stockColor = '#28a745';
+    }
+    
+    const pendingIndicator = hasPendingRequest ? '<span style="color: #ff9800; font-size: 12px; display: block;">Waiting for Admin Confirmation</span>' : '';
     
     const categoryFolderMap = {
         'Coffee': 'coffee',
@@ -1753,7 +2155,24 @@ function setTakeout() {
 
 function setTableNumber() {
     const input = document.getElementById('tableNumber');
-    tableNumber = input.value.trim();
+    const value = input.value.trim();
+    
+    // Only allow numbers
+    if (value && !/^\d+$/.test(value)) {
+        showToast('❌ Table number must be numbers only', 'error', 2000);
+        input.value = value.replace(/[^\d]/g, '');
+        tableNumber = null;
+    } else {
+        // Check if table is available
+        if (value && !isTableAvailable(value)) {
+            showToast(`❌ Table #${value} is currently occupied. Please select another table.`, 'error', 3000);
+            input.value = '';
+            tableNumber = null;
+        } else {
+            tableNumber = value || null;
+        }
+    }
+    
     updatePayButtonState();
 }
 
@@ -2063,6 +2482,9 @@ async function Payment() {
         return;
     }
     
+    // Show waiting modal during order processing
+    const waitingModal = showWaitingModal('Processing your order...');
+    
     try {
         const paymentMethod = selectedPaymentMethod === 'gcash' ? 'online' : selectedPaymentMethod;
         
@@ -2110,6 +2532,9 @@ async function Payment() {
         
         const savedOrder = await saveResponse.json();
         
+        // Close waiting modal
+        closeWaitingModal();
+        
         showToast('✅ Order saved! Preparing receipt...', 'success', 2000);
         
         const receiptNumber = `RCP-${Date.now().toString().slice(-8)}`;
@@ -2119,12 +2544,22 @@ async function Payment() {
         
         printReceipt(receiptHTML);
         
+        // If Dine In, show success modal with table number, then clear
+        if (orderType === 'Dine In') {
+            await showSuccessModal(tableNumber);
+        }
+        
         setTimeout(() => {
             clearOrderAfterPayment();
-            showToast('✅ Order completed! Ready for new order.', 'success', 3000);
+            if (orderType === 'Takeout') {
+                showToast('✅ Order completed! Ready for new order.', 'success', 3000);
+            }
         }, 500);
                
     } catch (error) {
+        // Close waiting modal on error
+        closeWaitingModal();
+        
         let userMessage = error.message;
         if (error.message.includes('NetworkError') || error instanceof TypeError) {
             userMessage = 'Network error: Server is not responding. Please check if server is running.';
@@ -2188,6 +2623,296 @@ function clearOrderAfterPayment() {
     
     renderOrder();
     updatePayButtonState();
+}
+
+// ========== ACTIVE DINE IN CUSTOMERS MANAGEMENT ==========
+
+// Load and render active dine in customers
+async function loadActiveDineInCustomers() {
+    // Use local table occupancy data instead of API
+    renderActiveDineInCustomers();
+}
+
+// Toggle visibility of dine-in customers section
+function toggleDineInCustomers() {
+    const container = document.getElementById('activeDineInCustomers');
+    const toggleBtn = document.querySelector('.dine-in-header-btn');
+    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'dineInModal';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        animation: fadeIn 0.3s ease-in-out;
+    `;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        max-height: 70vh;
+        overflow-y: auto;
+        animation: scaleIn 0.4s ease-in-out;
+    `;
+    
+    // Get active tables count
+    let activeTables = 0;
+    let tableContent = '';
+    for (let i = 1; i <= 5; i++) {
+        const tableData = tableOccupancyStatus.get(String(i));
+        const status = tableData ? tableData.status : 'available';
+        if (status !== 'available') {
+            activeTables++;
+            let statusIcon = '';
+            let statusColor = '';
+            if (status === 'paid') {
+                statusIcon = '💳';
+                statusColor = '#FF9800';
+            } else if (status === 'waiting') {
+                statusIcon = '⏳';
+                statusColor = '#FFC107';
+            } else if (status === 'left') {
+                statusIcon = '👋';
+                statusColor = '#9C27B0';
+            }
+            tableContent += `
+                <div style="padding: 12px; background: #f5f5f5; margin-bottom: 10px; border-left: 4px solid ${statusColor}; border-radius: 4px;">
+                    <strong>${statusIcon} Table #${i}</strong>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">Status: ${status.toUpperCase()}</div>
+                </div>
+            `;
+        }
+    }
+    
+    if (activeTables === 0) {
+        tableContent = '<p style="text-align: center; color: #999; padding: 20px;">✅ No active tables</p>';
+    }
+    
+    modal.innerHTML = `
+        <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">Active Dine In Customers</h2>
+        <div style="margin-bottom: 20px; padding: 10px; background: #e3f2fd; border-radius: 6px; text-align: center;">
+            <strong style="color: #1976d2;">Active Tables: ${activeTables}</strong>
+        </div>
+        <div>
+            ${tableContent}
+        </div>
+        <button id="closeDineInModal" style="
+            width: 100%;
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        " onmouseover="this.style.background='#1976D2'" onmouseout="this.style.background='#2196F3'">
+            Close
+        </button>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Close modal on button click
+    document.getElementById('closeDineInModal').onclick = function() {
+        overlay.remove();
+    };
+    
+    // Close modal on overlay click
+    overlay.onclick = function(e) {
+        if (e.target === overlay) {
+            overlay.remove();
+        }
+    };
+}
+
+// Render the active dine-in customers list in sidebar
+function renderActiveDineInList(orders) {
+    const container = document.getElementById('activeDineInCustomers');
+    if (!container) return;
+    
+    // Group orders by table number
+    const tableMap = new Map();
+    orders.forEach(order => {
+        if (order.tableNumber) {
+            tableMap.set(order.tableNumber, order);
+        }
+    });
+    
+    // Sort table numbers
+    const sortedTables = Array.from(tableMap.keys()).sort((a, b) => a - b);
+    
+    if (sortedTables.length === 0) {
+        container.innerHTML = `<p style="color: #999; font-size: 12px; text-align: center; padding: 10px;">No active dine-in customers</p>`;
+        return;
+    }
+    
+    let html = '';
+    sortedTables.forEach(tableNum => {
+        const order = tableMap.get(tableNum);
+        html += `
+            <div class="dine-in-customer-item" onclick="openDineInTableModal('${tableNum}', '${order._id}')">
+                <div class="dine-in-customer-header">
+                    <strong>🪑 Table #${tableNum}</strong>
+                    <span class="dine-in-customer-status" style="background: #4CAF50; color: white; border-radius: 4px;">Occupied</span>
+                </div>
+                <div style="font-size: 11px; color: #666;">
+                    Items: ${order.items.length} | Total: ₱${order.total.toFixed(2)}
+                </div>
+                <div style="font-size: 10px; color: #999; margin-top: 5px;">
+                    ID: ${order._id.substring(0, 8)}...
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Open modal for table management
+function openDineInTableModal(tableNum, orderId) {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'tableManagementModal';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100000;
+        animation: fadeIn 0.3s ease-in-out;
+    `;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-width: 450px;
+        animation: scaleIn 0.4s ease-in-out;
+    `;
+    
+    modal.innerHTML = `
+        <div style="font-size: 48px; margin-bottom: 20px;">🪑</div>
+        <h2 style="color: #2c3e50; margin-bottom: 10px; font-size: 28px;">Table #${tableNum}</h2>
+        <p style="color: #666; margin-bottom: 30px; font-size: 14px;">
+            Order ID: ${orderId.substring(0, 12)}...<br>
+            Status: <strong style="color: #4CAF50;">Occupied</strong>
+        </p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 25px;">
+            <button id="tableLeftBtn" style="
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 14px 20px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            " onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                🚪 Customer Left
+            </button>
+            
+            <button id="cancelTableBtn" style="
+                background: #6c757d;
+                color: white;
+                border: none;
+                padding: 14px 20px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            " onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">
+                ✕ Close
+            </button>
+        </div>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Add event listeners
+    document.getElementById('tableLeftBtn').addEventListener('click', async () => {
+        overlay.remove();
+        await markTableAsAvailable(tableNum, orderId);
+    });
+    
+    document.getElementById('cancelTableBtn').addEventListener('click', () => {
+        overlay.remove();
+    });
+}
+
+// Mark table as available after customer leaves
+async function markTableAsAvailable(tableNum, orderId) {
+    try {
+        // Show waiting modal
+        showWaitingModal('Updating table status...');
+        
+        // Update table status
+        const response = await fetch(`/api/orders/${orderId}/table-available`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to update table status');
+        }
+        
+        // Close waiting modal
+        closeWaitingModal();
+        
+        // Mark table as available in local system
+        setTableAvailable(tableNum);
+        
+        // Show table available alert
+        await showTableAvailableModal(tableNum);
+        
+        // Refresh the list
+        loadActiveDineInCustomers();
+        
+    } catch (error) {
+        closeWaitingModal();
+        showToast(`❌ Error: ${error.message}`, 'error', 3000);
+        console.error('Error marking table as available:', error);
+    }
+}
+
+// Auto-refresh dine-in customers list every 5 seconds
+function startDineInCustomersRefresh() {
+    setInterval(() => {
+        loadActiveDineInCustomers();
+    }, 5000);
 }
 
 function generateReceiptHTML(receiptNumber, total, change, gcashRef = '') {
@@ -2540,7 +3265,7 @@ function hasPendingRequest(productName) {
 }
 
 function requestStock(productNameOrId) {
-    console.log(`📦 requestStock called with: ${productNameOrId}`);
+    console.log(` requestStock called with: ${productNameOrId}`);
     
     // Check if it's a product name (string) or ID
     let productName = null;
@@ -2557,7 +3282,7 @@ function requestStock(productNameOrId) {
         if (product) {
             productName = product.name;
             unit = product.unit || 'unit';
-            console.log(`📦 Found product by name from catalog: ${productName}`);
+            console.log(`Found product by name from catalog: ${productName}`);
         } else {
             // Try to find in stocksData
             const stockItem = stocksData.find(item => 
@@ -2566,7 +3291,7 @@ function requestStock(productNameOrId) {
             );
             if (stockItem) {
                 productName = stockItem.name;
-                console.log(`📦 Found product from fallback list: ${productName}`);
+                console.log(` Found product from fallback list: ${productName}`);
             }
         }
     } else {
@@ -2576,13 +3301,13 @@ function requestStock(productNameOrId) {
         if (product) {
             productName = product.name;
             unit = product.unit || 'unit';
-            console.log(`📦 Found product by ID from catalog: ${productName}`);
+            console.log(` Found product by ID from catalog: ${productName}`);
         } else {
             // Fallback to hardcoded list
             const stockItem = stocksData.find(item => item.id === productNameOrId);
             if (stockItem) {
                 productName = stockItem.name;
-                console.log(`📦 Found product by ID from fallback list: ${productName}`);
+                console.log(` Found product by ID from fallback list: ${productName}`);
             }
         }
     }
@@ -2693,8 +3418,151 @@ function showPendingRequestAlert(productName) {
 }
 
 function showStockRequestModal(productName) {
-    // Directly submit stock request with default quantity of 100
-    submitStockRequest(productName, 100);
+    // Create modal overlay
+    const existingModal = document.getElementById('stockRequestModal');
+    if (existingModal) existingModal.remove();
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'stockRequestModal';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10001;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        text-align: center;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    modal.innerHTML = `
+        <h2 style="margin: 0 0 10px 0; color: #333; font-size: 24px;">Request Stock</h2>
+        <p style="margin: 0 0 30px 0; color: #666; font-size: 14px;">
+            Enter quantity for <strong style="color: #2196f3;">${productName}</strong>
+        </p>
+        
+        <div style="margin: 30px 0; text-align: left;">
+            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333; font-size: 14px;">
+                Quantity to Request:
+            </label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="decreaseQtyBtn" type="button" style="width: 50px; height: 50px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; font-size: 20px; cursor: pointer; font-weight: bold;">−</button>
+                <input type="number" id="requestQuantityInput" value="100" min="1" max="100" inputmode="numeric" placeholder="1-100" autocomplete="off" style="flex: 1; padding: 12px; border: 2px solid #2196f3; border-radius: 6px; font-size: 16px; font-weight: bold; text-align: center;">
+                <button id="increaseQtyBtn" type="button" style="width: 50px; height: 50px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; font-size: 20px; cursor: pointer; font-weight: bold;">+</button>
+            </div>
+        </div>
+        
+        <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 12px; border-radius: 6px; margin: 20px 0; text-align: left; font-size: 13px; color: #555;">
+        </div>
+        
+        <div style="display: flex; gap: 12px; margin-top: 30px;">
+            <button id="cancelStockRequestBtn" style="flex: 1; padding: 12px; background: #f0f0f0; border: 1px solid #ddd; color: #333; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                Cancel
+            </button>
+            <button id="confirmStockRequestBtn" style="flex: 1; padding: 12px; background: #4CAF50; border: none; color: white; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                ✓ Request Stock
+            </button>
+        </div>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Store product name for later
+    overlay.dataset.productName = productName;
+    
+    // Get elements
+    const quantityInput = modal.querySelector('#requestQuantityInput');
+    const decreaseBtn = modal.querySelector('#decreaseQtyBtn');
+    const increaseBtn = modal.querySelector('#increaseQtyBtn');
+    const cancelBtn = modal.querySelector('#cancelStockRequestBtn');
+    const confirmBtn = modal.querySelector('#confirmStockRequestBtn');
+    
+    // Button handlers - increase/decrease by 10 within 1-100 range
+    decreaseBtn.onclick = () => {
+        const current = parseInt(quantityInput.value) || 100;
+        quantityInput.value = Math.max(1, current - 10);
+    };
+    
+    increaseBtn.onclick = () => {
+        const current = parseInt(quantityInput.value) || 100;
+        quantityInput.value = Math.min(100, current + 10);
+    };
+    
+    // Allow manual input changes with real-time display
+    quantityInput.oninput = (e) => {
+        let value = parseInt(e.target.value) || 1;
+        if (value < 1) value = 1;
+        if (value > 100) value = 100;
+        quantityInput.value = value;
+    };
+    
+    quantityInput.onchange = (e) => {
+        let value = parseInt(e.target.value) || 1;
+        if (value < 1) value = 1;
+        if (value > 100) value = 100;
+        quantityInput.value = value;
+    };
+    
+    cancelBtn.onclick = () => closeStockRequestModal();
+    
+    confirmBtn.onclick = () => {
+        const quantity = parseInt(quantityInput.value) || 100;
+        if (quantity < 1 || quantity > 100) {
+            showToast('❌ Please enter quantity between 1-100', 'error', 3000);
+            quantityInput.focus();
+            return;
+        }
+        closeStockRequestModal();
+        submitStockRequest(productName, quantity);
+    };
+    
+    // Allow Enter key to submit
+    quantityInput.onkeypress = (e) => {
+        if (e.key === 'Enter') {
+            confirmBtn.click();
+        }
+    };
+    
+    // Allow Escape to close
+    overlay.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+            closeStockRequestModal();
+        }
+    };
+    
+    // Focus on input
+    setTimeout(() => quantityInput.focus(), 100);
 }
 
 function showInvalidQuantityAlert(callback = null) {
@@ -2954,13 +3822,35 @@ function loadInventoryFromStorage() {
     }
 }
 
-function loadActiveStockRequests() {
-    const saved = localStorage.getItem('activeStockRequests');
-    if (saved) {
-        try {
-            const parsed = JSON.parse(saved);
-            activeStockRequests = new Map(parsed);
-        } catch (e) {}
+async function loadActiveStockRequests() {
+    try {
+        // Fetch pending requests from server database
+        const response = await fetch('/api/stock-requests/pending');
+        
+        if (response.ok) {
+            const result = await response.json();
+            const pendingRequests = result.data || result || [];
+            
+            // Clear existing and load fresh from server
+            activeStockRequests.clear();
+            
+            // Add all pending requests to the map
+            pendingRequests.forEach(req => {
+                if (req.status === 'pending') {
+                    activeStockRequests.set(req.productName, {
+                        timestamp: req.requestDate || Date.now(),
+                        quantity: req.requestedQuantity,
+                        status: 'pending'
+                    });
+                }
+            });
+            
+            console.log('✅ Loaded pending stock requests from server:', Array.from(activeStockRequests.keys()));
+        } else {
+            console.log('⚠️ Could not fetch pending requests from server');
+        }
+    } catch (error) {
+        console.log('⚠️ Error loading pending requests:', error.message);
     }
 }
 
@@ -2972,21 +3862,29 @@ async function syncPendingRequests() {
             const result = await response.json();
             const pendingRequests = result.data || result || [];
             
+            // Get list of truly pending requests (status: pending)
             const serverPendingNames = new Set(
-                pendingRequests.map(req => req.productName || req.product_name || '')
+                pendingRequests
+                    .filter(req => req.status === 'pending')
+                    .map(req => req.productName || req.product_name || '')
             );
             
+            // Remove any request that is NOT pending (i.e., fulfilled or approved)
             for (const [productName] of activeStockRequests) {
                 if (!serverPendingNames.has(productName)) {
+                    console.log(`✅ Stock request for "${productName}" was approved/fulfilled - removing from pending`);
                     activeStockRequests.delete(productName);
                 }
             }
             
             saveActiveStockRequests();
+            renderMenu(); // Refresh menu to update pending status display
             
         } else {
+            console.log('⚠️ Could not sync pending requests');
         }
     } catch (error) {
+        console.log('⚠️ Sync pending requests error:', error.message);
     }
 }
 
@@ -3001,7 +3899,8 @@ function saveActiveStockRequests() {
 
 document.addEventListener('DOMContentLoaded', async function() {
     loadInventoryFromStorage();
-    loadActiveStockRequests();
+    await loadActiveStockRequests(); // Wait for pending requests to load from server
+    initializeTableOccupancy(); // Initialize table management system
     await getCurrentUser();
     
     const menuLoaded = await loadAllMenuItems();
@@ -3032,7 +3931,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     const tableInput = document.getElementById('tableNumber');
     if (tableInput) {
-        tableInput.addEventListener('input', setTableNumber);
+        // Allow only numbers in input
+        tableInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^\d]/g, '');
+            setTableNumber();
+        });
+        // Prevent non-numeric characters on keypress
+        tableInput.addEventListener('keypress', (e) => {
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+        tableInput.type = 'number';
         tableInput.disabled = true;
         tableInput.style.backgroundColor = '#f0f0f0';
         tableInput.style.opacity = '0.7';
@@ -3063,6 +3973,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     renderMenu();
     updatePayButtonState();
+    
+    // Load and refresh active dine-in customers
+    await loadActiveDineInCustomers();
+    startDineInCustomersRefresh();
     
     setInterval(() => {
         productCatalog.forEach(product => {

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Stocks - G'ray Countryside Cafe</title>
+    <link rel="stylesheet" href="/staff.css">
+    <script src="/script/session-manager.js"></script>
+    <script src="/script/back-button-prevention.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .request-stocks-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976d2;
+        }
+
+        .btn-secondary {
+            background: #757575;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #616161;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .quantity-input {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .priority-select {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .btn-request {
+            padding: 8px 16px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-request:hover:not(:disabled) {
+            background: #388e3c;
+        }
+
+        .btn-request:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        .product-row.row-selected {
+            background: #e3f2fd;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .status-out {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .status-low {
+            background: #fed7aa;
+            color: #92400e;
+            border: 1px solid #fdba74;
+        }
+
+        .status-good {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .bulk-actions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bulk-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .bulk-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state p {
+            margin: 10px 0;
+        }
+
+        .back-btn {
+            background: #757575;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #616161;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <nav class="header-navbar">
+        <div class="brandname">
+            <div class="logo">
+                <img src="/logo.png" alt="Logo" class="logo-img">
+            </div>
+            <h2>G'ray Countryside Cafe - Request Stocks</h2>
+        </div>
+        <div class="logout-container">
+            <button onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="request-stocks-container">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+
+        <div class="header">
+            <h1>📦 Request Stocks</h1>
+            <div class="header-buttons">
+                <button class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group" style="flex: 1; min-width: 200px;">
+                <label for="searchInput">Search Products</label>
+                <input type="text" id="searchInput" placeholder="Search by product name or category...">
+            </div>
+            <div class="filter-group" style="flex: 1; min-width: 200px;">
+                <label for="categoryFilter">Filter by Category</label>
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="Rice Bowl Meals">Rice Bowl Meals</option>
+                    <option value="Hot Sizzlers">Hot Sizzlers</option>
+                    <option value="Party Tray">Party Tray</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Coffee">Coffee</option>
+                    <option value="Milk Tea">Milk Tea</option>
+                    <option value="Frappe">Frappe</option>
+                    <option value="Snacks & Appetizer">Snacks & Appetizer</option>
+                    <option value="Budget Meals Served with Rice">Budget Meals Served with Rice</option>
+                    <option value="Specialties">Specialties</option>
+                    <option value="Packaging Supplies">Packaging Supplies</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">
+                            <input type="checkbox" id="selectAllCheckbox" class="checkbox" onchange="toggleSelectAll(this)">
+                        </th>
+                        <th style="width: 50px;">No.</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Unit</th>
+                        <th style="width: 120px;">Status</th>
+                        <th style="width: 80px;">Qty</th>
+                        <th style="width: 100px;">Priority</th>
+                        <th style="width: 80px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <!-- Products will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bulk-actions">
+            <div class="bulk-info">
+                <span id="selectedCount">0</span> product(s) selected
+            </div>
+            <div class="bulk-buttons">
+                <button class="btn btn-secondary" onclick="clearAllSelections()">Clear All</button>
+                <button class="btn btn-primary" id="submitAllBtn" onclick="submitAllRequests()" disabled>
+                    Submit All Requests
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script/requeststocks.js"></script>
+    <script>
+        // Handle logout
+        function handleLogout() {
+            fetch('/logout', { method: 'POST', credentials: 'include' })
+                .then(() => {
+                    sessionManager.clearRole();
+                    window.location.href = '/login';
+                });
+        }
+
+        // Clear all selections
+        function clearAllSelections() {
+            selectedRequests = {};
+            document.getElementById('selectAllCheckbox').checked = false;
+            renderProductsTable(allProducts);
+            updateBulkUI();
+        }
+
+        // Toggle select all
+        function toggleSelectAll(checkbox) {
+            if (checkbox.checked) {
+                allProducts.forEach(product => {
+                    const key = product.name;
+                    const quantity = parseInt(document.querySelector(`[data-key="${key}"] .quantity-input`)?.value) || 0;
+                    if (quantity > 0) {
+                        const priority = document.querySelector(`[data-key="${key}"] .priority-select`)?.value || 'medium';
+                        selectedRequests[key] = { quantity, priority };
+                    }
+                });
+            } else {
+                selectedRequests = {};
+            }
+            renderProductsTable(allProducts);
+            updateBulkUI();
+        }
+
+        // Update bulk UI
+        function updateBulkUI() {
+            const count = Object.keys(selectedRequests).length;
+            document.getElementById('selectedCount').textContent = count;
+            document.getElementById('submitAllBtn').disabled = count === 0;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 4px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Submit all requests
+        async function submitAllRequests() {
+            const keys = Object.keys(selectedRequests);
+            if (keys.length === 0) {
+                showNotification('Please select at least one product', 'error');
+                return;
+            }
+
+            for (const key of keys) {
+                await submitSingleRequest(key);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Delay between requests
+            }
+        }
+    </script>
+</body>
+</html>

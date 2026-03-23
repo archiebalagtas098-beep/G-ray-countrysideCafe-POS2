@@ -59,6 +59,15 @@
       <br>
       <button class="category-btn" id="category11" data-category="Specialties">Specialties</button>
 
+  <!-- ACTIVE DINE IN CUSTOMERS SECTION -->
+<button class="dine-in-header-btn" onclick="toggleDineInCustomers()">
+  <span>ACTIVE DINE IN CUSTOMERS</span>
+</button>
+      
+      <div id="activeDineInCustomers" class="dine-in-customers-list" style="display: none;">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+
       <!-- STOCK MANAGEMENT BUTTON -->
       <button class="category-btn" id="stockManagementBtn" onclick="openStockManagementModal()" style="background: #4CAF50; color: white; margin-top: 20px;">
         <i class="fas fa-boxes"></i> Request Stock
@@ -79,7 +88,10 @@
   <p>Payment Type: <span id="paymentMethodDisplay">None</span></p>
   <p>Order Type: <span id="orderTypeDisplay">None</span></p>
   <p>Change: ₱<span id="changeAmount">0.00</span></p>
-  <ul id="productlist"></ul>
+  
+  <div class="product-list-wrapper">
+    <ul id="productlist"></ul>
+  </div>
 
   <div class="totals">
   <p>Subtotal: <span id="subtotal">0.00</span></p>
@@ -749,8 +761,8 @@
             return;
         }
         
-        console.log('📦 Sending stock batch with', changes.size, 'changes');
-        showToast(`📦 Batch sent with ${changes.size} items!`, 'success', 3000);
+        console.log(' Sending stock batch with', changes.size, 'changes');
+        showToast(` Batch sent with ${changes.size} items!`, 'success', 3000);
         changes.clear();
     }
 
@@ -762,7 +774,7 @@
             return;
         }
         
-        console.log(`📦 Requesting stock for ID: ${id}, Name: ${stock.name}`);
+        console.log(` Requesting stock for ID: ${id}, Name: ${stock.name}`);
         
         // Call the requestStock function from staff.js (imported below)
         // This will show the modal and allow quantity input

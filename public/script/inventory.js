@@ -65,7 +65,7 @@ const categoryUnitsMapping = {
     'produce': ['kg', 'g', 'pieces'],
     'condiment': ['liters', 'ml', 'pieces', 'bottles'],
     'oil': ['liters', 'ml', 'bottles'],
-    'dry': ['kg', 'g', 'liters', 'ml', 'pieces'],
+    'dry': ['kg', 'g', 'ml', 'pieces'],
     'snacks': ['pieces', 'packs', 'boxes'],
     'bakery': ['pieces', 'packs', 'boxes'],
     'beverage': ['liters', 'ml', 'pieces'],
@@ -1466,8 +1466,8 @@ function autoFillItemFromCategory(category) {
         
         // Set default stock values
         if (elements.currentStock) elements.currentStock.value = 0;
-        if (elements.minStock) elements.minStock.value = 10;
-        if (elements.maxStock) elements.maxStock.value = 50;
+        if (elements.minStock) elements.minStock.value = 0;
+        if (elements.maxStock) elements.maxStock.value = 0;
         
         // Show recipe info
         showRecipeInfo(firstItem);
@@ -1760,6 +1760,11 @@ function openAddModal() {
     if (elements.modalTitle) elements.modalTitle.textContent = 'Add New Raw Ingredient';
     if (elements.itemId) elements.itemId.value = '';
     if (elements.itemForm) elements.itemForm.reset();
+    
+    // Set all stock fields to 0 for new ingredient
+    if (elements.currentStock) elements.currentStock.value = 0;
+    if (elements.minStock) elements.minStock.value = 0;
+    if (elements.maxStock) elements.maxStock.value = 0;
     
     // Hide duplicate notification when opening add modal
     hideDuplicateNotification();
@@ -2135,9 +2140,7 @@ function renderFilteredInventoryGrid(filteredItems) {
     if (filteredItems.length === 0) {
         elements.inventoryGrid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">🔍</div>
                 <h3>No items found</h3>
-                <p>Try searching with different keywords</p>
             </div>
         `;
         return;
@@ -2195,7 +2198,6 @@ function renderFilteredDashboardGrid(filteredItems) {
     if (filteredItems.length === 0) {
         elements.dashboardGrid.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">🔍</div>
                 <h3>No matching items</h3>
                 <p>Try a different search term</p>
             </div>
@@ -3302,25 +3304,13 @@ function initializeEventListeners() {
         });
     }
     
-    // Category items click listeners - open modal and auto-fill
+    // Category items click listeners - filter by category
     if (elements.categoryItems && elements.categoryItems.length > 0) {
         elements.categoryItems.forEach(categoryItem => {
             categoryItem.addEventListener('click', (e) => {
                 const category = categoryItem.getAttribute('data-category');
-                
-                if (category !== 'all' && 
-                    category !== 'in-stock' && 
-                    category !== 'low-stock' && 
-                    category !== 'out-of-stock') {
-                    // Open the modal and auto-fill
-                    openAddModal();
-                    setTimeout(() => {
-                        autoFillItemFromCategory(category);
-                    }, 100);
-                } else {
-                    // Just filter
-                    filterByCategory(category);
-                }
+                // Just filter the inventory by category - don't open modal
+                filterByCategory(category);
             });
         });
     }
@@ -3871,7 +3861,7 @@ window.showLogoutConfirmation = showLogoutConfirmation;
                 originalWindow[funcName] = window[funcName];
                 
                 window[funcName] = function(...args) {
-                    console.log(`🔍 Intercepted: ${funcName}(${args})`);
+                    console.log(` Intercepted: ${funcName}(${args})`);
                     
                     // Call original function
                     const result = originalWindow[funcName].apply(this, args);
@@ -4014,7 +4004,7 @@ window.showLogoutConfirmation = showLogoutConfirmation;
 // Add this at the very end of your file
 
 (function() {
-    console.log('🔍 Setting up auto-deduction for ALL menu items...');
+    console.log(' Setting up auto-deduction for ALL menu items...');
     
     // Map of menu item categories to their ingredients (for verification)
 const menuItemIngredients = {

@@ -5355,7 +5355,7 @@ function openAddModal() {
         elements.currentStock.style.color = '';
         elements.currentStock.title = 'Current quantity in stock';
     }
-    if (elements.minimumStock) elements.minimumStock.value = '20';
+    if (elements.minimumStock) elements.minimumStock.value = '0';
     if (elements.itemPrice) elements.itemPrice.value = '';
     
     if (elements.itemCategory) {
@@ -5459,8 +5459,8 @@ async function handleSaveItem() {
         category: elements.itemCategory ? elements.itemCategory.value : '',
         unit: elements.itemUnit ? elements.itemUnit.value : '',
         currentStock: elements.currentStock ? elements.currentStock.value : '0',
-        minStock: elements.minimumStock ? elements.minimumStock.value : '20',
-        maxStock: elements.maximumStock ? elements.maximumStock.value : '200',
+        minStock: elements.minimumStock ? elements.minimumStock.value : '0',
+        maxStock: elements.maximumStock ? elements.maximumStock.value : '',
         price: elements.itemPrice ? elements.itemPrice.value : '0'
     };
     
@@ -5918,8 +5918,6 @@ function renderMenuGrid() {
         elements.menuGrid.innerHTML = `
             <div class="empty-state">
                 <h3>No products found</h3>
-                <p>Click "Add New Product" to create your first menu item.</p>
-                <button class="btn btn-primary" onclick="openAddModal()">Add New Product</button>
             </div>
         `;
         return;
@@ -5948,8 +5946,8 @@ function renderMenuGrid() {
         // Get price directly from database (field name is 'price')
         const itemPrice = item.price;
         const currentStock = item.currentStock || 0;
-        const maxStock = item.maxStock || 100;
-        const minStock = item.minStock || 5;
+        const maxStock = item.maxStock || 0;
+        const minStock = item.minStock || 0;
         const unit = item.unit || 'unit';
         const displayUnit = unitDisplayLabels[unit] || unit;
         const itemValue = itemPrice * currentStock;
